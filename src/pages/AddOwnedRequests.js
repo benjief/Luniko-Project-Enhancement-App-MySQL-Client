@@ -11,7 +11,6 @@ import { getStatus, getScopeType, getDepartment, getValue, getApprovalStatus } f
 import "../styles/AddOwnedRequests.css";
 import "../styles/CardComponents.css";
 
-https://luniko-pe.herokuapp.com/
 function AddOwnedRequests() {
     const [user, loading] = useAuthState(auth);
     const [rendering, setRendering] = useState(true);
