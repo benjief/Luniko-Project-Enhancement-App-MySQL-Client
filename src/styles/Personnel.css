@@ -1,0 +1,74 @@
+.Personnel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 10pt;
+  }
+  
+  .enter-information {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 25px;
+  }
+  
+  .enter-information input {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    width: 70%;
+    max-width: 300px;
+    height: 20px;
+    padding-left: 5px;
+  }
+  
+  .show-information {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .personnel-info-container button {
+    align-self: center;
+  }
+  
+  #hide-personnel-button {
+    margin-top: 5px;
+    margin-bottom: 10px;
+  }
+  
+  .personnel-info-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    border: 1px solid black;
+    border-style: dashed;
+    border-radius: 10px;
+    padding: 5px;
+    margin-top: 10px;
+  }
+  
+  .personnel-info-container p {
+    margin: 5px;
+  }
+  
+  .personnel-name {
+    font-weight: bold;
+  }
+  
+  .personnel-info-container button {
+    margin-bottom: 8px;
+  }
+  
+  button {
+    margin-top: 10px;
+    padding: 3px;
+    width: 115px;
+    border-width: 1px;
+  }
+  
+  button:hover {
+    cursor: pointer;
+  }

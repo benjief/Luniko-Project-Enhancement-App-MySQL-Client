@@ -1,0 +1,40 @@
+.update-owned-request {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+    height: calc(100vh - 106.52px);
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.update-owned-request::-webkit-scrollbar {
+    display: none;
+}
+
+.update-owned-request-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    padding-bottom: 20px;
+}
+
+.update-owned-request-card textarea {
+    width: 100%;
+    font-size: 10.5pt;
+    box-shadow: none;
+    background-color: transparent;
+    border: 1px solid rgba(0, 0, 0, 0.7);
+}
+
+.update-request-button {
+    font-size: 13pt !important;
+    margin-top: 10px;
+}
+
+.material-text-field {
+    width: 100%;
+}

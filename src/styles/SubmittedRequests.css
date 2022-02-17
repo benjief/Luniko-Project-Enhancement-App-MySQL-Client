@@ -1,0 +1,30 @@
+.submitted-requests {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    height: 88.5vh;
+}
+
+
+.submitted-requests-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    padding-bottom: 20px;
+}
+
+.submitted-requests-container::-webkit-scrollbar {
+    display: none;
+}
+
+.submitted-requests br {
+    display: block;
+    content: "";
+    margin-top: -3px;
+}
