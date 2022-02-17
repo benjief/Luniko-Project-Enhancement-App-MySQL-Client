@@ -40,7 +40,7 @@ const auth = getAuth(app);
 //     let uidList = [];
 //     // Pull all UIDs from the MySQL DB
 //     try {
-//         await Axios.get("http://localhost:3001/get-uids", {
+//         await Axios.get("https://luniko-pe.herokuapp.com/get-uids", {
 //         }).then((response) => {
 //             uidList.push(response.data);
 //             return uidList;
@@ -52,7 +52,7 @@ const auth = getAuth(app);
 
 const getPersonnelWithUID = async (personnelList, id) => {
     try {
-        await Axios.get(`http://localhost:3001/get-personnel-with-id/${id}`, {
+        await Axios.get(`https://luniko-pe.herokuapp.com/get-personnel-with-id/${id}`, {
         }).then((response) => {
             personnelList.push(response.data);
         });
@@ -64,7 +64,7 @@ const getPersonnelWithUID = async (personnelList, id) => {
 const writePersonnelToDB = async (uid, firstName, lastName, email) => {
     // Add the new user to the MySQL DB
     try {
-        await Axios.post("http://localhost:3001/create-personnel", {
+        await Axios.post("https://luniko-pe.herokuapp.com/create-personnel", {
             uid: uid,
             firstName: firstName,
             lastName: lastName,
