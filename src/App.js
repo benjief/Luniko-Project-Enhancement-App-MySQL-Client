@@ -14,7 +14,7 @@ import "./App.css";
 function App() {
   return (
     // Used to be "app"
-    <div className="App"> Used to be
+    <div className="App">
       <Router>
         <Switch>
           <Route exact path="/" element={<Login />} />
