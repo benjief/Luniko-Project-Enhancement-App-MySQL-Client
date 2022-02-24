@@ -6,7 +6,6 @@ import NavBar from "../components/Navbar";
 import Hypnosis from "react-cssfx-loading/lib/Hypnosis";
 import "../styles/Login.css";
 
-
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");

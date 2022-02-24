@@ -64,7 +64,7 @@ export default function UpdateOwnedRequestCard({
         updatedDescription(updatedText);
     }
 
-    const handleOnSelecteValue = (valueFromSelector) => {
+    const handleOnSelectValue = (valueFromSelector) => {
         selectedValue(valueFromSelector);
     }
 
@@ -162,7 +162,7 @@ export default function UpdateOwnedRequestCard({
                             label="Value"
                             placeholder="Value"
                             singleSelectOptions={valueOptions}
-                            selectedValue={handleOnSelecteValue}
+                            selectedValue={handleOnSelectValue}
                             required={true}>
                         </MaterialSingleSelect>
                         <MaterialMultiSelect

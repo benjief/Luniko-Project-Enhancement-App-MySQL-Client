@@ -1,4 +1,3 @@
-import "./App.css";
 // Router is apparently the standard name for BrowserRouter, so we rename it here
 import { BrowserRouter as Router, Route, Routes as Switch } from "react-router-dom"
 import Login from "./pages/Login";
@@ -10,10 +9,12 @@ import SubmittedRequests from "./pages/SubmittedRequests";
 import AddOwnedRequests from "./pages/AddOwnedRequests";
 import OwnedRequests from "./pages/OwnedRequests";
 import UpdateOwnedRequest from "./pages/UpdateOwnedRequest";
+import "./App.css";
 
 function App() {
   return (
-    <div className="app">
+    // Used to be "app"
+    <div className="App"> Used to be
       <Router>
         <Switch>
           <Route exact path="/" element={<Login />} />

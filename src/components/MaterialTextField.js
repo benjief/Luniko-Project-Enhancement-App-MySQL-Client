@@ -29,7 +29,9 @@ export default function MaterialTextField({
       }
       handleValidValue(value);
     } else {
-      let helperText = "Required Field"
+      if (required) {
+        let helperText = "Required Field"
+      }
       handleInvalidValue(value, helperText);
     }
   }
