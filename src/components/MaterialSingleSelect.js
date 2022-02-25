@@ -1,7 +1,6 @@
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
-import { Popper } from '@mui/material';
 
 export default function MaterialSingleSelect(
     {
@@ -17,14 +16,6 @@ export default function MaterialSingleSelect(
 ) {
     const [errorEnabled, setErrorEnabled] = React.useState(false);
     const [errorMsg, setErrorMsg] = React.useState("");
-
-    const customPopper = function (props) {
-        return <Popper
-            {...props}
-            placement="bottom"
-            disablePortal={true}
-        ></Popper>
-    };
 
     const handleOnChange = (object) => {
         if (object) {
@@ -44,7 +35,6 @@ export default function MaterialSingleSelect(
         <Autocomplete
             // Override of option equality is needed for MUI to properly compare options and values
             isOptionEqualToValue={(option, value) => option.id === value.id}
-            PopperComponent={customPopper}
             disablePortal
             disabled={isDisabled}
             // id="combo-box-demo"

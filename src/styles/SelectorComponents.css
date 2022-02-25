@@ -43,11 +43,6 @@
     top: 5px !important;
 }
 
-.MuiAutocomplete-popper {
-    position: relative;
-    top: 5px !important;
-}
-
 .MuiAutocomplete-popper[data-popper-reference-hidden] {
     opacity: 0;
     pointer-events: none;
