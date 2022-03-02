@@ -14,20 +14,30 @@ export default function MaterialSingleSelect(
     }
 
 ) {
+    const [value, setValue] = React.useState("");
     const [errorEnabled, setErrorEnabled] = React.useState(false);
     const [errorMsg, setErrorMsg] = React.useState("");
 
     const handleOnChange = (object) => {
         if (object) {
+            setValue(object.value);
             selectedValue(object.value);
             setErrorEnabled(false);
             setErrorMsg("");
         } else {
+            setValue("");
             selectedValue("");
             if (required) {
                 setErrorEnabled(true);
                 setErrorMsg("Required Field");
             }
+        }
+    }
+
+    const handleOnBlur = () => {
+        if (required && value === "") {
+            setErrorEnabled(true);
+            setErrorMsg("Required Field");
         }
     }
 
@@ -42,6 +52,7 @@ export default function MaterialSingleSelect(
             defaultValue={defaultValue}
             sx={{ width: "100%", marginBottom: "10px" }}
             onChange={(event, object) => handleOnChange(object)}
+            onBlur={handleOnBlur}
             renderInput={(params) =>
                 <TextField
                     {...params}

@@ -13,13 +13,31 @@ export default function MaterialMultiSelect({
   required = false
 }) {
 
+  const [values, setValues] = React.useState([]);
+  const [errorEnabled, setErrorEnabled] = React.useState(false);
+  const [errorMsg, setErrorMsg] = React.useState("");
+
   const handleOnChange = (object) => {
-    if (object[0]) {
-      let tempArray = [];
-      for (let i = 0; i < object.length; i++) {
-        tempArray.push(object[i].value);
+    if (object.length) {
+      console.log(object);
+      setValues(object);
+      selectedValues(object);
+      setErrorEnabled(false);
+      setErrorMsg("");
+    } else {
+      setValues([]);
+      selectedValues([]);
+      if (required) {
+        setErrorEnabled(true);
+        setErrorMsg("Required Field");
       }
-      selectedValues(tempArray);
+    }
+  }
+
+  const handleOnBlur = () => {
+    if (required && values === []) {
+      setErrorEnabled(true);
+      setErrorMsg("Required Field");
     }
   }
 
@@ -28,6 +46,7 @@ export default function MaterialMultiSelect({
       // Override of option equality is needed for MUI to properly compare options and values
       // isOptionEqualToValue={(option, value) => option.id === value.id}
       multiple
+      values={values}
       disablePortal
       limitTags={limitTags}
       // id="tags-outlined"
@@ -36,6 +55,7 @@ export default function MaterialMultiSelect({
       // defaultValue={[top100Films[13]]}
       filterSelectedOptions
       onChange={(event, object) => handleOnChange(object)}
+      onBlur={handleOnBlur}
       renderInput={(params) => (
         <TextField
           // color='warning'

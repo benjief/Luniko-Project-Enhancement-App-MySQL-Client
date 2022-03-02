@@ -15,6 +15,7 @@ export default function MaterialTextField({
   required = false,
   showCharCounter = false
 }) {
+  const [value, setValue] = React.useState("");
   const [errorEnabled, setErrorEnabled] = React.useState(false);
   // const [errorMsg, setErrorMsg] = React.useState("");
   const [displayedHelperText, setDisplayedHelperText] = React.useState(helperText);
@@ -30,9 +31,16 @@ export default function MaterialTextField({
       handleValidValue(value);
     } else {
       if (required) {
-        let helperText = "Required Field"
+        setDisplayedHelperText("Required Field");
       }
-      handleInvalidValue(value, helperText);
+      handleInvalidValue(value);
+    }
+  }
+
+  const handleOnBlur = () => {
+    if (required && value === "") {
+      setErrorEnabled(true);
+      setDisplayedHelperText("Required Field");
     }
   }
 
@@ -40,8 +48,8 @@ export default function MaterialTextField({
     if (email.match(/[^@]+@[^@]+\./)) {
       handleValidValue(email);
     } else {
-      let helperText = "Please enter a valid email address"
-      handleInvalidValue(email, helperText);
+      setDisplayedHelperText("Please enter a valid email address");
+      handleInvalidValue(email);
     }
   }
 
@@ -49,21 +57,24 @@ export default function MaterialTextField({
     if (password.length > 5) {
       handleValidValue(password);
     } else {
-      let helperTexst = "Passwords must be at least 6 characters long"
-      handleInvalidValue(password, helperText);
+      setDisplayedHelperText("Passwords must be at least 6 characters long");
+      handleInvalidValue(password);
     }
   }
 
-  const handleInvalidValue = (value, errorMsgText) => {
+  const handleInvalidValue = (value) => {
+    setValue("");
     inputValue("");
-    setInputLength(value.length);
+    if (value) {
+      setInputLength(value.length);
+    }
     if (required) {
       setErrorEnabled(true);
-      setDisplayedHelperText(errorMsgText);
     }
   }
 
   const handleValidValue = (value) => {
+    setValue(value);
     inputValue(value);
     setInputLength(value.length);
     setErrorEnabled(false);
@@ -85,6 +96,7 @@ export default function MaterialTextField({
           defaultValue={defaultValue}
           type={type}
           onChange={(event) => handleOnChange(event.target.value)}
+          onBlur={(event) => handleOnBlur(event.target.value)}
           multiline={multiline}
           error={errorEnabled}
           required={required}

@@ -3,30 +3,33 @@
     flex-direction: column;
     align-items: center;
     margin-top: 20px;
-    height: 88.5vh;
+    height: calc(100vh - 76.52px);
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
+.owned-requests::-webkit-scrollbar {
+    display: none;
+}
 
 .owned-requests-container {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 95%;
     height: 100%;
-    width: 100%;
-    overflow-y: scroll;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-    padding-bottom: 20px;
-}
-
-.owned-requests-container::-webkit-scrollbar {
-    display: none;
+    max-width: 500px;
 }
 
 .page-message {
     align-self: center;
     margin-top: 20px;
     font-size: 12pt;
+}
+
+.owned-request-card {
+    width: 100%;
 }
 
 .request-info-container p {

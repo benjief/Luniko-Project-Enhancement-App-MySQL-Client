@@ -19,6 +19,12 @@
 
 .MuiInputLabel-shrink {
     font-size: 12pt !important;
+    background-color: var(--lunikoOrange);
+    margin: 0 !important;
+    padding-right: 5px !important;
+    /* margin-left: 5px !important;
+    margin-right: 1px !important; */
+    transform: translate(14px, -8px) scale(0.75) !important;
 }
 
 .MuiAutocomplete-input {

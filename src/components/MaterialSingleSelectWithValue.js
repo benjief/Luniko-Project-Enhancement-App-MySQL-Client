@@ -19,9 +19,8 @@ export default function MaterialSingleSelect(
     const [errorMsg, setErrorMsg] = React.useState("");
     const [displayedValue, setDisplayedValue] = React.useState(value);
 
-    const handleOnChange = (object) => {
+    const handleOnChangeOrBlur = (object) => {
         if (object) {
-            console.log(object);
             selectedValue(object.value);
             setErrorEnabled(false);
             setErrorMsg("");
@@ -47,7 +46,8 @@ export default function MaterialSingleSelect(
             defaultValue={defaultValue}
             value={displayedValue}
             sx={{ width: "100%", marginBottom: "10px" }}
-            onChange={(event, object) => handleOnChange(object)}
+            onChange={(event, object) => handleOnChangeOrBlur(object)}
+            onBlur={(event, object) => handleOnChangeOrBlur(object)}
             renderInput={(params) =>
                 <TextField
                     {...params}

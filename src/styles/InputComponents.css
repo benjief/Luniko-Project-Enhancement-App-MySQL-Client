@@ -21,11 +21,6 @@
     border-color: rgba(0, 0, 0, 0.7) !important;
 }
 
-.update-owned-request-container .material-text-field .MuiInputLabel-shrink,
-.create-request-container .material-text-field .MuiInputLabel-shrink {
-    transform: translate(11.5px, -9px) scale(0.75) !important;
-}
-
 .update-owned-request-container .comments-text-field .material-text-field .MuiInputLabel-shrink {
     transform: translate(13px, -9px) scale(0.75) !important;
 }
@@ -44,4 +39,12 @@
 
 .css-dpjnhs-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
     border-color: rgba(0, 0, 0, 0.7) !important;
+}
+
+.css-dpjnhs-MuiInputBase-root-MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline {
+    border-color: #d32f2f !important;
+}
+
+.MuiInputLabel-root {
+    z-index: 1 !important;
 }

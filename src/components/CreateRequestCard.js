@@ -92,9 +92,9 @@ export default function UpdateOwnedRequestCard({
     return (
         <Card
             sx={{
-                minWidth: 350,
-                maxWidth: 350,
-                maxHeight: 589,
+                // minWidth: 350,
+                // maxWidth: 350,
+                maxHeight: "calc(100vh - 96.52px)",
                 overflowY: "scroll",
                 borderRadius: "10px",
                 boxShadow: "2px 2px 6px rgba(43, 43, 43, 0.6)",
@@ -178,7 +178,7 @@ export default function UpdateOwnedRequestCard({
                             placeholder="Description"
                             inputValue={handleOnChangeDescription}
                             multiline={true}
-                            required={false}
+                            required={true}
                             showCharCounter={true}>
                         </MaterialTextField>
                         <button
