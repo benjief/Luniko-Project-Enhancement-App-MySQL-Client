@@ -9,9 +9,9 @@
     color: rgba(0, 0, 0, 0.7) !important;
 }
 
-.css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root.Mui-error {
+/* .css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root.Mui-error {
     color: #d32f2f !important;
-}
+} */
 
 .css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root.Mui-disabled {
     color: rgba(0, 0, 0, 0.38) !important;
@@ -66,11 +66,11 @@
     border-color: rgba(0, 0, 0, 0.7) !important;
 }
 
-.css-154xyx0-MuiInputBase-root-MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline,
+/* .css-154xyx0-MuiInputBase-root-MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline,
 .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline,
 .css-1gywuxd-MuiInputBase-root-MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline {
     border-color: #d32f2f !important;
-}
+} */
 
 .MuiAutocomplete-input {
     font-size: 10.5pt !important;
