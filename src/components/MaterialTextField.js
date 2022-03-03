@@ -27,8 +27,9 @@ export default function MaterialTextField({
         checkEmailValidity(value);
       } else if (type === "password") {
         checkPasswordValidity(value);
+      } else {
+        handleValidValue(value);
       }
-      handleValidValue(value);
     } else {
       if (required) {
         setDisplayedHelperText("Required Field");
