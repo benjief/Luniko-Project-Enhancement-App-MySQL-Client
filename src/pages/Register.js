@@ -7,9 +7,13 @@ import {
     loginWithGoogle,
 } from "../firebase";
 import NavBar from "../components/Navbar";
+import UserRegistrationCard from "../components/UserRegistrationCard";
 import BootstrapPopover from "../components/BootstrapPopover";
 import Hypnosis from "react-cssfx-loading/lib/Hypnosis";
 import "../styles/Register.css";
+import "../styles/SelectorComponents.css";
+import "../styles/InputComponents.css";
+import "../styles/CardComponents.css";
 
 function Register() {
     const [user, loading] = useAuthState(auth);
@@ -18,34 +22,54 @@ function Register() {
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [backgroundColor, setBackgroundColor] = useState("#BFBFBF");
-    const [disabled, setDisabled] = useState(true);
+    // const [backgroundColor, setBackgroundColor] = useState("#BFBFBF");
+    const [registerButtonDisabled, setRegisterButtonDisabled] = useState(true);
     const [transitionElementOpacity, setTransitionElementOpacity] = useState("100%");
     const [transtitionElementVisibility, setTransitionElementVisibility] = useState("visible");
 
     // const history = useHistory();
     const navigate = useNavigate();
 
-    const activateRegistration = () => {
-        setBackgroundColor("#E58004");
-        setDisabled(false);
+    // const activateRegistration = () => {
+    //     setBackgroundColor("#E58004");
+    //     setRegisterButtonDisabled(false);
+    // }
+
+    // const deactivateRegistration = () => {
+    //     setBackgroundColor("#BFBFBF");
+    //     setRegisterButtonDisabled(true);
+    // }
+
+    const handleFirstNameCallback = (firstNameFromTextInput) => {
+        setFirstName(firstNameFromTextInput);
     }
 
-    const deactivateRegistration = () => {
-        setBackgroundColor("#BFBFBF");
-        setDisabled(true);
+    const handleLastNameCallback = (lastNameFromTextInput) => {
+        setLastName(lastNameFromTextInput);
     }
 
-    const registerConventionally = async () => {
-        await registerWithEmailAndPassword(firstName, lastName, email, password).then(() => {
-            navigate("/dashboard");
-        });
+    const handleEmailCallback = (emailFromTextInput) => {
+        setEmail(emailFromTextInput);
+    }
+
+    const handlePasswordCallback = (passwordFromTextInput) => {
+        setFirstName(passwordFromTextInput);
+    }
+
+    const registerConventionally = async (conventionalRegistrationSelected) => {
+        if (conventionalRegistrationSelected) {
+            await registerWithEmailAndPassword(firstName, lastName, email, password).then(() => {
+                navigate("/dashboard");
+            });
+        }
     };
 
-    const registerWithGoogle = async () => {
-        await loginWithGoogle(firstName, lastName, email, password).then(() => {
-            navigate("/dashboard");
-        });
+    const registerWithGoogle = async (googleRegistrationSelected) => {
+        if (googleRegistrationSelected) {
+            await loginWithGoogle(firstName, lastName, email, password).then(() => {
+                navigate("/dashboard");
+            });
+        }
     };
 
     useEffect(() => {
@@ -56,16 +80,15 @@ function Register() {
             setTransitionElementOpacity("0%");
             setTransitionElementVisibility("hidden");
             if (firstName && lastName && email.match(/[^@]+@[^@]+\./) && password.length > 5) {
-                if (disabled) {
-                    activateRegistration();
-                }
+                // if (registerButtonDisabled) {
+                //     activateRegistration();
+                // }
+                setRegisterButtonDisabled(false);
             } else {
-                if (!disabled) {
-                    deactivateRegistration();
-                }
+                setRegisterButtonDisabled(true);
             }
         }
-    }, [loading, user, firstName, lastName, email, password, disabled]);
+    }, [loading, user, firstName, lastName, email, password, registerButtonDisabled]);
 
     return (
         rendering ?
@@ -92,7 +115,17 @@ function Register() {
                 </NavBar>
                 <div className="register">
                     <div className="register-container">
-                        <input
+                        <div className="register-card">
+                            <UserRegistrationCard
+                                updatedFirstName={handleFirstNameCallback}
+                                updatedLastName={handleLastNameCallback}
+                                updatedEmail={handleEmailCallback}
+                                updatedPassword={handlePasswordCallback}
+                                registerConventionally={registerConventionally}
+                                registerWithGoogle={registerWithGoogle}>
+                            </UserRegistrationCard>
+                        </div>
+                        {/* <input
                             type="text"
                             className="register-textBox"
                             value={firstName}
@@ -128,7 +161,7 @@ function Register() {
                         />
                         <button className="register-button"
                             style={{ backgroundColor: backgroundColor }}
-                            disabled={disabled}
+                            disabled={registerButtonDisabled}
                             onClick={registerConventionally}>
                             Register
                         </button>
@@ -147,7 +180,7 @@ function Register() {
                             <div>
                                 Already have an account? <Link to="/">Login</Link> now.
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </Fragment>

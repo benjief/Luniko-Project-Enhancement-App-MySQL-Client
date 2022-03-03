@@ -1,47 +1,46 @@
-.update-owned-request-container .MuiBox-root,
-.create-request-container .MuiBox-root {
+.MuiBox-root {
     width: 100% !important;
     display: flex;
-    margin-bottom: 20px;
+    margin-bottom: 10px !important;
+    /* margin-top: 5px; */
 }
 
-.update-owned-request-container .MuiFormControl-root,
-.create-request-container .MuiFormControl-root {
+.material-text-field {
+    width: 100% !important;
+    margin-top: 0 !important;
+}
+
+.MuiFormControl-root {
     width: 100% !important;
     margin: 0 !important;
+    padding: 0 !important;
 }
 
-.update-owned-request-container .MuiOutlinedInput-input,
-.create-request-container .MuiOutlinedInput-input {
-    border: none !important;
+.MuiOutlinedInput-root {
+    min-height: 50px !important;
+    font-family: "Raleway", Verdana, Geneva, Tahoma, sans-serif !important;
+    font-size: 11pt !important;
+    /* background-color: white !important; */
+
 }
 
-.update-owned-request-container .css-dpjnhs-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline,
-.update-owned-request-container .css-dpjnhs-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
-    border-color: rgba(0, 0, 0, 0.7) !important;
-}
-
-.update-owned-request-container .comments-text-field .material-text-field .MuiInputLabel-shrink {
-    transform: translate(13px, -9px) scale(0.75) !important;
-}
-
-.update-owned-request-container .MuiBox-root:last-of-type {
-    margin-bottom: 15px;
-}
-
-/* .css-1sumxir-MuiFormLabel-root-MuiInputLabel-root.Mui-error {
-    color: #d32f2f !important;
+/* .data-sources .MuiOutlinedInput-root,
+.pre-cleanup-notes .MuiOutlinedInput-root,
+.post-cleanup-notes .MuiOutlinedInput-root,
+.pre-conversion-manipulation .MuiOutlinedInput-root {
+    min-height: 200px !important;
 } */
 
-.css-1sumxir-MuiFormLabel-root-MuiInputLabel-root.Mui-disabled {
-    color: rgba(0, 0, 0, 0.38) !important;
-}
-
-.MuiOutlinedInput-notchedOutline {
-    border-color: rgba(0, 0, 0, 0.7) !important;
+.MuiOutlinedInput-input {
+    /* align-self: flex-start !important; */
+    box-shadow: none !important;
+    position: relative;
+    top: -2.5px;
 }
 
 .MuiInputLabel-root {
+    top: 7px !important;
+    font-family: "Raleway", Verdana, Geneva, Tahoma, sans-serif !important;
     z-index: 1 !important;
 }
 
@@ -52,3 +51,12 @@
 .Mui-error .MuiOutlinedInput-notchedOutline {
     border-color: #d32f2f !important;
 }
+
+/* .MuiInputLabel-shrink {
+    top: 0px !important;
+    color: var(--lunikoBlue) !important;
+} */
+
+/* .MuiOutlinedInput-notchedOutline {
+    border-color: var(--lunikoBlue) !important;
+} */

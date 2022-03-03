@@ -27,6 +27,7 @@ button:hover {
   cursor: pointer;
 }
 
+
 input {
   font-family: "Raleway", Verdana, Geneva, Tahoma, sans-serif;
   font-size: 13pt;
@@ -95,5 +96,5 @@ textarea:focus {
 .popover-container {
   display: flex;
   justify-content: center;
-  margin-bottom: 10px;
+  margin-bottom: 9px;
 }

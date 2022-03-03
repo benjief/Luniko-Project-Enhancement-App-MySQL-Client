@@ -84,8 +84,8 @@ function CreateRequest() {
     }
 
     // Selector callback handlers
-    const handleCompanyCallback = (companyFromSelector) => {
-        setCompany(companyFromSelector);
+    const handleCompanyCallback = (companyFromTextInput) => {
+        setCompany(companyFromTextInput);
     }
 
     const handleScopeCallback = (scopeFromSelector) => {
@@ -96,8 +96,8 @@ function CreateRequest() {
         setDepartment(deptFromSelector);
     }
 
-    const handleDescriptionCallback = (descriptionFromSelector) => {
-        setDescription(descriptionFromSelector);
+    const handleDescriptionCallback = (descriptionFromTextInput) => {
+        setDescription(descriptionFromTextInput);
     }
 
     const handleValueCallback = (valueFromSelector) => {

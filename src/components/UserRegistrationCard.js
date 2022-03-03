@@ -5,9 +5,9 @@ import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import Collapse from '@mui/material/Collapse';
-// import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
+import { Link } from 'react-router-dom';
 // import { yellow } from '@mui/material/colors';
 // import { green } from '@mui/material/colors';
 // import { red } from '@mui/material/colors';
@@ -17,7 +17,7 @@ import MaterialSingleSelect from './MaterialSingleSelect';
 import MaterialSingleSelectWithValue from './MaterialSingleSelectWithValue';
 import MaterialTextField from './MaterialTextField';
 import MaterialMultiSelect from './MaterialMultiSelect';
-import BootstrapPopover from "../components/BootstrapPopover";
+import BootstrapPopover from "./BootstrapPopover";
 
 const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
@@ -30,50 +30,40 @@ const ExpandMore = styled((props) => {
     }),
 }));
 
-export default function UpdateOwnedRequestCard({
-    uid = "",
-    scopeTypeOptions = [],
-    departmentOptions = [],
-    valueOptions = [],
-    identifierOptions = [],
-    updatedCompany = "",
-    selectedScopeType = "",
-    selectedDepartment = "",
-    updatedDescription = "",
-    selectedValue = 0,
-    selectedIdentifiers = [],
-    requestToSubmit = "",
-    submitButtonDisabled = true
+export default function UserRegistrationCard({
+    updatedFirstName = "",
+    updatedLastName = "",
+    updatedEmail = "",
+    updatedPassword = "",
+    registerConventionally = false,
+    registerWithGoogle = false,
+    registerButtonDisabled = true
 }) {
     const [expanded, setExpanded] = React.useState(true);
-    const [submitButtonColor, setSubmitButtonColor] = React.useState("#BFBFBF");
+    const [registerButtonColor, setRegisterButtonColor] = React.useState("#BFBFBF");
 
-    const handleOnChangeCompany = (updatedText) => {
-        updatedCompany(updatedText);
+    const handleOnChangeFirstName = (updatedText) => {
+        updatedFirstName(updatedText);
     }
 
-    const handleOnSelectScopeType = (valueFromSelector) => {
-        selectedScopeType(valueFromSelector);
+    const handleOnChangeLastName = (updatedText) => {
+        updatedLastName(updatedText);
     }
 
-    const handleOnSelectDepartment = (valueFromSelector) => {
-        selectedDepartment(valueFromSelector);
+    const handleOnChangeEmail = (updatedText) => {
+        updatedEmail(updatedText);
     }
 
-    const handleOnChangeDescription = (updatedText) => {
-        updatedDescription(updatedText);
+    const handleOnChangePassword = (updatedText) => {
+        updatedPassword(updatedText);
     }
 
-    const handleOnSelectValue = (valueFromSelector) => {
-        selectedValue(valueFromSelector);
+    const handleOnClickRegisterWithEmail = () => {
+        registerConventionally(true);
     }
 
-    const handleOnChangeIdentifiers = (valuesFromSelector) => {
-        selectedIdentifiers(valuesFromSelector);
-    }
-
-    const handleSubmitRequest = () => {
-        requestToSubmit(uid);
+    const handleOnClickRegisterWithGoogle = () => {
+        registerWithGoogle(true);
     }
 
     // const handleExpandClick = () => {
@@ -82,12 +72,12 @@ export default function UpdateOwnedRequestCard({
     // };
 
     React.useEffect(() => {
-        if (!submitButtonDisabled) {
-            setSubmitButtonColor("var(--lunikoBlue)");
+        if (!registerButtonDisabled) {
+            setRegisterButtonColor("var(--lunikoBlue)");
         } else {
-            setSubmitButtonColor("#BFBFBF");
+            setRegisterButtonColor("#BFBFBF");
         }
-    }, [submitButtonDisabled]);
+    }, [registerButtonDisabled]);
 
     return (
         <Card
@@ -99,7 +89,7 @@ export default function UpdateOwnedRequestCard({
                 borderRadius: "10px",
                 boxShadow: "2px 2px 6px rgba(43, 43, 43, 0.6)",
                 transition: "0.5s",
-                backgroundColor: "var(--lunikoOrange)",
+                backgroundColor: "var(--lunikoDarkGrey)",
                 marginBottom: "20px"
             }}>
             <div className="card-content">
@@ -114,7 +104,7 @@ export default function UpdateOwnedRequestCard({
                     //         {statusAbbreviation}
                     //     </Avatar>
                     // }
-                    title={<strong>Create Your Request</strong>}
+                    title={<strong>Please Fill In the Fields Below</strong>}
                 />
                 {/* < CardActions
                 disableSpacing
@@ -136,64 +126,65 @@ export default function UpdateOwnedRequestCard({
                         <strong>Updatable Fields</strong>
                     </Typography> */}
                         <MaterialTextField
-                            label="Company Name"
+                            label="First Name"
                             characterLimit={45}
-                            placeholder="Company Name"
-                            inputValue={handleOnChangeCompany}
+                            placeholder="First Name"
+                            inputValue={handleOnChangeFirstName}
                             multiline={false}
                             required={true}
                             showCharCounter={true}>
                         </MaterialTextField>
-                        <MaterialSingleSelect
-                            label="Scope Type"
-                            placeholder="Scope Type"
-                            singleSelectOptions={scopeTypeOptions}
-                            selectedValue={handleOnSelectScopeType}
-                            required={true}>
-                        </MaterialSingleSelect>
-                        <MaterialSingleSelect
-                            label="Department"
-                            placeholder="Department"
-                            singleSelectOptions={departmentOptions}
-                            selectedValue={handleOnSelectDepartment}
-                            required={true}>
-                        </MaterialSingleSelect>
-                        <MaterialSingleSelect
-                            label="Value"
-                            placeholder="Value"
-                            singleSelectOptions={valueOptions}
-                            selectedValue={handleOnSelectValue}
-                            required={true}>
-                        </MaterialSingleSelect>
-                        <MaterialMultiSelect
-                            label="Add Identifiers"
-                            placeholder="Add Identifiers"
-                            multiSelectOptions={identifierOptions}
-                            selectedValues={handleOnChangeIdentifiers}
-                            required={false}>
-                        </MaterialMultiSelect>
                         <MaterialTextField
-                            label="Description"
-                            characterLimit={500}
-                            placeholder="Description"
-                            inputValue={handleOnChangeDescription}
-                            multiline={true}
+                            label="Last Name"
+                            characterLimit={45}
+                            placeholder="Last Name"
+                            inputValue={handleOnChangeLastName}
+                            multiline={false}
                             required={true}
                             showCharCounter={true}>
                         </MaterialTextField>
+                        <MaterialTextField
+                            label="Email"
+                            characterLimit={45}
+                            placeholder="Email Address"
+                            inputValue={handleOnChangeEmail}
+                            multiline={false}
+                            required={true}
+                            type="email"
+                            showCharCounter={true}>
+                        </MaterialTextField>
+                        <MaterialTextField
+                            label="Password"
+                            placeholder="Password"
+                            inputValue={handleOnChangePassword}
+                            multiline={false}
+                            required={true}
+                            type="password">
+                        </MaterialTextField>
                         <button
-                            className="submit-request-button"
-                            onClick={handleSubmitRequest}
-                            disabled={submitButtonDisabled}
-                            style={{ backgroundColor: submitButtonColor }}>
-                            Submit Request
+                            className="register-button"
+                            onClick={handleOnClickRegisterWithEmail}
+                            disabled={registerButtonDisabled}
+                            style={{ backgroundColor: registerButtonColor }}>
+                            Register with Email
                         </button>
+                        <div
+                            className="register-google"
+                            onClick={registerWithGoogle}>
+                            <img src={require("../img/google_logo.png")} alt="Google" />
+                            <p>Register with Google</p>
+                        </div>
                         <div className="popover-container">
                             <BootstrapPopover
                                 popoverText=
-                                {[<strong>All identifiers </strong>, "added to this request will be ",
-                                    "able to view it and receive updates pertaining to it."]}>
+                                {["A ", <strong>valid email address </strong>, "and password length of ", <strong>at least six characters </strong>,
+                                    "are required for registration."]}>
                             </BootstrapPopover>
+                        </div>
+                        <div className="register-text-container">
+                            <div>
+                                Already have an account? <Link to="/">Login</Link> now.
+                            </div>
                         </div>
                     </CardContent>
                 </Collapse>

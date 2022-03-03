@@ -34,7 +34,7 @@ export default function MaterialTextField({
       if (required) {
         setDisplayedHelperText("Required Field");
       }
-      handleInvalidValue(value);
+      handleEmptyOrInvalidValue(value);
     }
   }
 
@@ -46,11 +46,12 @@ export default function MaterialTextField({
   }
 
   const checkEmailValidity = (email) => {
-    if (email.match(/[^@]+@[^@]+\./)) {
+    console.log("checking email");
+    if (email.match(/[^@]+@[^@]+\.+[^@]/)) {
       handleValidValue(email);
     } else {
       setDisplayedHelperText("Please enter a valid email address");
-      handleInvalidValue(email);
+      handleEmptyOrInvalidValue(email);
     }
   }
 
@@ -59,11 +60,11 @@ export default function MaterialTextField({
       handleValidValue(password);
     } else {
       setDisplayedHelperText("Passwords must be at least 6 characters long");
-      handleInvalidValue(password);
+      handleEmptyOrInvalidValue(password);
     }
   }
 
-  const handleInvalidValue = (value) => {
+  const handleEmptyOrInvalidValue = (value) => {
     setValue("");
     inputValue("");
     if (value) {
