@@ -20,7 +20,8 @@
     transform: translate(14px, -8.5px) scale(0.75) !important;
 }
 
-.register-container .MuiInputLabel-shrink {
+.register-container .MuiInputLabel-shrink,
+.login-container .MuiInputLabel-shrink {
     background-color: var(--lunikoDarkGrey);
 }
 

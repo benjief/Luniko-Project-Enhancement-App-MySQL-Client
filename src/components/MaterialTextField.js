@@ -13,7 +13,10 @@ export default function MaterialTextField({
   multiline = false,
   type = "text",
   required = false,
-  showCharCounter = false
+  showCharCounter = false,
+  requiresValidation = false,
+  emailAuthenticationError = "",
+  passwordAuthenticationError = ""
 }) {
   const [value, setValue] = React.useState("");
   const [errorEnabled, setErrorEnabled] = React.useState(false);
@@ -23,9 +26,9 @@ export default function MaterialTextField({
 
   const handleOnChange = (value) => {
     if (value) {
-      if (type === "email") {
+      if (type === "email" && requiresValidation) {
         checkEmailValidity(value);
-      } else if (type === "password") {
+      } else if (type === "password" && requiresValidation) {
         checkPasswordValidity(value);
       } else {
         handleValidValue(value);
@@ -46,7 +49,6 @@ export default function MaterialTextField({
   }
 
   const checkEmailValidity = (email) => {
-    console.log("checking email");
     if (email.match(/[^@]+@[^@]+\.+[^@]/)) {
       handleValidValue(email);
     } else {
@@ -82,6 +84,19 @@ export default function MaterialTextField({
     setErrorEnabled(false);
     setDisplayedHelperText(helperText);
   }
+
+  React.useEffect(() => {
+    if (emailAuthenticationError !== "") {
+      setErrorEnabled(true);
+      setDisplayedHelperText(emailAuthenticationError);
+    } else if (passwordAuthenticationError !== "") {
+      setErrorEnabled(true);
+      setDisplayedHelperText(passwordAuthenticationError);
+    } else {
+      setErrorEnabled(false);
+      setDisplayedHelperText("");
+    }
+  }, [emailAuthenticationError, passwordAuthenticationError, errorEnabled])
 
   return (
     <Box

@@ -27,8 +27,8 @@
 }
 
 .MuiCardHeader-root {
-    padding-top: 10px !important;
-    padding-bottom: 0 !important;
+    /* padding-top: 10px !important; */
+    /* padding-bottom: 0 !important; */
     margin: 0 !important;
 }
 
@@ -42,20 +42,9 @@
 
 .MuiCardHeader-title {
     font-size: 12pt !important;
-    margin-bottom: 0px !important;
+    margin-top: 20px !important;
+    margin-bottom: 20px !important;
     text-align: center;
-}
-
-.create-request-container .MuiCardHeader-title {
-    margin-top: 10px;
-}
-
-.MuiCollapse-root, .MuiCollapse-wrapper {
-    margin-top: 0 !important;
-}
-
-.MuiCollapse-wrapperInner {
-    margin-top: 3px !important;
 }
 
 /* .unowned-requests-container .MuiCardHeader-title,

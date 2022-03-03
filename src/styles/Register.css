@@ -91,10 +91,6 @@ input:focus {
   margin-bottom: 0;
 }
 
-.register div {
-  margin-top: 7px;
-}
-
 .register-text-container {
   display: flex;
   flex-direction: column;

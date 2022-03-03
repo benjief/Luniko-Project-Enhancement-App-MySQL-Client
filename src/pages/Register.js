@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
     auth,
     registerWithEmailAndPassword,
@@ -8,7 +8,6 @@ import {
 } from "../firebase";
 import NavBar from "../components/Navbar";
 import UserRegistrationCard from "../components/UserRegistrationCard";
-import BootstrapPopover from "../components/BootstrapPopover";
 import Hypnosis from "react-cssfx-loading/lib/Hypnosis";
 import "../styles/Register.css";
 import "../styles/SelectorComponents.css";
@@ -53,7 +52,7 @@ function Register() {
     }
 
     const handlePasswordCallback = (passwordFromTextInput) => {
-        setFirstName(passwordFromTextInput);
+        setPassword(passwordFromTextInput);
     }
 
     const registerConventionally = async (conventionalRegistrationSelected) => {
@@ -66,7 +65,7 @@ function Register() {
 
     const registerWithGoogle = async (googleRegistrationSelected) => {
         if (googleRegistrationSelected) {
-            await loginWithGoogle(firstName, lastName, email, password).then(() => {
+            await loginWithGoogle(email, password).then(() => {
                 navigate("/dashboard");
             });
         }
@@ -79,7 +78,7 @@ function Register() {
             setRendering(false);
             setTransitionElementOpacity("0%");
             setTransitionElementVisibility("hidden");
-            if (firstName && lastName && email.match(/[^@]+@[^@]+\./) && password.length > 5) {
+            if (firstName !== "" && lastName !== "" && email !== "" && password !== "") {
                 // if (registerButtonDisabled) {
                 //     activateRegistration();
                 // }
@@ -122,7 +121,8 @@ function Register() {
                                 updatedEmail={handleEmailCallback}
                                 updatedPassword={handlePasswordCallback}
                                 registerConventionally={registerConventionally}
-                                registerWithGoogle={registerWithGoogle}>
+                                registerWithGoogle={registerWithGoogle}
+                                registerButtonDisabled={registerButtonDisabled}>
                             </UserRegistrationCard>
                         </div>
                         {/* <input

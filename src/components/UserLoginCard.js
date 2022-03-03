@@ -30,25 +30,17 @@ const ExpandMore = styled((props) => {
     }),
 }));
 
-export default function UserRegistrationCard({
-    updatedFirstName = "",
-    updatedLastName = "",
+export default function UserLoginCard({
     updatedEmail = "",
+    emailAuthenticationError = "",
     updatedPassword = "",
-    registerConventionally = false,
-    registerWithGoogle = false,
-    registerButtonDisabled = true
+    passwordAuthenticationError = "",
+    loginConventionally = false,
+    loginWithGoogle = false,
+    loginButtonDisabled = true
 }) {
     const [expanded, setExpanded] = React.useState(true);
-    const [registerButtonColor, setRegisterButtonColor] = React.useState("#BFBFBF");
-
-    const handleOnChangeFirstName = (updatedText) => {
-        updatedFirstName(updatedText);
-    }
-
-    const handleOnChangeLastName = (updatedText) => {
-        updatedLastName(updatedText);
-    }
+    const [loginButtonColor, setLoginButtonColor] = React.useState("#BFBFBF");
 
     const handleOnChangeEmail = (updatedText) => {
         updatedEmail(updatedText);
@@ -58,12 +50,12 @@ export default function UserRegistrationCard({
         updatedPassword(updatedText);
     }
 
-    const handleOnClickRegisterWithEmail = () => {
-        registerConventionally(true);
+    const handleOnClickLogin = () => {
+        loginConventionally(true);
     }
 
-    const handleOnClickRegisterWithGoogle = () => {
-        registerWithGoogle(true);
+    const handleOnClickLoginWithGoogle = () => {
+        loginWithGoogle(true);
     }
 
     // const handleExpandClick = () => {
@@ -72,12 +64,12 @@ export default function UserRegistrationCard({
     // };
 
     React.useEffect(() => {
-        if (!registerButtonDisabled) {
-            setRegisterButtonColor("var(--lunikoBlue)");
+        if (!loginButtonDisabled) {
+            setLoginButtonColor("var(--lunikoBlue)");
         } else {
-            setRegisterButtonColor("#BFBFBF");
+            setLoginButtonColor("#BFBFBF");
         }
-    }, [registerButtonDisabled]);
+    }, [loginButtonDisabled]);
 
     return (
         <Card
@@ -126,66 +118,40 @@ export default function UserRegistrationCard({
                         <strong>Updatable Fields</strong>
                     </Typography> */}
                         <MaterialTextField
-                            label="First Name"
-                            characterLimit={45}
-                            placeholder="First Name"
-                            inputValue={handleOnChangeFirstName}
-                            multiline={false}
-                            required={true}
-                            showCharCounter={true}>
-                        </MaterialTextField>
-                        <MaterialTextField
-                            label="Last Name"
-                            characterLimit={45}
-                            placeholder="Last Name"
-                            inputValue={handleOnChangeLastName}
-                            multiline={false}
-                            required={true}
-                            showCharCounter={true}>
-                        </MaterialTextField>
-                        <MaterialTextField
                             label="Email"
-                            characterLimit={45}
                             placeholder="Email Address"
                             inputValue={handleOnChangeEmail}
                             multiline={false}
-                            required={true}
-                            requiresValidation={true}
                             type="email"
-                            showCharCounter={true}>
+                            emailAuthenticationError={emailAuthenticationError}>
                         </MaterialTextField>
                         <MaterialTextField
                             label="Password"
                             placeholder="Password"
                             inputValue={handleOnChangePassword}
                             multiline={false}
-                            required={true}
                             type="password"
-                            requiresValidation={true}>
+                            passwordAuthenticationError={passwordAuthenticationError}>
                         </MaterialTextField>
                         <button
-                            className="register-button"
-                            onClick={handleOnClickRegisterWithEmail}
-                            disabled={registerButtonDisabled}
-                            style={{ backgroundColor: registerButtonColor }}>
-                            Register with Email
+                            className="login-button"
+                            onClick={handleOnClickLogin}
+                            disabled={loginButtonDisabled}
+                            style={{ backgroundColor: loginButtonColor }}>
+                            Login
                         </button>
                         <div
-                            className="register-google"
-                            onClick={registerWithGoogle}>
+                            className="login-google"
+                            onClick={handleOnClickLoginWithGoogle}>
                             <img src={require("../img/google_logo.png")} alt="Google" />
-                            <p>Register with Google</p>
+                            <p>Login with Google</p>
                         </div>
-                        <div className="popover-container">
-                            <BootstrapPopover
-                                popoverText=
-                                {["A ", <strong>valid email address </strong>, "and password length of ", <strong>at least six characters </strong>,
-                                    "are required for registration."]}>
-                            </BootstrapPopover>
-                        </div>
-                        <div className="register-text-container">
+                        <div className="login-text-container">
                             <div>
-                                Already have an account? <Link to="/">Login</Link> now.
+                                <Link to="/reset">Forgot Password</Link>
+                            </div>
+                            <div>
+                                Don't have an account? <Link to="/register">Register</Link> now.
                             </div>
                         </div>
                     </CardContent>

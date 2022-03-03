@@ -1,7 +1,7 @@
 .MuiBox-root {
     width: 100% !important;
     display: flex;
-    margin-bottom: 10px !important;
+    margin-bottom: 15px !important;
     /* margin-top: 5px; */
 }
 
@@ -34,12 +34,12 @@
 .MuiOutlinedInput-input {
     /* align-self: flex-start !important; */
     box-shadow: none !important;
-    position: relative;
-    top: -2.5px;
+    /* position: relative;
+    top: -2.5px; */
 }
 
 .MuiInputLabel-root {
-    top: 7px !important;
+    /* top: 7px !important; */
     font-family: "Raleway", Verdana, Geneva, Tahoma, sans-serif !important;
     z-index: 1 !important;
 }

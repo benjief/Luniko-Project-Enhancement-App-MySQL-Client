@@ -92,7 +92,6 @@ const loginWithGoogle = async () => {
             if (personnelList[0].length === 0) {
                 await writePersonnelToDB(user.uid, user.displayName.split(" ")[0],
                     user.displayName.split(" ").slice(1), user.email).then(() => {
-                        console.log("Personnel written to DB!");
                     });
             }
         });
@@ -110,18 +109,19 @@ const loginWithGoogle = async () => {
 
     } catch (err) {
         console.error(err);
+        console.log(err.message);
         alert(err.message);
     }
 };
 
 // Standard Authentication
 const loginWithEmailAndPassword = async (email, password) => {
-    try {
-        await signInWithEmailAndPassword(auth, email, password);
-    } catch (err) {
-        console.error(err);
-        alert(err.message);
-    }
+    // try {
+    await signInWithEmailAndPassword(auth, email, password);
+    // } catch (err) {
+    //     console.error(err);
+    //     alert(err.message);
+    // }
 };
 
 // Register with email and password

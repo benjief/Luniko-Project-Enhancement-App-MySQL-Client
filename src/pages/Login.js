@@ -1,31 +1,74 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { auth, loginWithEmailAndPassword, loginWithGoogle } from "../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import NavBar from "../components/Navbar";
+import UserLoginCard from "../components/UserLoginCard";
 import Hypnosis from "react-cssfx-loading/lib/Hypnosis";
 import "../styles/Login.css";
+import "../styles/SelectorComponents.css";
+import "../styles/InputComponents.css";
+import "../styles/CardComponents.css";
 
 function Login() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
     const [user, loading] = useAuthState(auth);
     const [rendering, setRendering] = useState(true);
+    const [email, setEmail] = useState("");
+    const [emailAuthenticationError, setEmailAuthenticationError] = useState("");
+    const [password, setPassword] = useState("");
+    const [passwordAuthenticationError, setPasswordAuthenticationError] = useState("");
+    const [loginButtonDisabled, setLoginButtonDisabled] = useState(true);
     const [transitionElementOpacity, setTransitionElementOpacity] = useState("100%");
     const [transtitionElementVisibility, setTransitionElementVisibility] = useState("visible");
     const navigate = useNavigate();
 
+    const handleEmailCallback = (emailFromTextInput) => {
+        setEmail(emailFromTextInput);
+        setEmailAuthenticationError("");
+    }
+
+    const handlePasswordCallback = (passwordFromTextInput) => {
+        console.log(passwordFromTextInput);
+        setPassword(passwordFromTextInput);
+        setPasswordAuthenticationError("");
+    }
+
+    const attemptConventionalLogin = async () => {
+        try {
+            await loginWithEmailAndPassword(email, password).then(() => {
+                navigate("/dashboard");
+            });
+        } catch (err) {
+            // console.log("error caught!");
+            console.log(err.message);
+            if (err.message.indexOf("email") !== -1) {
+                setEmailAuthenticationError("User not found");
+            } else if (err.message.indexOf("password") !== -1) {
+                setPasswordAuthenticationError("Incorrect password");
+            }
+        }
+    }
+
+    const attemptLoginWithGoogle = async () => {
+        await loginWithGoogle(email, password).then(() => {
+            navigate("/dashboard");
+        });
+    };
+
     useEffect(() => {
         if (loading) {
             return;
-        } if (user) {
-            navigate("/dashboard");
         } else {
             setRendering(false);
             setTransitionElementOpacity("0%");
             setTransitionElementVisibility("hidden");
+            if (email !== "" && password !== "") {
+                setLoginButtonDisabled(false);
+            } else {
+                setLoginButtonDisabled(true);
+            }
         }
-    }, [loading, user]);
+    }, [loading, email, password]);
 
     return (
         rendering ?
@@ -52,7 +95,18 @@ function Login() {
                 </NavBar>
                 <div className="login">
                     <div className="login-container">
-                        <input
+                        <div className="login-card">
+                            <UserLoginCard
+                                updatedEmail={handleEmailCallback}
+                                updatedPassword={handlePasswordCallback}
+                                emailAuthenticationError={emailAuthenticationError}
+                                passwordAuthenticationError={passwordAuthenticationError}
+                                loginConventionally={attemptConventionalLogin}
+                                loginWithGoogle={attemptLoginWithGoogle}
+                                loginButtonDisabled={loginButtonDisabled}>
+                            </UserLoginCard>
+                        </div>
+                        {/* <input
                             type="text"
                             className="login-textBox"
                             value={email}
@@ -74,7 +128,7 @@ function Login() {
                         </button>
                         <div
                             className="login-google"
-                            onClick={loginWithGoogle}>
+                            onClick={attemptLoginWithGoogle}>
                             <img src={require("../img/google_logo.png")} alt="Luniko" />
                             <p>Login with Google</p>
                         </div>
@@ -85,7 +139,7 @@ function Login() {
                             <div>
                                 Don't have an account? <Link to="/register">Register</Link> now.
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </Fragment>
