@@ -171,6 +171,7 @@ export default function UpdateOwnedRequestCard({
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
                     <CardContent>
                         <Typography
+                            style={{ marginTop: "20px", marginBottom: "20px" }}
                             paragraph>
                             <strong>Updatable Fields</strong>
                         </Typography>
@@ -211,18 +212,20 @@ export default function UpdateOwnedRequestCard({
                             required={true}>
                         </MaterialSingleSelectWithValue>
                         <MaterialTextField
+                            className="reason-for-rejection"
                             label="Reason for Rejection"
                             helperText={"Required for rejection"}
-                            placeholder="Reason for Rejection"
+                            placeholder="Why are you rejecting this request?"
                             defaultValue={reasonRejected}
                             inputValue={handleOnChangeReasonRejected}
                             multiline={true}
+                            characterLimit={1000}
                             showCharCounter={true}>
                         </MaterialTextField>
                         <MaterialTextField
                             className="comments-text-field"
                             label="Comments"
-                            placeholder="Comments"
+                            placeholder="Enter any relevant comments related to this request's status"
                             defaultValue={comments}
                             inputValue={handleOnChangeComments}
                             multiline={true}

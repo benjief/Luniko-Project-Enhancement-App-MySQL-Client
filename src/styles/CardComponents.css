@@ -32,6 +32,13 @@
     margin: 0 !important;
 }
 
+.unowned-requests-container .MuiCardHeader-root,
+.owned-requests-container .MuiCardHeader-root,
+.update-owned-request-container .MuiCardHeader-root,
+.submitted-requests-container .MuiCardHeader-root {
+    padding-bottom: 0 !important;
+}
+
 .MuiCardHeader-content {
     width: 100% !important;
     display: flex;
@@ -41,22 +48,32 @@
 }
 
 .MuiCardHeader-title {
-    font-size: 12pt !important;
+    font-size: 13pt !important;
     margin-top: 20px !important;
     margin-bottom: 20px !important;
     text-align: center;
 }
 
-/* .unowned-requests-container .MuiCardHeader-title,
+.unowned-requests-container .MuiCardHeader-title,
 .owned-requests-container .MuiCardHeader-title,
 .update-owned-request-container .MuiCardHeader-title,
 .submitted-requests-container .MuiCardHeader-title {
     position: relative;
-    left: -20px;
-} */
+    left: -25px;
+    margin: 0 !important;
+}
+
+.unowned-requests-container .MuiButtonBase-root,
+.owned-requests-container .MuiButtonBase-root,
+.update-owned-request-container .MuiButtonBase-root,
+.submitted-requests-container .MuiButtonBase-root {
+    height: 100% !important;
+}
 
 .MuiCardActions-root {
     width: 100% !important;
+    min-height: 40px !important;
+    padding: 0 !important;
 }
 
 .MuiCardActions-root button {

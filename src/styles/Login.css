@@ -51,7 +51,7 @@
 .login-button {
   padding: 10px;
   margin-top: 18px;
-  margin-bottom: 10px !important;
+  margin-bottom: 10px;
   border: none;
   color: white;
   background-color: var(--lunikoBlue);
@@ -60,7 +60,12 @@
   font-weight: 600;
   height: 50px;
   width: 100%;
-  font-size: 13pt !important;
+  font-size: 13pt;
+  transition: 200ms;
+}
+
+.login-button:hover {
+  background-color: var(--lunikoOrange) !important;
 }
 
 .login-google:hover {

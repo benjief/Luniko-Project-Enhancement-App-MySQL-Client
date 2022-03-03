@@ -21,20 +21,24 @@
 
 button {
   box-shadow: 2px 2px 4px rgba(43, 43, 43, 0.6) !important;
-  transition: 200ms;
 }
 
 button:hover {
   cursor: pointer;
 }
 
+button:disabled:hover {
+  cursor: default !important;
+  background-color: #BFBFBF !important;
+}
 
-input {
+
+/* input {
   font-family: "Raleway", Verdana, Geneva, Tahoma, sans-serif;
   font-size: 13pt;
   height: 50px;
   box-shadow: 2px 2px 4px rgba(43, 43, 43, 0.6);
-}
+} */
 
 .select__input {
   box-shadow: none;
@@ -54,9 +58,12 @@ textarea:focus {
 .page-message {
   font-weight: 600;
   font-family: "Raleway", Verdana, Geneva, Tahoma, sans-serif;
-  font-size: 14pt !important;
-  margin-bottom: 37px;
+  font-size: 13pt !important;
+  margin-top: 0 !important;
+  margin-bottom: 20px;
   color: var(--lunikoBlue);
+  align-self: center;
+  transition: 0.3s;
 }
 
 .loading-spinner {
@@ -74,13 +81,6 @@ textarea:focus {
   background-image: url("img/background_pattern.png");
   transition: 1s;
   z-index: 2;
-}
-
-.page-message {
-  align-self: center;
-  margin-top: 20px;
-  font-size: 12pt;
-  transition: 0.3s;
 }
 
 .card-content {

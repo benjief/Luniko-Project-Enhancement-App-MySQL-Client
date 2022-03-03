@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { logout } from '../firebase';
 import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
@@ -30,46 +31,58 @@ const ExpandMore = styled((props) => {
     }),
 }));
 
-export default function UserLoginCard({
-    updatedEmail = "",
-    emailAuthenticationError = "",
-    updatedPassword = "",
-    passwordAuthenticationError = "",
-    loginConventionally = false,
-    loginWithGoogle = false,
-    loginButtonDisabled = true
+export default function DashboardOptionsCard({
+    uid = "",
+    isIdentifier = false,
+    isOwner = false,
+    firstName = "",
+    // createRequest = false,
+    // submittedRequests = false,
+    // addToOwnedRequests = false,
+    // ownedRequests = false,
+    submittedRequestsButtonDisabled = true,
+    addToOwnedRequestsButtonDisabled = true,
+    ownedRequestsButtonDisabled = true
 }) {
     const [expanded, setExpanded] = React.useState(true);
-    const [loginButtonColor, setLoginButtonColor] = React.useState("#BFBFBF");
-
-    const handleOnChangeEmail = (updatedText) => {
-        updatedEmail(updatedText);
-    }
-
-    const handleOnChangePassword = (updatedText) => {
-        updatedPassword(updatedText);
-    }
-
-    const handleOnClickLogin = () => {
-        loginConventionally(true);
-    }
-
-    const handleOnClickLoginWithGoogle = () => {
-        loginWithGoogle(true);
-    }
+    const [submittedRequestsButtonColor, setSubmittedRequestsButtonColor] = React.useState("#BFBFBF");
+    const [addToOwnedRequestsButtonColor, setAddToOwnedRequestsButtonColor] = React.useState("#BFBFBF");
+    const [ownedRequestsButtonColor, setOwnedRequestsButtonColor] = React.useState("#BFBFBF");
 
     // const handleExpandClick = () => {
     //     setExpanded(!expanded);
     //     // cardColor === "var(--lunikoMidGrey)" ? setCardColor("var(--lunikoOrange)") : setCardColor("var(--lunikoMidGrey)");
     // };
 
+    // const handleOnClickCreateRequest = () => {
+    //     createRequest(true);
+    // }
+
+    // const handleOnClickSubmittedRequests = () => {
+    //     submittedRequests(true);
+    // }
+
+    // const handleOnClickAddToOwnedRequests = () => {
+    //     addToOwnedRequests(true);
+    // }
+
+    // const handleOnClickOwnedRequests = () => {
+    //     ownedRequests(true);
+    // }
+
     React.useEffect(() => {
-        if (!loginButtonDisabled) {
-            setLoginButtonColor("var(--lunikoBlue)");
-        } else {
-            setLoginButtonColor("#BFBFBF");
-        }
-    }, [loginButtonDisabled]);
+        !submittedRequestsButtonDisabled
+            ? setSubmittedRequestsButtonColor("var(--lunikoBlue)")
+            : setSubmittedRequestsButtonColor("#BFBFBF");
+
+        !addToOwnedRequestsButtonDisabled
+            ? setAddToOwnedRequestsButtonColor("var(--lunikoBlue)")
+            : setAddToOwnedRequestsButtonColor("#BFBFBF");
+
+        !ownedRequestsButtonDisabled
+            ? setOwnedRequestsButtonColor("var(--lunikoBlue)")
+            : setOwnedRequestsButtonColor("#BFBFBF");
+    }, [submittedRequestsButtonDisabled, addToOwnedRequestsButtonDisabled, ownedRequestsButtonDisabled]);
 
     return (
         <Card
@@ -96,7 +109,7 @@ export default function UserLoginCard({
                     //         {statusAbbreviation}
                     //     </Avatar>
                     // }
-                    title={<strong>Please Login Below</strong>}
+                    title={["Welcome, ", <strong>{firstName}</strong>, "!"]}
                 />
                 {/* < CardActions
                 disableSpacing
@@ -117,45 +130,41 @@ export default function UserLoginCard({
                         paragraph>
                         <strong>Updatable Fields</strong>
                     </Typography> */}
-                        <MaterialTextField
-                            label="Email"
-                            placeholder="Email Address"
-                            inputValue={handleOnChangeEmail}
-                            multiline={false}
-                            type="email"
-                            authenticationField={true}
-                            emailAuthenticationError={emailAuthenticationError}>
-                        </MaterialTextField>
-                        <MaterialTextField
-                            label="Password"
-                            placeholder="Password"
-                            inputValue={handleOnChangePassword}
-                            multiline={false}
-                            type="password"
-                            authenticationField={true}
-                            passwordAuthenticationError={passwordAuthenticationError}>
-                        </MaterialTextField>
+                        <Link to={`/create-request/${uid}/${isIdentifier}/${isOwner}`}>
+                            <button
+                                className="create-request-button">
+                                Create Request
+                            </button>
+                        </Link>
+                        <Link to={`/submitted-requests/${uid}/${isIdentifier}/${isOwner}`}>
+                            <button
+                                className="submitted-requests-button"
+                                disabled={submittedRequestsButtonDisabled}
+                                style={{ backgroundColor: submittedRequestsButtonColor }}>
+                                Submitted Requests
+                            </button>
+                        </Link>
+                        <Link to={`/add-owned-requests/${uid}/${isIdentifier}/${isOwner}`}>
+                            <button
+                                className="add-to-owned-requests-button"
+                                disabled={addToOwnedRequestsButtonDisabled}
+                                style={{ backgroundColor: addToOwnedRequestsButtonColor }}>
+                                Add to Owned Requests
+                            </button>
+                        </Link >
+                        <Link to={`/owned-requests/${uid}/${isIdentifier}/${isOwner}`}>
+                            <button
+                                className="owned-requests-button"
+                                disabled={ownedRequestsButtonDisabled}
+                                style={{ backgroundColor: ownedRequestsButtonColor }}>
+                                Owned Requests
+                            </button>
+                        </Link >
                         <button
-                            className="login-button"
-                            onClick={handleOnClickLogin}
-                            disabled={loginButtonDisabled}
-                            style={{ backgroundColor: loginButtonColor }}>
-                            Login
+                            className="logout-button"
+                            onClick={logout}>
+                            Logout
                         </button>
-                        <div
-                            className="login-google"
-                            onClick={handleOnClickLoginWithGoogle}>
-                            <img src={require("../img/google_logo.png")} alt="Google" />
-                            <p>Login with Google</p>
-                        </div>
-                        <div className="login-text-container">
-                            <div>
-                                <Link to="/reset">Forgot Password</Link>
-                            </div>
-                            <div>
-                                Don't have an account? <Link to="/register">Register</Link> now.
-                            </div>
-                        </div>
                     </CardContent>
                 </Collapse>
             </div>

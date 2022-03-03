@@ -19,7 +19,6 @@ export default function MaterialMultiSelect({
 
   const handleOnChange = (object) => {
     if (object.length) {
-      console.log(object);
       setValues(object);
       selectedValues(object);
       setErrorEnabled(false);

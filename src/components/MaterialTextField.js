@@ -15,6 +15,7 @@ export default function MaterialTextField({
   required = false,
   showCharCounter = false,
   requiresValidation = false,
+  authenticationField = false,
   emailAuthenticationError = "",
   passwordAuthenticationError = ""
 }) {
@@ -43,6 +44,7 @@ export default function MaterialTextField({
 
   const handleOnBlur = () => {
     if (required && value === "") {
+      console.log("empty field");
       setErrorEnabled(true);
       setDisplayedHelperText("Required Field");
     }
@@ -69,6 +71,7 @@ export default function MaterialTextField({
   const handleEmptyOrInvalidValue = (value) => {
     setValue("");
     inputValue("");
+    setInputLength(0);
     if (value) {
       setInputLength(value.length);
     }
@@ -86,17 +89,19 @@ export default function MaterialTextField({
   }
 
   React.useEffect(() => {
-    if (emailAuthenticationError !== "") {
-      setErrorEnabled(true);
-      setDisplayedHelperText(emailAuthenticationError);
-    } else if (passwordAuthenticationError !== "") {
-      setErrorEnabled(true);
-      setDisplayedHelperText(passwordAuthenticationError);
-    } else {
-      setErrorEnabled(false);
-      setDisplayedHelperText("");
+    if (authenticationField) {
+      if (emailAuthenticationError !== "") {
+        setErrorEnabled(true);
+        setDisplayedHelperText(emailAuthenticationError);
+      } else if (passwordAuthenticationError !== "") {
+        setErrorEnabled(true);
+        setDisplayedHelperText(passwordAuthenticationError);
+      } else {
+        setErrorEnabled(false);
+        setDisplayedHelperText("");
+      }
     }
-  }, [emailAuthenticationError, passwordAuthenticationError, errorEnabled])
+  }, [authenticationField, emailAuthenticationError, passwordAuthenticationError, errorEnabled])
 
   return (
     <Box
@@ -115,6 +120,7 @@ export default function MaterialTextField({
           onChange={(event) => handleOnChange(event.target.value)}
           onBlur={(event) => handleOnBlur(event.target.value)}
           multiline={multiline}
+          placeholder={placeholder}
           error={errorEnabled}
           required={required}
           inputProps={{

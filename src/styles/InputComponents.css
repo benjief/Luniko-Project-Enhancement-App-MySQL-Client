@@ -24,15 +24,14 @@
 
 }
 
-/* .data-sources .MuiOutlinedInput-root,
-.pre-cleanup-notes .MuiOutlinedInput-root,
-.post-cleanup-notes .MuiOutlinedInput-root,
-.pre-conversion-manipulation .MuiOutlinedInput-root {
+.description .MuiOutlinedInput-root,
+.reason-for-rejection .MuiOutlinedInput-root,
+.comments-text-field .MuiOutlinedInput-root {
     min-height: 200px !important;
-} */
+}
 
 .MuiOutlinedInput-input {
-    /* align-self: flex-start !important; */
+    align-self: flex-start !important;
     box-shadow: none !important;
     /* position: relative;
     top: -2.5px; */

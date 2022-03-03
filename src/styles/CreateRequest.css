@@ -26,17 +26,6 @@
     width: 100%;
 }
 
-.create-request-card input,
-.create-request-card textarea {
-    width: 100%;
-    font-family: "Raleway", Verdana, Geneva, Tahoma, sans-serif;
-    font-size: 10.5pt;
-    color: rgba(0, 0, 0, 0.7) !important;
-    box-shadow: none;
-    background-color: transparent;
-    border: 1px solid rgba(0, 0, 0, 0.7);
-}
-
 .submit-request-button {
     padding: 10px;
     margin-top: 10px;
@@ -51,4 +40,9 @@
     height: 50px;
     width: 100%;
     font-size: 13pt !important;
+    transition: 200ms;
+}
+
+.submit-request-button:hover {
+    background-color: var(--lunikoOrange) !important;
 }

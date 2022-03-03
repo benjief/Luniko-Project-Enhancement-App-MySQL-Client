@@ -50,7 +50,7 @@ input:focus {
 .register-button {
   padding: 10px;
   margin-top: 10px;
-  margin-bottom: 10px !important;
+  margin-bottom: 10px;
   border: none;
   color: white;
   background-color: var(--lunikoBlue);
@@ -59,7 +59,12 @@ input:focus {
   font-weight: 600;
   height: 50px;
   width: 100%;
-  font-size: 13pt !important;
+  font-size: 13pt;
+  transition: 200ms;
+}
+
+.register-button:hover {
+  background-color: var(--lunikoOrange) !important;
 }
 
 .register-google:hover {

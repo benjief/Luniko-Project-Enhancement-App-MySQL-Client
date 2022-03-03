@@ -34,6 +34,11 @@ function AddOwnedRequests() {
                 getRequestOwners(response.data);
             }
             setRendering(false);
+            if (response.data.length === 0) {
+                setTimeout(() => {
+                    navigate("/dashboard");
+                }, 2000);
+            }
         });
     };
 
@@ -81,8 +86,11 @@ function AddOwnedRequests() {
                 setPageMessageOpacity("0%");
                 setTimeout(() => {
                     setMessageContent("No more requests available!");
-                    setPageMessageOpacity("100%")
+                    setPageMessageOpacity("100%");
                 }, 300);
+                setTimeout(() => {
+                    navigate("/dashboard");
+                }, 2000);
             }
         });
     };

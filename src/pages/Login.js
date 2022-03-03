@@ -28,7 +28,6 @@ function Login() {
     }
 
     const handlePasswordCallback = (passwordFromTextInput) => {
-        console.log(passwordFromTextInput);
         setPassword(passwordFromTextInput);
         setPasswordAuthenticationError("");
     }
@@ -39,9 +38,7 @@ function Login() {
                 navigate("/dashboard");
             });
         } catch (err) {
-            // console.log("error caught!");
-            console.log(err.message);
-            if (err.message.indexOf("email") !== -1) {
+            if (err.message.indexOf("email") !== -1 || err.message.indexOf("user") !== -1) {
                 setEmailAuthenticationError("User not found");
             } else if (err.message.indexOf("password") !== -1) {
                 setPasswordAuthenticationError("Incorrect password");
