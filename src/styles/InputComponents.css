@@ -29,7 +29,8 @@
 
 .login-container .MuiOutlinedInput-notchedOutline,
 .register-container .MuiOutlinedInput-notchedOutline {
-    top: 0 !important
+    top: 0 !important;
+    /* border: none !important; */
 }
 
 .login-container .MuiOutlinedInput-notchedOutline legend,

@@ -100,7 +100,7 @@ input:focus {
   display: flex;
   flex-direction: column;
   margin-top: 0;
-  margin-bottom: 10px;
+  margin-bottom: 13px;
 }
 
 .register-text-container div {
@@ -110,4 +110,8 @@ input:focus {
 
 a {
   color: white !important;
+}
+
+.register-container .popover-container {
+  margin-top: 18px !important;
 }
