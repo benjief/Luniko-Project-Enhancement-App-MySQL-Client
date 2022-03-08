@@ -17,13 +17,15 @@ export default function MaterialTextField({
   requiresValidation = false,
   authenticationField = false,
   emailAuthenticationError = "",
-  passwordAuthenticationError = ""
+  passwordAuthenticationError = "",
+  shrinkInputLabel = true
 }) {
   const [value, setValue] = React.useState("");
   const [errorEnabled, setErrorEnabled] = React.useState(false);
   // const [errorMsg, setErrorMsg] = React.useState("");
   const [displayedHelperText, setDisplayedHelperText] = React.useState(helperText);
   const [inputLength, setInputLength] = React.useState(defaultValue.length);
+  const [inputLabelShrunk, setInputLabelShrunk] = React.useState(false);
 
   const handleOnChange = (value) => {
     if (value) {
@@ -43,6 +45,9 @@ export default function MaterialTextField({
   }
 
   const handleOnBlur = () => {
+    if (shrinkInputLabel) {
+      setInputLabelShrunk(false);
+    }
     if (required && value === "") {
       console.log("empty field");
       setErrorEnabled(true);
@@ -88,6 +93,12 @@ export default function MaterialTextField({
     setDisplayedHelperText(helperText);
   }
 
+  const handleOnFocus = () => {
+    if (shrinkInputLabel) {
+      setInputLabelShrunk(shrinkInputLabel ? true : false);
+    }
+  }
+
   React.useEffect(() => {
     if (authenticationField) {
       if (emailAuthenticationError !== "") {
@@ -114,9 +125,15 @@ export default function MaterialTextField({
       autoComplete="off">
       <div className="material-text-field">
         <TextField
-          label={label}
+          label={value && !shrinkInputLabel ? "" : label}
+          InputLabelProps={
+            {
+              shrink: inputLabelShrunk
+            }
+          }
           defaultValue={defaultValue}
           type={type}
+          onClick={handleOnFocus}
           onChange={(event) => handleOnChange(event.target.value)}
           onBlur={(event) => handleOnBlur(event.target.value)}
           multiline={multiline}

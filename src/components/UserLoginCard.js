@@ -124,7 +124,8 @@ export default function UserLoginCard({
                             multiline={false}
                             type="email"
                             authenticationField={true}
-                            emailAuthenticationError={emailAuthenticationError}>
+                            emailAuthenticationError={emailAuthenticationError}
+                            shrinkInputLabel={false}>
                         </MaterialTextField>
                         <MaterialTextField
                             label="Password"
@@ -133,7 +134,8 @@ export default function UserLoginCard({
                             multiline={false}
                             type="password"
                             authenticationField={true}
-                            passwordAuthenticationError={passwordAuthenticationError}>
+                            passwordAuthenticationError={passwordAuthenticationError}
+                            shrinkInputLabel={false}>
                         </MaterialTextField>
                         <button
                             className="login-button"

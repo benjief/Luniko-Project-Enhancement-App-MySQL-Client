@@ -20,8 +20,19 @@
     min-height: 50px !important;
     font-family: "Raleway", Verdana, Geneva, Tahoma, sans-serif !important;
     font-size: 11pt !important;
-    /* background-color: white !important; */
+}
 
+.login-container .MuiOutlinedInput-root {
+    background-color: white !important;
+}
+
+.login-container .MuiInputLabel-root {
+    /* display: none !important; */
+    /* visibility: hidden; */
+}
+
+.login-container input::placeholder {
+    /* color: blue !important; */
 }
 
 .description .MuiOutlinedInput-root,
