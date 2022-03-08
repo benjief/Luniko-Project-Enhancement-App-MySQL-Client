@@ -119,7 +119,7 @@ export default function UserLoginCard({
                     </Typography> */}
                         <MaterialTextField
                             label="Email"
-                            placeholder="Email Address"
+                            // placeholder="Email Address"
                             inputValue={handleOnChangeEmail}
                             multiline={false}
                             type="email"
@@ -129,7 +129,7 @@ export default function UserLoginCard({
                         </MaterialTextField>
                         <MaterialTextField
                             label="Password"
-                            placeholder="Password"
+                            // placeholder="Password"
                             inputValue={handleOnChangePassword}
                             multiline={false}
                             type="password"

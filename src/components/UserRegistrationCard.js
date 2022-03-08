@@ -128,40 +128,44 @@ export default function UserRegistrationCard({
                         <MaterialTextField
                             label="First Name"
                             characterLimit={45}
-                            placeholder="First Name"
+                            // placeholder="First Name"
                             inputValue={handleOnChangeFirstName}
                             multiline={false}
                             required={true}
-                            showCharCounter={true}>
+                            showCharCounter={true}
+                            shrinkInputLabel={false}>
                         </MaterialTextField>
                         <MaterialTextField
                             label="Last Name"
                             characterLimit={45}
-                            placeholder="Last Name"
+                            // placeholder="Last Name"
                             inputValue={handleOnChangeLastName}
                             multiline={false}
                             required={true}
-                            showCharCounter={true}>
+                            showCharCounter={true}
+                            shrinkInputLabel={false}>
                         </MaterialTextField>
                         <MaterialTextField
                             label="Email"
                             characterLimit={45}
-                            placeholder="Email Address"
+                            // placeholder="Email Address"
                             inputValue={handleOnChangeEmail}
                             multiline={false}
                             required={true}
                             requiresValidation={true}
                             type="email"
-                            showCharCounter={true}>
+                            showCharCounter={true}
+                            shrinkInputLabel={false}>
                         </MaterialTextField>
                         <MaterialTextField
                             label="Password"
-                            placeholder="Password"
+                            // placeholder="Password"
                             inputValue={handleOnChangePassword}
                             multiline={false}
                             required={true}
                             type="password"
-                            requiresValidation={true}>
+                            requiresValidation={true}
+                            shrinkInputLabel={false}>
                         </MaterialTextField>
                         <button
                             className="register-button"

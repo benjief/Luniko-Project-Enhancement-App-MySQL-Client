@@ -22,17 +22,19 @@
     font-size: 11pt !important;
 }
 
-.login-container .MuiOutlinedInput-root {
+.login-container .MuiOutlinedInput-root,
+.register-container .MuiOutlinedInput-root {
     background-color: white !important;
 }
 
-.login-container .MuiInputLabel-root {
-    /* display: none !important; */
-    /* visibility: hidden; */
+.login-container .MuiOutlinedInput-notchedOutline,
+.register-container .MuiOutlinedInput-notchedOutline {
+    top: 0 !important
 }
 
-.login-container input::placeholder {
-    /* color: blue !important; */
+.login-container .MuiOutlinedInput-notchedOutline legend,
+.register-container .MuiOutlinedInput-notchedOutline legend {
+    display: none !important;
 }
 
 .description .MuiOutlinedInput-root,
