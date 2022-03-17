@@ -145,9 +145,9 @@ function AddOwnedRequests() {
                         {unownedRequests.map((val, key) => {
                             return <div
                                 className="unowned-request-card"
+                                key={key}
                                 /*style={{ opacity: cardContainerOpacity }}*/>
                                 <AddOwnedRequestsCard
-                                    key={key}
                                     requestsRemaining={unownedRequests.length - 1}
                                     id={val.req_id}
                                     dateSubmitted={val.req_date}

@@ -96,7 +96,7 @@ export default function UserLoginCard({
                     //         {statusAbbreviation}
                     //     </Avatar>
                     // }
-                    title={<strong>Please Login Below</strong>}
+                    title={"Please Log In Below"}
                 />
                 {/* < CardActions
                 disableSpacing

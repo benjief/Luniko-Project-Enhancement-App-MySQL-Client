@@ -104,7 +104,7 @@ export default function UserRegistrationCard({
                     //         {statusAbbreviation}
                     //     </Avatar>
                     // }
-                    title={<strong>Please Fill In the Fields Below</strong>}
+                    title="Please Fill In the Fields Below"
                 />
                 {/* < CardActions
                 disableSpacing

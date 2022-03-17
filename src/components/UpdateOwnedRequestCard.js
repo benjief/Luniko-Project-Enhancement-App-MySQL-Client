@@ -153,7 +153,8 @@ export default function UpdateOwnedRequestCard({
                             {statusAbbreviation}
                         </Avatar>
                     }
-                    title={[<strong>Request ID </strong>, <strong>{id}</strong>]}
+                    // title={[<strong>Request ID </strong>, <strong>{id}</strong>]}
+                    title={"Request ID " + id}
                 />
                 {/* < CardActions
                 disableSpacing
@@ -175,26 +176,26 @@ export default function UpdateOwnedRequestCard({
                             paragraph>
                             <strong>Updatable Fields</strong>
                         </Typography>
-                        <MaterialSingleSelect
+                        <MaterialSingleSelectWithValue
                             label="Status"
                             placeholder="Status"
                             defaultValue={status}
                             singleSelectOptions={statusOptions}
                             selectedValue={handleOnSelectStatus}
                             required={true}>
-                        </MaterialSingleSelect>
-                        <MaterialSingleSelect
+                        </MaterialSingleSelectWithValue>
+                        <MaterialSingleSelectWithValue
                             label="Effort"
                             placeholder="Effort"
                             defaultValue={effort}
                             singleSelectOptions={effortOptions}
                             selectedValue={handleOnSelectEffort}
                             required={true}>
-                        </MaterialSingleSelect>
+                        </MaterialSingleSelectWithValue>
                         <MaterialSingleSelectWithValue
                             label="Approved"
                             placeholder="Approved"
-                            defaultValue={approved}
+                            // defaultValue={approved}
                             value={approvedValue}
                             singleSelectOptions={approvalOptions}
                             selectedValue={handleOnSelectApproved}
@@ -204,7 +205,7 @@ export default function UpdateOwnedRequestCard({
                         <MaterialSingleSelectWithValue
                             label="Rejected"
                             placeholder="Rejected"
-                            defaultValue={rejected}
+                            // defaultValue={rejected}
                             value={rejectedValue}
                             singleSelectOptions={approvalOptions}
                             selectedValue={handleOnSelectRejected}

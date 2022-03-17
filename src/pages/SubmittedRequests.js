@@ -75,9 +75,10 @@ function SubmittedRequests() {
                     <p className="page-message">{messageContent}</p>
                     <div className="submitted-requests-container">
                         {submittedRequests.map((val, key) => {
-                            return <div className="submitted-request-card">
+                            return <div
+                                className="submitted-request-card"
+                                key={key}>
                                 <SubmittedRequestCard
-                                    key={key}
                                     id={val.req_id}
                                     dateSubmitted={val.req_date}
                                     lastUpdated={val.req_updated}

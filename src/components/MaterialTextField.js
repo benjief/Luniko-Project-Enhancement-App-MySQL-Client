@@ -117,6 +117,7 @@ export default function MaterialTextField({
 
   return (
     <Box
+      onSubmit={event => { event.preventDefault(); }}
       className={className}
       component="form"
       sx={{
@@ -135,7 +136,6 @@ export default function MaterialTextField({
           defaultValue={defaultValue}
           type={type}
           onClick={handleOnFocus}
-          on
           onChange={(event) => handleOnChange(event.target.value)}
           onBlur={(event) => handleOnBlur(event.target.value)}
           multiline={multiline}

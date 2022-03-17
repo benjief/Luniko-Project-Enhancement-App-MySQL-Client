@@ -65,7 +65,7 @@ function UpdateOwnedRequest() {
             setEffort(response.data[0].req_effort);
             setApproved(response.data[0].req_approved.data[0]);
             setRejected(response.data[0].req_rejected.data[0]);
-            if (response.data.rsn_rejected && response.data.rsn_rejected.length > 0) {
+            if (!approved && response.data.rsn_rejected && response.data.rsn_rejected.length > 0) {
                 setRejectDisabled(false);
             } else {
                 setRejectDisabled(true);
@@ -118,13 +118,16 @@ function UpdateOwnedRequest() {
     }
 
     const handleApprovedCallback = (approvedFromSelector) => {
-        console.log(approvedFromSelector);
         setApproved(approvedFromSelector);
+        if (approvedFromSelector) {
+            setRejectDisabled(true);
+        } else if (!approvedFromSelector && reasonRejected !== "") {
+            setRejectDisabled(false);
+        }
         checkValueUpdated();
     }
 
     const handleRejectedCallback = (rejectedFromSelector) => {
-        console.log(rejectedFromSelector);
         setRejected(rejectedFromSelector);
         rejectedFromSelector === 1
             ? setApproveDisabled(true)
@@ -135,7 +138,7 @@ function UpdateOwnedRequest() {
     const handleReasonRejectedChange = (reasonRejectedFromTextArea) => {
         setReasonRejected(reasonRejectedFromTextArea);
         let regex = new RegExp("[a-zA-Z]");
-        if (reasonRejectedFromTextArea.length > 0 && regex.test(reasonRejectedFromTextArea)) {
+        if (!approved && reasonRejectedFromTextArea.length > 0 && regex.test(reasonRejectedFromTextArea)) {
             setRejectDisabled(false)
         } else {
             setRejectDisabled(true);
@@ -152,10 +155,10 @@ function UpdateOwnedRequest() {
     const updateRequest = (idFromSelector) => {
         console.log("Updating request...");
         Axios.put("https://luniko-pe.herokuapp.com/update-owned-request", {
-            reasonRejected: reasonRejected,
+            reasonRejected: rejectDisabled ? null : reasonRejected,
             effort: effort,
-            approved: approved,
-            rejected: rejected,
+            approved: !approveDisabled ? approved : 0,
+            rejected: !rejectDisabled ? rejected === "" ? 0 : rejected : 0,
             status: status,
             comments: comments,
             id: idFromSelector
@@ -228,9 +231,10 @@ function UpdateOwnedRequest() {
                             Update your request below:
                         </div>
                         {requestDetails.map((val, key) => {
-                            return <div className="update-owned-request-card">
+                            return <div
+                                className="update-owned-request-card"
+                                key={key}>
                                 <UpdateOwnedRequestCard
-                                    key={key}
                                     id={val.req_id}
                                     status={getStatus(val.req_status)}
                                     statusOptions={statusOptions}

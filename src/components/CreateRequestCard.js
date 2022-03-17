@@ -114,7 +114,7 @@ export default function UpdateOwnedRequestCard({
                     //         {statusAbbreviation}
                     //     </Avatar>
                     // }
-                    title={<strong>Create Your Request</strong>}
+                    title="Create Your Request"
                 />
                 {/* < CardActions
                 disableSpacing

@@ -87,9 +87,10 @@ function OwnedRequests() {
                     <p className="page-message">{messageContent}</p>
                     <div className="owned-requests-container">
                         {ownedRequests.map((val, key) => {
-                            return <div className="owned-request-card">
+                            return <div
+                                className="owned-request-card"
+                                key={key}>
                                 <OwnedRequestCard
-                                    key={key}
                                     uid={uid}
                                     isIdentifier={isIdentifier}
                                     isOwner={isOwner}

@@ -102,7 +102,7 @@ export default function AddOwnedRequestsCard({
                         {statusAbbreviation}
                     </Avatar>
                 }
-                title={[<strong>Request ID </strong>, <strong>{id}</strong>]}
+                title={"Request ID " + id}
             // subheader={[<strong>Date Submitted</strong>, <br />, dateSubmitted, <span />, <strong>Last Updated</strong>, <br />, lastUpdated]}
             />
             {/* <CardContent>

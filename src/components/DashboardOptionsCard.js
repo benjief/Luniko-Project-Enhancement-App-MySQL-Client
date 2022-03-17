@@ -109,7 +109,7 @@ export default function DashboardOptionsCard({
                     //         {statusAbbreviation}
                     //     </Avatar>
                     // }
-                    title={["Welcome, ", <strong>{firstName}</strong>, "!"]}
+                    title={"Welcome, " + firstName + "!"}
                 />
                 {/* < CardActions
                 disableSpacing

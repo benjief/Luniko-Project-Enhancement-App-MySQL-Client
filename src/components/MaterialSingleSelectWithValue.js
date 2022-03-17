@@ -36,11 +36,17 @@ export default function MaterialSingleSelectWithValue(
     }
 
     const handleOnBlur = () => {
-        if (required && (value === "" && defaultValue == "")) {
+        if (required && (value === "" && defaultValue === "")) {
             setErrorEnabled(true);
             setErrorMsg("Required Field");
         }
     }
+
+    React.useEffect(() => {
+        if (defaultValue === "") {
+            setDisplayedValue(value);
+        }
+    }, [displayedValue]);
 
     return (
         <Autocomplete
