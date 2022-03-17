@@ -209,7 +209,7 @@ export default function UpdateOwnedRequestCard({
                             singleSelectOptions={approvalOptions}
                             selectedValue={handleOnSelectRejected}
                             isDisabled={rejectDisabled}
-                            required={true}>
+                            required={false}>
                         </MaterialSingleSelectWithValue>
                         <MaterialTextField
                             className="reason-for-rejection"

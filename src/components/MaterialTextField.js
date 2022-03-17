@@ -28,7 +28,7 @@ export default function MaterialTextField({
   const [inputLabelShrunk, setInputLabelShrunk] = React.useState(false);
 
   const handleOnChange = (value) => {
-    if (value) {
+    if (value.trim() !== "") {
       if (type === "email" && requiresValidation) {
         checkEmailValidity(value);
       } else if (type === "password" && requiresValidation) {
@@ -45,11 +45,10 @@ export default function MaterialTextField({
   }
 
   const handleOnBlur = () => {
-    if (shrinkInputLabel) {
+    if (!shrinkInputLabel || shrinkInputLabel && (!value || value.trim() === "")) {
       setInputLabelShrunk(false);
     }
-    if (required && value === "") {
-      console.log("empty field");
+    if (required && value.trim() === "") {
       setErrorEnabled(true);
       setDisplayedHelperText("Required Field");
     }
@@ -108,8 +107,10 @@ export default function MaterialTextField({
         setErrorEnabled(true);
         setDisplayedHelperText(passwordAuthenticationError);
       } else {
-        setErrorEnabled(false);
-        setDisplayedHelperText("");
+        if (value.trim() !== "") {
+          setErrorEnabled(false);
+          setDisplayedHelperText("");
+        }
       }
     }
   }, [authenticationField, emailAuthenticationError, passwordAuthenticationError, errorEnabled])
@@ -134,6 +135,7 @@ export default function MaterialTextField({
           defaultValue={defaultValue}
           type={type}
           onClick={handleOnFocus}
+          on
           onChange={(event) => handleOnChange(event.target.value)}
           onBlur={(event) => handleOnBlur(event.target.value)}
           multiline={multiline}

@@ -108,6 +108,9 @@ function Dashboard() {
                 </NavBar>
                 <div className="dashboard">
                     <div className="dashboard-container">
+                        <div className="page-heading">
+                            Please choose an option below:
+                        </div>
                         <div className="dashboard-card">
                             <DashboardOptionsCard
                                 uid={user?.uid}

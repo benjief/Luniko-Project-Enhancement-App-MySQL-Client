@@ -161,7 +161,7 @@ function CreateRequest() {
         } else {
             setTransitionElementOpacity("0%");
             setTransitionElementVisibility("hidden");
-            if (company !== "" && scopeType !== "" && department !== "" && value !== "" && description.length) {
+            if (company.trim() !== "" && scopeType !== "" && department !== "" && value !== "" && description.trim() !== "") {
                 setSubmitButtonDisabled(false);
             } else {
                 setSubmitButtonDisabled(true);

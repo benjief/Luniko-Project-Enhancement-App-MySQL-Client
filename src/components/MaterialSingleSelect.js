@@ -6,7 +6,7 @@ export default function MaterialSingleSelect(
     {
         label = "",
         placeholder = "",
-        defaultValue = "",
+        // defaultValue = "",
         singleSelectOptions = [],
         selectedValue = "",
         isDisabled = false,
@@ -49,7 +49,7 @@ export default function MaterialSingleSelect(
             disabled={isDisabled}
             // id="combo-box-demo"
             options={singleSelectOptions}
-            defaultValue={defaultValue}
+            // defaultValue={defaultValue}
             sx={{ width: "100%", marginBottom: "10px" }}
             onChange={(event, object) => handleOnChange(object)}
             onBlur={handleOnBlur}

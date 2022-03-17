@@ -55,6 +55,12 @@ textarea:focus {
   outline: none;
 }
 
+.page-heading {
+  font-size: 15pt;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
 .page-message {
   font-weight: 600;
   font-family: "Raleway", Verdana, Geneva, Tahoma, sans-serif;
@@ -97,6 +103,5 @@ textarea:focus {
 .popover-container {
   display: flex;
   justify-content: center;
-  /* margin-top: 17px !important; */
   margin-bottom: 9px;
 }

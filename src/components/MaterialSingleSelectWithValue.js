@@ -2,7 +2,7 @@ import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 
-export default function MaterialSingleSelect(
+export default function MaterialSingleSelectWithValue(
     {
         label = "",
         placeholder = "",
@@ -17,21 +17,28 @@ export default function MaterialSingleSelect(
 ) {
     const [errorEnabled, setErrorEnabled] = React.useState(false);
     const [errorMsg, setErrorMsg] = React.useState("");
-    const [displayedValue, setDisplayedValue] = React.useState(value);
+    const [displayedValue, setDisplayedValue] = React.useState(defaultValue);
 
-    const handleOnChangeOrBlur = (object) => {
+    const handleOnChange = (object) => {
         if (object) {
+            setDisplayedValue(object.label);
             selectedValue(object.value);
             setErrorEnabled(false);
             setErrorMsg("");
-            setDisplayedValue(object);
         } else {
+            setDisplayedValue("");
+            selectedValue("");
             if (required) {
-                selectedValue("");
                 setErrorEnabled(true);
                 setErrorMsg("Required Field");
-                setDisplayedValue("");
             }
+        }
+    }
+
+    const handleOnBlur = () => {
+        if (required && (value === "" && defaultValue == "")) {
+            setErrorEnabled(true);
+            setErrorMsg("Required Field");
         }
     }
 
@@ -46,8 +53,8 @@ export default function MaterialSingleSelect(
             defaultValue={defaultValue}
             value={displayedValue}
             sx={{ width: "100%", marginBottom: "10px" }}
-            onChange={(event, object) => handleOnChangeOrBlur(object)}
-            onBlur={(event, object) => handleOnChangeOrBlur(object)}
+            onChange={(event, object) => handleOnChange(object)}
+            onBlur={handleOnBlur}
             renderInput={(params) =>
                 <TextField
                     {...params}

@@ -23,7 +23,7 @@ function SubmittedRequests() {
     const getSubmittedRequests = () => {
         Axios.get(`https://luniko-pe.herokuapp.com/get-submitted-requests-for-id/${uid}`, {
         }).then((response) => {
-            console.log(response.data);
+            // console.log(response.data);
             setSubmittedRequests(response.data);
             if (response.data.length !== 0) {
                 setMessageContent("Your submitted requests:");

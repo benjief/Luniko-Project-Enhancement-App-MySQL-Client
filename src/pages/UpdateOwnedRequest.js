@@ -124,6 +124,7 @@ function UpdateOwnedRequest() {
     }
 
     const handleRejectedCallback = (rejectedFromSelector) => {
+        console.log(rejectedFromSelector);
         setRejected(rejectedFromSelector);
         rejectedFromSelector === 1
             ? setApproveDisabled(true)
@@ -223,6 +224,9 @@ function UpdateOwnedRequest() {
                 </NavBar>
                 <div className="update-owned-request">
                     <div className="update-owned-request-container">
+                        <div className="page-heading">
+                            Update your request below:
+                        </div>
                         {requestDetails.map((val, key) => {
                             return <div className="update-owned-request-card">
                                 <UpdateOwnedRequestCard
