@@ -133,7 +133,7 @@ export default function UpdateOwnedRequestCard({
             sx={{
                 // minWidth: 350,
                 // maxWidth: 350,
-                maxHeight: "calc(100vh - 96.52px)",
+                maxHeight: "calc(100vh - 156.52px)",
                 overflowY: "scroll",
                 borderRadius: "10px",
                 boxShadow: "2px 2px 6px rgba(43, 43, 43, 0.6)",
@@ -143,7 +143,7 @@ export default function UpdateOwnedRequestCard({
             }}>
             <div className="card-content">
                 <CardHeader
-                    titleTypographyProps={{ color: "rgba(0, 0, 0, 0.7)", fontFamily: "'Raleway', Verdana, Geneva, Tahoma, sans-serif", fontSize: "10.5pt" }}
+                    titleTypographyProps={{ color: "white", fontFamily: "'Raleway', Verdana, Geneva, Tahoma, sans-serif", fontSize: "10.5pt" }}
                     // subheaderTypographyProps={{ color: "rgba(0, 0, 0, 0.7)", fontFamily: "'Raleway', Verdana, Geneva, Tahoma, sans-serif", fontSize: "10.5pt" }}
                     avatar={
                         <Avatar sx={{

@@ -46,3 +46,7 @@
 .submit-request-button:hover {
     background-color: var(--lunikoOrange) !important;
 }
+
+.submit-request-button:focus {
+    background-color: #00e654 !important;
+}
