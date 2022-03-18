@@ -55,6 +55,8 @@ textarea:focus {
   outline: none;
 }
 
+/* Note that the next two items should probably be combined */
+
 .page-heading {
   font-size: 15pt;
   font-weight: 500;
@@ -64,7 +66,7 @@ textarea:focus {
 .page-message {
   font-weight: 600;
   font-family: "Raleway", Verdana, Geneva, Tahoma, sans-serif;
-  font-size: 13pt !important;
+  font-size: 15pt !important;
   margin-top: 0 !important;
   margin-bottom: 20px;
   color: var(--lunikoBlue);

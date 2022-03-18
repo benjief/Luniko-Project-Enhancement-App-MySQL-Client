@@ -50,8 +50,15 @@ export default function MaterialMultiSelect({
       limitTags={limitTags}
       // id="tags-outlined"
       options={multiSelectOptions}
-      getOptionLabel={(option) => option.label}
-      // defaultValue={[top100Films[13]]}
+      // getOptionLabel={(option) => [option.label, " - ", option.value]}
+      renderOption={(props, option) => {
+        return (
+          <li {...props} key={option.value} style={{ flexDirection: "column", alignItems: "flex-start" }}>
+            {option.label}
+            <span style={{ fontSize: "8pt", color: "var(--lunikoBlue)" }}>{option.description}</span>
+          </li>
+        );
+      }}
       filterSelectedOptions
       onChange={(event, object) => handleOnChange(object)}
       onBlur={handleOnBlur}

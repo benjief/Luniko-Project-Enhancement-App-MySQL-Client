@@ -34,7 +34,6 @@ class BootstrapPopover extends Component {
                     isOpen={popoverOpen}
                     target="popover-icon"
                     toggle={this.togglePopover}
-
                 >
                     <PopoverBody
                         style={{

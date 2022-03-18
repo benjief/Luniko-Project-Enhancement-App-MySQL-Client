@@ -62,7 +62,7 @@ export default function OwnedRequestCard({
         <Card sx={{
             // minWidth: 350,
             // maxWidth: 350,
-            maxHeight: "calc(100vh - 146.52px)",
+            maxHeight: expanded ? "calc(100vh - 146.52px)" : "96px",
             overflowY: "scroll",
             borderRadius: "10px",
             boxShadow: "2px 2px 6px rgba(43, 43, 43, 0.6)",

@@ -71,9 +71,11 @@ function CreateRequest() {
                 if (identifierList[i].pers_id !== uid) {
                     let value = identifierList[i].pers_id;
                     let label = identifierList[i].pers_fname + " " + identifierList[i].pers_lname;
+                    let email = identifierList[i].pers_email;
                     let identifier = {
                         "value": value,
-                        "label": label
+                        "label": label,
+                        "description": email
                     };
                     tempArray.push(identifier);
                 }
@@ -197,6 +199,9 @@ function CreateRequest() {
                 </NavBar>
                 <div className="create-request">
                     <div className="create-request-container">
+                        <div className="page-heading">
+                            Create Your Request:
+                        </div>
                         <div className="create-request-card">
                             <CreateRequestCard
                                 uid={uid}
