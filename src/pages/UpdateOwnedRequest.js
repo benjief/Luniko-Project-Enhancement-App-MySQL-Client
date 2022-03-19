@@ -154,12 +154,12 @@ function UpdateOwnedRequest() {
     const updateRequest = (idFromSelector) => {
         console.log("Updating request...");
         Axios.put("https://luniko-pe.herokuapp.com/update-owned-request", {
-            reasonRejected: rejectDisabled ? null : reasonRejected,
+            reasonRejected: rejectDisabled ? null : rejected === "" ? null : reasonRejected,
             effort: effort,
             approved: !approveDisabled ? approved : 0,
             rejected: !rejectDisabled ? rejected === "" ? 0 : rejected : 0,
             status: status,
-            comments: comments,
+            comments: comments === "" ? null : comments,
             id: idFromSelector
         }).then((response) => {
             console.log(response);
@@ -189,9 +189,8 @@ function UpdateOwnedRequest() {
         } else {
             setTransitionElementOpacity("0%");
             setTransitionElementVisibility("hidden");
-            if (valueUpdated && status !== "" && effort !== "" && approved !== "" && rejected !== "") {
+            if (valueUpdated && status !== "" && effort !== "" && approved !== "") {
                 setUpdateButtonDisabled(false);
-                // console.log(valueUpdated + " " + status + " " + effort + " " + approved + " " + rejected);
             } else {
                 setUpdateButtonDisabled(true);
             }

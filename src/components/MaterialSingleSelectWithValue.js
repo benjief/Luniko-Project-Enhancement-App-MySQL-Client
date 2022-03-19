@@ -7,7 +7,7 @@ export default function MaterialSingleSelectWithValue(
         label = "",
         placeholder = "",
         defaultValue = "",
-        value = "",
+        // value = "",
         singleSelectOptions = [],
         selectedValue = "",
         isDisabled = false,
@@ -17,16 +17,17 @@ export default function MaterialSingleSelectWithValue(
 ) {
     const [errorEnabled, setErrorEnabled] = React.useState(false);
     const [errorMsg, setErrorMsg] = React.useState("");
-    const [displayedValue, setDisplayedValue] = React.useState(defaultValue);
+    const [value, setValue] = React.useState(defaultValue);
 
     const handleOnChange = (object) => {
+        console.log(object);
         if (object) {
-            setDisplayedValue(object.label);
+            setValue(object.label);
             selectedValue(object.value);
             setErrorEnabled(false);
             setErrorMsg("");
         } else {
-            setDisplayedValue("");
+            setValue("");
             selectedValue("");
             if (required) {
                 setErrorEnabled(true);
@@ -43,10 +44,12 @@ export default function MaterialSingleSelectWithValue(
     }
 
     React.useEffect(() => {
+        console.log(value);
         if (defaultValue === "") {
-            setDisplayedValue(value);
+            console.log(value);
+            setValue(value);
         }
-    }, [displayedValue]);
+    }, [value]);
 
     return (
         <Autocomplete
@@ -57,7 +60,7 @@ export default function MaterialSingleSelectWithValue(
             // id="combo-box-demo"
             options={singleSelectOptions}
             defaultValue={defaultValue}
-            value={displayedValue}
+            value={value}
             sx={{ width: "100%", marginBottom: "10px" }}
             onChange={(event, object) => handleOnChange(object)}
             onBlur={handleOnBlur}

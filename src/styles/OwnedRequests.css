@@ -61,6 +61,6 @@
     transition: 200ms;
 }
 
-.update-request-button:hover {
-    background-color: var(--lunikoOrange) !important;
-}
+/* .update-request-button:hover {
+    background-color: var(--lunikoBlue) !important;
+} */

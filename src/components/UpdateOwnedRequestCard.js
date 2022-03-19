@@ -84,7 +84,8 @@ export default function UpdateOwnedRequestCard({
             setApprovedValue("Yes");
             setRejectedValue("No");
         } else {
-            setApprovedValue("No");
+            console.log(valueFromSelector);
+            // setApprovedValue("No");
         }
     }
 
@@ -95,7 +96,7 @@ export default function UpdateOwnedRequestCard({
             setRejectedValue("Yes");
             setApprovedValue("No");
         } else {
-            setRejectedValue("No");
+            // setRejectedValue("No");
         }
     }
 
@@ -269,7 +270,7 @@ export default function UpdateOwnedRequestCard({
                             <strong>Priority<br /></strong> {priority}
                         </Typography>
                         <button
-                            className="update-request-button"
+                            className="submit-update-request-button"
                             onClick={handleUpdateRequest}
                             disabled={updateButtonDisabled}
                             style={{ backgroundColor: updateButtonColor }}>

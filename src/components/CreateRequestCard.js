@@ -194,13 +194,6 @@ export default function UpdateOwnedRequestCard({
                             dialogText={[<strong>All identifiers </strong>, "added to this request will be ",
                                 "able to view it and receive updates pertaining to it."]}
                         ></DraggableDialog>
-                        {/* <div className="popover-container">
-                            <BootstrapPopover
-                                popoverText=
-                                {[<strong>All identifiers </strong>, "added to this request will be ",
-                                    "able to view it and receive updates pertaining to it."]}>
-                            </BootstrapPopover>
-                        </div> */}
                     </CardContent>
                 </Collapse>
             </div>

@@ -1,14 +1,14 @@
 /* Color Definition */
-:root {
+/* :root {
     --lunikoBlue: #032E59;
     --lunikoOrange: #E58004;
     --darkGrey: #A6A6A6;
     --midGrey: #BFBFBF;
-    --lightGrey: #F2F2F2;
+    --lightGrey: #F2F2F2; */
 }
 
 /* Navbar styling */
-.navbar {
+/* .navbar {
     background-color: var(--lunikoBlue);
     font-family: 'Raleway', Verdana, sans-serif;
     font-weight: 400;
@@ -50,4 +50,4 @@
     .nav-link {
         font-size: 11pt;
     }
-}
+} */

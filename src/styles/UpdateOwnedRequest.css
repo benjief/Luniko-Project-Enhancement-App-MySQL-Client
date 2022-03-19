@@ -26,7 +26,7 @@
     width: 100%;
 }
 
-.update-request-button {
+.submit-update-request-button {
     padding: 10px;
     margin-top: 10px;
     margin-bottom: 10px !important;
@@ -43,10 +43,6 @@
     transition: 200ms;
 }
 
-.update-request-button:hover {
-    background-color: var(--lunikoOrange) !important;
-}
-
-.material-text-field {
-    width: 100%;
+.submit-update-request-button:focus {
+    background-color: #00e654 !important;
 }

@@ -114,6 +114,9 @@ function Register() {
                 </NavBar>
                 <div className="register">
                     <div className="register-container">
+                        <div className="page-heading">
+                            Please Register Below:
+                        </div>
                         <div className="register-card">
                             <UserRegistrationCard
                                 updatedFirstName={handleFirstNameCallback}

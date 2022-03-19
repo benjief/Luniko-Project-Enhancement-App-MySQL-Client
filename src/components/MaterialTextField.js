@@ -100,8 +100,6 @@ export default function MaterialTextField({
   }
 
   React.useEffect(() => {
-    console.log(value);
-    console.log(shrinkInputLabel);
     if (authenticationField) {
       if (emailAuthenticationError !== "") {
         setErrorEnabled(true);

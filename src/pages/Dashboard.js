@@ -47,8 +47,8 @@ function Dashboard() {
             } else {
                 setIsOwner(false);
                 setAddToOwnedRequestsButtonDisabled(true);
+                setRendering(false);
             }
-            setRendering(false);
         });
     }
 

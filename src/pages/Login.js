@@ -92,6 +92,9 @@ function Login() {
                 </NavBar>
                 <div className="login">
                     <div className="login-container">
+                        <div className="page-heading">
+                            Please Log In Below:
+                        </div>
                         <div className="login-card">
                             <UserLoginCard
                                 updatedEmail={handleEmailCallback}
