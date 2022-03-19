@@ -17,7 +17,8 @@ import MaterialSingleSelect from './MaterialSingleSelect';
 import MaterialSingleSelectWithValue from './MaterialSingleSelectWithValue';
 import MaterialTextField from './MaterialTextField';
 import MaterialMultiSelect from './MaterialMultiSelect';
-import BootstrapPopover from "../components/BootstrapPopover";
+// import BootstrapPopover from "../components/BootstrapPopover";
+import DraggableDialog from './DraggableDialog';
 
 const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
@@ -189,13 +190,17 @@ export default function UpdateOwnedRequestCard({
                             style={{ backgroundColor: submitButtonColor }}>
                             Submit Request
                         </button>
-                        <div className="popover-container">
+                        <DraggableDialog
+                            dialogText={[<strong>All identifiers </strong>, "added to this request will be ",
+                                "able to view it and receive updates pertaining to it."]}
+                        ></DraggableDialog>
+                        {/* <div className="popover-container">
                             <BootstrapPopover
                                 popoverText=
                                 {[<strong>All identifiers </strong>, "added to this request will be ",
                                     "able to view it and receive updates pertaining to it."]}>
                             </BootstrapPopover>
-                        </div>
+                        </div> */}
                     </CardContent>
                 </Collapse>
             </div>

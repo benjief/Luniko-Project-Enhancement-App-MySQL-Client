@@ -77,6 +77,7 @@ export default function MaterialTextField({
     inputValue("");
     setInputLength(0);
     if (value) {
+      setValue(value);
       setInputLength(value.length);
     }
     if (required) {
@@ -99,6 +100,8 @@ export default function MaterialTextField({
   }
 
   React.useEffect(() => {
+    console.log(value);
+    console.log(shrinkInputLabel);
     if (authenticationField) {
       if (emailAuthenticationError !== "") {
         setErrorEnabled(true);
@@ -113,7 +116,7 @@ export default function MaterialTextField({
         }
       }
     }
-  }, [authenticationField, emailAuthenticationError, passwordAuthenticationError, errorEnabled])
+  }, [authenticationField, emailAuthenticationError, passwordAuthenticationError, errorEnabled, value])
 
   return (
     <Box
@@ -127,7 +130,7 @@ export default function MaterialTextField({
       autoComplete="off">
       <div className="material-text-field">
         <TextField
-          label={value && !shrinkInputLabel ? "" : label}
+          label={(value && !shrinkInputLabel) ? "" : label}
           InputLabelProps={
             {
               shrink: inputLabelShrunk

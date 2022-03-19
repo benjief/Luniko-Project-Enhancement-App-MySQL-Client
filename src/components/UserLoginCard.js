@@ -17,7 +17,6 @@ import MaterialSingleSelect from './MaterialSingleSelect';
 import MaterialSingleSelectWithValue from './MaterialSingleSelectWithValue';
 import MaterialTextField from './MaterialTextField';
 import MaterialMultiSelect from './MaterialMultiSelect';
-import BootstrapPopover from "./BootstrapPopover";
 
 const ExpandMore = styled((props) => {
     const { expand, ...other } = props;

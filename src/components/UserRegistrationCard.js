@@ -17,7 +17,7 @@ import MaterialSingleSelect from './MaterialSingleSelect';
 import MaterialSingleSelectWithValue from './MaterialSingleSelectWithValue';
 import MaterialTextField from './MaterialTextField';
 import MaterialMultiSelect from './MaterialMultiSelect';
-import BootstrapPopover from "./BootstrapPopover";
+import DraggableDialog from './DraggableDialog';
 
 const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
@@ -180,13 +180,10 @@ export default function UserRegistrationCard({
                             <img src={require("../img/google_logo.png")} alt="Google" />
                             <p>Register with Google</p>
                         </div>
-                        <div className="popover-container">
-                            <BootstrapPopover
-                                popoverText=
-                                {["A ", <strong>valid email address </strong>, "and password length of ", <strong>at least six characters </strong>,
-                                    "are required for registration."]}>
-                            </BootstrapPopover>
-                        </div>
+                        <DraggableDialog
+                            dialogText={["A ", <strong>valid email address </strong>, "and password length of ", <strong>at least six characters </strong>,
+                                "are required for registration."]}
+                        ></DraggableDialog>
                         <div className="register-text-container">
                             <div>
                                 Already have an account? <Link to="/">Login</Link> now.

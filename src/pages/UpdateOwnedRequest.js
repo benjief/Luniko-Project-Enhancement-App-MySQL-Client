@@ -4,7 +4,6 @@ import { auth } from "../firebase";
 import { useNavigate, useParams } from "react-router-dom";
 import NavBar from "../components/Navbar";
 import MaterialSingleSelect from "../components/MaterialSingleSelect";
-import BootstrapPopover from "../components/BootstrapPopover";
 import Axios from "axios";
 import Hypnosis from "react-cssfx-loading/lib/Hypnosis";
 import {
