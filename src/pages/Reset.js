@@ -6,11 +6,13 @@ import { Link } from "react-router-dom";
 import { auth, sendPasswordReset } from "../firebase";
 import NavBar from "../components/Navbar";
 import UserResetPasswordCard from "../components/UserResetPasswordCard";
+import PositionedSnackbar from "../components/PositionedSnackbar";
 import Hypnosis from "react-cssfx-loading/lib/Hypnosis";
 import "../styles/Reset.css";
 import "../styles/SelectorComponents.css";
 import "../styles/InputComponents.css";
 import "../styles/CardComponents.css";
+import "../styles/AlertComponents.css";
 
 function Reset() {
     const [user, loading] = useAuthState(auth);
@@ -21,6 +23,7 @@ function Reset() {
     const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
     const [transitionElementOpacity, setTransitionElementOpacity] = useState("100%");
     const [transtitionElementVisibility, setTransitionElementVisibility] = useState("visible");
+    const [alert, setAlert] = useState(false);
     const navigate = useNavigate();
 
     const getRegisteredEmails = () => {
@@ -36,6 +39,7 @@ function Reset() {
             for (let i = 0; i < registeredEmailsList.length; i++) {
                 tempArray.push(registeredEmailsList[i].pers_email);
             }
+            setRegisteredEmails([...tempArray]);
         }
         setRendering(false);
     }
@@ -51,7 +55,21 @@ function Reset() {
 
     const handleOnClickSubmit = (resetRequested) => {
         if (resetRequested) {
-            checkEmail() ? sendPasswordReset(email) : setEmailAuthenticationError("Email not found");
+            if (checkEmail(email)) {
+                sendPasswordReset(email)
+                setAlert(true);
+                setTimeout(() => {
+                    handleAlertClosed(true);
+                }, 5000);
+            } else {
+                setEmailAuthenticationError("Email not found");
+            }
+        }
+    }
+
+    const handleAlertClosed = (alertAcknowledged) => {
+        if (alertAcknowledged) {
+            navigate("/");
         }
     }
 
@@ -82,6 +100,19 @@ function Reset() {
                     duration="1.5s" />
             </div> :
             <Fragment>
+                <NavBar
+                    visibility={"hidden"}
+                    srDisabled={true}
+                    orDisabled={true}>
+                </NavBar>
+                {alert
+                    ? <div className="alert-container">
+                        <PositionedSnackbar
+                            message="Password reset email successfully sent!"
+                            closed={handleAlertClosed}>
+                        </PositionedSnackbar>
+                    </div>
+                    : <div></div>}
                 <div
                     className="transition-element"
                     style={{
@@ -89,11 +120,6 @@ function Reset() {
                         visibility: transtitionElementVisibility
                     }}>
                 </div>
-                <NavBar
-                    visibility={"hidden"}
-                    srDisabled={true}
-                    orDisabled={true}>
-                </NavBar>
                 <div className="reset">
                     <div className="reset-container">
                         <div className="page-heading">

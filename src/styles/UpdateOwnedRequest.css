@@ -42,7 +42,3 @@
     font-size: 13pt !important;
     transition: 200ms;
 }
-
-.submit-update-request-button:focus {
-    background-color: #00e654 !important;
-}
