@@ -56,6 +56,7 @@ export default function UpdateOwnedRequestCard({
     selectedApproved = "",
     selectedRejected = "",
     reasonRejected = "",
+    reasonRejectedDisabled = false,
     updatedReasonRejected = "",
     comments = "",
     updatedComments = "",
@@ -83,10 +84,10 @@ export default function UpdateOwnedRequestCard({
         if (valueFromSelector === 1) {
             setApprovedValue("Yes");
             setRejectedValue("No");
-        } else {
-            console.log(valueFromSelector);
-            // setApprovedValue("No");
-        }
+            approved = "";
+        } /* else {
+            setApprovedValue("No");
+        } */
     }
 
     const handleOnSelectRejected = (valueFromSelector) => {
@@ -95,6 +96,7 @@ export default function UpdateOwnedRequestCard({
         if (valueFromSelector === 1) {
             setRejectedValue("Yes");
             setApprovedValue("No");
+            rejected = "";
         } else {
             // setRejectedValue("No");
         }
@@ -196,7 +198,7 @@ export default function UpdateOwnedRequestCard({
                         <MaterialSingleSelectWithValue
                             label="Approved"
                             placeholder="Approved"
-                            // defaultValue={approved}
+                            defaultValue={approved}
                             value={approvedValue}
                             singleSelectOptions={approvalOptions}
                             selectedValue={handleOnSelectApproved}
@@ -206,7 +208,7 @@ export default function UpdateOwnedRequestCard({
                         <MaterialSingleSelectWithValue
                             label="Rejected"
                             placeholder="Rejected"
-                            // defaultValue={rejected}
+                            defaultValue={rejected}
                             value={rejectedValue}
                             singleSelectOptions={approvalOptions}
                             selectedValue={handleOnSelectRejected}
@@ -222,7 +224,8 @@ export default function UpdateOwnedRequestCard({
                             inputValue={handleOnChangeReasonRejected}
                             multiline={true}
                             characterLimit={1000}
-                            showCharCounter={true}>
+                            showCharCounter={true}
+                            isDisabled={reasonRejectedDisabled}>
                         </MaterialTextField>
                         <MaterialTextField
                             className="comments-text-field"

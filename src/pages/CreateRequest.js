@@ -146,7 +146,7 @@ function CreateRequest() {
             }).then((response) => {
                 setAlert(true);
                 setTimeout(() => {
-                    handleAlertClosed(true);
+                    handleAlertClosed(alert);
                 }, 5000);
             });
         };
@@ -154,6 +154,7 @@ function CreateRequest() {
 
     const handleAlertClosed = (alertClosed) => {
         if (alertClosed) {
+            setAlert(false);
             navigate("/dashboard");
         }
     }

@@ -20,7 +20,6 @@ export default function MaterialSingleSelectWithValue(
     const [value, setValue] = React.useState(defaultValue);
 
     const handleOnChange = (object) => {
-        console.log(object);
         if (object) {
             setValue(object.label);
             selectedValue(object.value);
@@ -44,9 +43,7 @@ export default function MaterialSingleSelectWithValue(
     }
 
     React.useEffect(() => {
-        console.log(value);
         if (defaultValue === "") {
-            console.log(value);
             setValue(value);
         }
     }, [value]);

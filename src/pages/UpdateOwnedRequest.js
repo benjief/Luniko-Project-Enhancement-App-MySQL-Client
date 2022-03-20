@@ -4,6 +4,7 @@ import { auth } from "../firebase";
 import { useNavigate, useParams } from "react-router-dom";
 import NavBar from "../components/Navbar";
 import MaterialSingleSelect from "../components/MaterialSingleSelect";
+import PositionedSnackbar from "../components/PositionedSnackbar";
 import Axios from "axios";
 import Hypnosis from "react-cssfx-loading/lib/Hypnosis";
 import {
@@ -21,6 +22,7 @@ import "../styles/SelectorComponents.css";
 import "../styles/CardComponents.css";
 import "../styles/InputComponents.css";
 import "../styles/UpdateOwnedRequest.css";
+import "../styles/AlertComponents.css";
 
 function UpdateOwnedRequest() {
     const [user, loading] = useAuthState(auth);
@@ -38,12 +40,14 @@ function UpdateOwnedRequest() {
     const [comments, setComments] = useState("");
     const [rejectDisabled, setRejectDisabled] = useState(true);
     const [approveDisabled, setApproveDisabled] = useState(false);
+    const [reasonRejectedDisabled, setReasonRejectedDisabled] = useState(false);
     const [valueUpdated, setValueUpdated] = useState(false);
     const [updated, setUpdated] = useState(false);
     const [updateButtonText, setUpdateButtonText] = useState("Update");
     const [updateButtonDisabled, setUpdateButtonDisabled] = useState(true);
     const [transitionElementOpacity, setTransitionElementOpacity] = useState("100%");
     const [transtitionElementVisibility, setTransitionElementVisibility] = useState("visible");
+    const [alert, setAlert] = useState(false);
 
     // Update button
     // const activateUpdate = () => {
@@ -120,8 +124,12 @@ function UpdateOwnedRequest() {
         setApproved(approvedFromSelector);
         if (approvedFromSelector) {
             setRejectDisabled(true);
-        } else if (!approvedFromSelector && reasonRejected !== "") {
-            setRejectDisabled(false);
+            setReasonRejectedDisabled(true);
+        } else {
+            setReasonRejectedDisabled(false);
+            if (reasonRejected !== "") {
+                setRejectDisabled(false);
+            }
         }
         checkValueUpdated();
     }
@@ -165,18 +173,19 @@ function UpdateOwnedRequest() {
             console.log(response);
             setUpdated(true);
             console.log("Request successfully updated!");
-            handleSuccessfulUpdate();
+            setAlert(true);
+            setTimeout(() => {
+                handleAlertClosed(alert);
+            }, 5000);
         });
     };
 
-    const handleSuccessfulUpdate = () => {
-        // setTimeout(() => {
-        //     setSubmitButtonText("Request Submitted!");
-        // }, 500);
-        setTimeout(() => {
-            // Go back to owned requests page
+    const handleAlertClosed = (alertClosed) => {
+        if (alertClosed) {
+            console.log("navigating back");
+            setAlert(false);
             navigate(-1);
-        }, 1000);
+        }
     }
 
     useEffect(() => {
@@ -187,6 +196,9 @@ function UpdateOwnedRequest() {
         } if (rendering) {
             getRequestDetails(reqID);
         } else {
+            if (approved) {
+                setReasonRejectedDisabled(true);
+            }
             setTransitionElementOpacity("0%");
             setTransitionElementVisibility("hidden");
             if (valueUpdated && status !== "" && effort !== "" && approved !== "") {
@@ -195,7 +207,7 @@ function UpdateOwnedRequest() {
                 setUpdateButtonDisabled(true);
             }
         }
-    }, [loading, user, rendering, valueUpdated, status, effort, approved, rejected, updateButtonDisabled]);
+    }, [loading, user, rendering, valueUpdated, status, effort, approved, rejected, updateButtonDisabled, reasonRejectedDisabled]);
 
     return (
         rendering ?
@@ -223,6 +235,14 @@ function UpdateOwnedRequest() {
                     submittedRequestsLink={`/submitted-requests/${uid}/${isIdentifier}/${isOwner}`}
                     ownedRequestsLink={`/owned-requests/${user?.uid}/${isIdentifier}/${isOwner}`}>
                 </NavBar>
+                {alert
+                    ? <div className="alert-container">
+                        <PositionedSnackbar
+                            message="Request successfully updated!"
+                            closed={handleAlertClosed}>
+                        </PositionedSnackbar>
+                    </div>
+                    : <div></div>}
                 <div className="update-owned-request">
                     <div className="update-owned-request-container">
                         <div className="page-heading">
@@ -257,6 +277,7 @@ function UpdateOwnedRequest() {
                                     selectedApproved={handleApprovedCallback}
                                     selectedRejected={handleRejectedCallback}
                                     reasonRejected={val.rsn_rejected === null ? "" : val.rsn_rejected}
+                                    reasonRejectedDisabled={reasonRejectedDisabled}
                                     updatedReasonRejected={handleReasonRejectedChange}
                                     comments={val.req_comments === null ? "" : val.req_comments}
                                     updatedComments={handleCommentsChange}

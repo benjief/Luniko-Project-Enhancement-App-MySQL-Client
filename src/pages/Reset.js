@@ -59,7 +59,7 @@ function Reset() {
                 sendPasswordReset(email);
                 setAlert(true);
                 setTimeout(() => {
-                    handleAlertClosed(true);
+                    handleAlertClosed(alert);
                 }, 5000);
             } else {
                 setEmailAuthenticationError("Email not found");
@@ -69,6 +69,7 @@ function Reset() {
 
     const handleAlertClosed = (alertClosed) => {
         if (alertClosed) {
+            setAlert(false);
             navigate("/");
         }
     }

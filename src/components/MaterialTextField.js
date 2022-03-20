@@ -18,14 +18,15 @@ export default function MaterialTextField({
   authenticationField = false,
   emailAuthenticationError = "",
   passwordAuthenticationError = "",
-  shrinkInputLabel = true
+  shrinkInputLabel = true,
+  isDisabled = false
 }) {
-  const [value, setValue] = React.useState("");
+  const [value, setValue] = React.useState(defaultValue);
   const [errorEnabled, setErrorEnabled] = React.useState(false);
   // const [errorMsg, setErrorMsg] = React.useState("");
   const [displayedHelperText, setDisplayedHelperText] = React.useState(helperText);
   const [inputLength, setInputLength] = React.useState(defaultValue.length);
-  const [inputLabelShrunk, setInputLabelShrunk] = React.useState(false);
+  const [inputLabelShrunk, setInputLabelShrunk] = React.useState(defaultValue === "" ? false : true);
 
   const handleOnChange = (value) => {
     if (value.trim() !== "") {
@@ -94,8 +95,8 @@ export default function MaterialTextField({
   }
 
   const handleOnFocus = () => {
-    if (shrinkInputLabel) {
-      setInputLabelShrunk(shrinkInputLabel ? true : false);
+    if (!isDisabled && shrinkInputLabel) {
+      setInputLabelShrunk(shrinkInputLabel);
     }
   }
 
@@ -149,7 +150,8 @@ export default function MaterialTextField({
           helperText={showCharCounter ? !errorEnabled ? displayedHelperText !== ""
             ? [displayedHelperText, ". Limit: ", inputLength, "/", characterLimit] : ["Limit: ", inputLength, "/", characterLimit]
             : displayedHelperText
-            : displayedHelperText} />
+            : displayedHelperText}
+          disabled={isDisabled} />
       </div>
     </Box>
   );

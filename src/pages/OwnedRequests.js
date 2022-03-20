@@ -47,6 +47,7 @@ function OwnedRequests() {
         if (loading) {
             return;
         } if (!user || !uid) {
+            !user ? console.log("no user") : console.log("no uid");
             return navigate("/");
         } if (rendering) {
             getOwnedRequests();
