@@ -145,9 +145,6 @@ function CreateRequest() {
                 req_id: requestID
             }).then((response) => {
                 setAlert(true);
-                setTimeout(() => {
-                    handleAlertClosed(alert);
-                }, 5000);
             });
         };
     };

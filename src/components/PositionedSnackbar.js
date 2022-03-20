@@ -40,6 +40,7 @@ export default function PositionedSnackbar({
                 message={message}
                 action={action}
                 key={vertical + horizontal}
+                autoHideDuration={5000}
             />
         </div>
     );

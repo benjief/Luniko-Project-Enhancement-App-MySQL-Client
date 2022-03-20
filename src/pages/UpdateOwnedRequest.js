@@ -170,13 +170,10 @@ function UpdateOwnedRequest() {
             comments: comments === "" ? null : comments,
             id: idFromSelector
         }).then((response) => {
-            console.log(response);
             setUpdated(true);
             console.log("Request successfully updated!");
             setAlert(true);
-            setTimeout(() => {
-                handleAlertClosed(alert);
-            }, 5000);
+            // handleAlertClosed(true);
         });
     };
 

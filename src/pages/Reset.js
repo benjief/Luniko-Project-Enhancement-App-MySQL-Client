@@ -58,9 +58,6 @@ function Reset() {
             if (checkEmail(email)) {
                 sendPasswordReset(email);
                 setAlert(true);
-                setTimeout(() => {
-                    handleAlertClosed(alert);
-                }, 5000);
             } else {
                 setEmailAuthenticationError("Email not found");
             }
