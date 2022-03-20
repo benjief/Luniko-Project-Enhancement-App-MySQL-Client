@@ -26,32 +26,21 @@ const ExpandMore = styled((props) => {
     }),
 }));
 
-export default function UserLoginCard({
+export default function UserResetPasswordCard({
     updatedEmail = "",
     emailAuthenticationError = "",
-    updatedPassword = "",
-    passwordAuthenticationError = "",
-    loginConventionally = false,
-    loginWithGoogle = false,
-    loginButtonDisabled = true
+    submitButtonDisabled = true,
+    requestReset = false
 }) {
     const [expanded, setExpanded] = React.useState(true);
-    const [loginButtonColor, setLoginButtonColor] = React.useState("#BFBFBF");
+    const [submitButtonColor, setSubmitButtonColor] = React.useState("#BFBFBF");
 
     const handleOnChangeEmail = (updatedText) => {
         updatedEmail(updatedText);
     }
 
-    const handleOnChangePassword = (updatedText) => {
-        updatedPassword(updatedText);
-    }
-
-    const handleOnClickLogin = () => {
-        loginConventionally(true);
-    }
-
-    const handleOnClickLoginWithGoogle = () => {
-        loginWithGoogle(true);
+    const handleOnClickSubmit = () => {
+        requestReset(true);
     }
 
     // const handleExpandClick = () => {
@@ -60,12 +49,12 @@ export default function UserLoginCard({
     // };
 
     React.useEffect(() => {
-        if (!loginButtonDisabled) {
-            setLoginButtonColor("var(--lunikoBlue)");
+        if (!submitButtonDisabled) {
+            setSubmitButtonColor("var(--lunikoBlue)");
         } else {
-            setLoginButtonColor("#BFBFBF");
+            setSubmitButtonColor("#BFBFBF");
         }
-    }, [loginButtonDisabled]);
+    }, [submitButtonDisabled]);
 
     return (
         <Card
@@ -92,7 +81,7 @@ export default function UserLoginCard({
                     //         {statusAbbreviation}
                     //     </Avatar>
                     // }
-                    title={"User Login"}
+                    title={"Password Reset"}
                 />
                 {/* < CardActions
                 disableSpacing
@@ -123,33 +112,14 @@ export default function UserLoginCard({
                             emailAuthenticationError={emailAuthenticationError}
                             shrinkInputLabel={false}>
                         </MaterialTextField>
-                        <MaterialTextField
-                            label="Password"
-                            // placeholder="Password"
-                            inputValue={handleOnChangePassword}
-                            multiline={false}
-                            type="password"
-                            authenticationField={true}
-                            passwordAuthenticationError={passwordAuthenticationError}
-                            shrinkInputLabel={false}>
-                        </MaterialTextField>
                         <button
-                            className="login-button"
-                            onClick={handleOnClickLogin}
-                            disabled={loginButtonDisabled}
-                            style={{ backgroundColor: loginButtonColor }}>
-                            Login
+                            className="submit-button"
+                            onClick={handleOnClickSubmit}
+                            disabled={submitButtonDisabled}
+                            style={{ backgroundColor: submitButtonColor }}>
+                            Send Password Reset Email
                         </button>
-                        <div
-                            className="login-google"
-                            onClick={handleOnClickLoginWithGoogle}>
-                            <img src={require("../img/google_logo.png")} alt="Google" />
-                            <p>Login with Google</p>
-                        </div>
-                        <div className="login-text-container">
-                            <div>
-                                <Link to="/reset">Forgot Password</Link>
-                            </div>
+                        <div className="reset-text-container">
                             <div>
                                 Don't have an account? <Link to="/register">Register</Link> now.
                             </div>

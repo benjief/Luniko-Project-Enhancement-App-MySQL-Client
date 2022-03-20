@@ -1,34 +1,85 @@
 .reset {
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .reset__container {
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    background-color: #dcdcdc;
-    padding: 30px;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+  height: calc(100vh - 76.52px);
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 
-  .reset__textBox {
-    padding: 10px;
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
+.reset::-webkit-scrollbar {
+  display: none;
+}
 
-  .reset__btn {
-    padding: 10px;
-    font-size: 18px;
-    margin-bottom: 10px;
-    border: none;
-    color: white;
-    background-color: black;
-  }
+.reset-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 95%;
+  height: 100%;
+  max-width: 500px;
+}
 
-  .reset div {
-    margin-top: 7px;
-  }
+.reset-card {
+  width: 100%;
+}
+
+/* 
+.login-textBox {
+  padding: 10px;
+  font-size: 14pt;
+  margin-bottom: 10px;
+  border: 1px solid rgb(209, 208, 208);
+  border-radius: 5px;
+} */
+
+/* .login-textBox::placeholder {
+  color: rgba(83, 83, 83, 0.29);
+} */
+
+/* input {
+  font-family: "Raleway", Verdana, Geneva, Tahoma, sans-serif;
+  color: rgba(83, 83, 83, 0.767);
+} */
+
+/* input:focus {
+  outline: none;
+} */
+
+.submit-button {
+  padding: 10px;
+  margin-top: 18px;
+  margin-bottom: 14px;
+  border: none;
+  color: white;
+  background-color: var(--lunikoBlue);
+  border-radius: 5px;
+  font-family: "Raleway", Verdana, Geneva, Tahoma, sans-serif;
+  font-weight: 600;
+  height: 50px;
+  width: 100%;
+  font-size: 13pt;
+  transition: 200ms;
+}
+
+.submit-button:hover {
+  background-color: var(--lunikoOrange) !important;
+}
+
+.reset-text-container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 0;
+  margin-bottom: 13px;
+}
+
+.reset-text-container div {
+  margin-top: 0;
+  color: white;
+}
+
+a {
+  color: white !important;
+}

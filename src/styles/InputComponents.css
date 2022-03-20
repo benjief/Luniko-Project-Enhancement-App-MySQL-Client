@@ -23,13 +23,15 @@
 }
 
 .login-container .MuiOutlinedInput-root,
-.register-container .MuiOutlinedInput-root {
+.register-container .MuiOutlinedInput-root,
+.reset-container .MuiOutlinedInput-root {
     background-color: white !important;
     box-shadow: 2px 2px 4px rgba(43, 43, 43, 0.6) !important;
 }
 
 .login-container .MuiOutlinedInput-notchedOutline,
-.register-container .MuiOutlinedInput-notchedOutline {
+.register-container .MuiOutlinedInput-notchedOutline,
+.reset-container .MuiOutlinedInput-notchedOutline {
     top: 0 !important;
     visibility: hidden;
     /* border: none !important; */
