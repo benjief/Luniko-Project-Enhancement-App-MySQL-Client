@@ -68,6 +68,8 @@ function UpdateOwnedRequest() {
             setEffort(response.data[0].req_effort);
             setApproved(response.data[0].req_approved.data[0]);
             setRejected(response.data[0].req_rejected.data[0]);
+            setComments(response.data[0].req_comments);
+            setValue(response.data[0].req_value);
             if (!approved && response.data.rsn_rejected && response.data.rsn_rejected.length > 0) {
                 setRejectDisabled(false);
             } else {
@@ -168,7 +170,7 @@ function UpdateOwnedRequest() {
             rejected: !rejectDisabled ? rejected === "" ? 0 : rejected : 0,
             status: status,
             comments: comments === "" ? null : comments,
-            id: idFromSelector
+            id: idFromSelector,
         }).then((response) => {
             setUpdated(true);
             console.log("Request successfully updated!");
@@ -198,13 +200,14 @@ function UpdateOwnedRequest() {
             }
             setTransitionElementOpacity("0%");
             setTransitionElementVisibility("hidden");
-            if (valueUpdated && status !== "" && effort !== "" && approved !== "") {
+            // console.log(comments);
+            if (valueUpdated && status !== "" && effort !== "" && approved !== "" && comments.trim() !== "") {
                 setUpdateButtonDisabled(false);
             } else {
                 setUpdateButtonDisabled(true);
             }
         }
-    }, [loading, user, rendering, valueUpdated, status, effort, approved, rejected, updateButtonDisabled, reasonRejectedDisabled]);
+    }, [loading, user, rendering, valueUpdated, status, effort, approved, rejected, comments, value, updateButtonDisabled, reasonRejectedDisabled]);
 
     return (
         rendering ?
