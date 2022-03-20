@@ -56,7 +56,7 @@ function Reset() {
     const handleOnClickSubmit = (resetRequested) => {
         if (resetRequested) {
             if (checkEmail(email)) {
-                sendPasswordReset(email)
+                sendPasswordReset(email);
                 setAlert(true);
                 setTimeout(() => {
                     handleAlertClosed(true);
@@ -67,8 +67,8 @@ function Reset() {
         }
     }
 
-    const handleAlertClosed = (alertAcknowledged) => {
-        if (alertAcknowledged) {
+    const handleAlertClosed = (alertClosed) => {
+        if (alertClosed) {
             navigate("/");
         }
     }

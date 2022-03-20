@@ -6,11 +6,13 @@ import NavBar from "../components/Navbar";
 import MaterialSingleSelect from "../components/MaterialSingleSelect";
 import MaterialMultiSelect from "../components/MaterialMultiSelect";
 import CreateRequestCard from "../components/CreateRequestCard";
+import PositionedSnackbar from "../components/PositionedSnackbar";
 import Axios from "axios";
 import Hypnosis from "react-cssfx-loading/lib/Hypnosis";
 import "../styles/CreateRequest.css";
 import "../styles/SelectorComponents.css";
 import "../styles/InputComponents.css";
+import "../styles/AlertComponents.css";
 
 function CreateRequest() {
     const [user, loading] = useAuthState(auth);
@@ -29,6 +31,7 @@ function CreateRequest() {
     const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
     const [transitionElementOpacity, setTransitionElementOpacity] = useState("100%");
     const [transtitionElementVisibility, setTransitionElementVisibility] = useState("visible");
+    const [alert, setAlert] = useState(false);
 
     // Single select options
     const scopeOptions = [
@@ -126,7 +129,10 @@ function CreateRequest() {
             if (selectedIdentifiers.length !== 0) {
                 addIdentifications(response.data.insertId);
             } else {
-                handleSuccessfulSubmit();
+                setAlert(true);
+                setTimeout(() => {
+                    handleAlertClosed(true);
+                }, 5000);
             }
         });
     };
@@ -138,19 +144,18 @@ function CreateRequest() {
                 uid: selectedIdentifiers[i].value,
                 req_id: requestID
             }).then((response) => {
-                console.log("Identification successfully added!");
-                handleSuccessfulSubmit();
+                setAlert(true);
+                setTimeout(() => {
+                    handleAlertClosed(true);
+                }, 5000);
             });
         };
     };
 
-    const handleSuccessfulSubmit = () => {
-        // setTimeout(() => {
-        //     setSubmitButtonText("Request Submitted!");
-        // }, 500);
-        setTimeout(() => {
+    const handleAlertClosed = (alertClosed) => {
+        if (alertClosed) {
             navigate("/dashboard");
-        }, 1000);
+        }
     }
 
     useEffect(() => {
@@ -197,6 +202,14 @@ function CreateRequest() {
                     submittedRequestsLink={`/submitted-requests/${uid}/${isIdentifier}/${isOwner}`}
                     ownedRequestsLink={`/owned-requests/${user?.uid}/${isIdentifier}/${isOwner}`}>
                 </NavBar>
+                {alert
+                    ? <div className="alert-container">
+                        <PositionedSnackbar
+                            message="Request successfully submitted!"
+                            closed={handleAlertClosed}>
+                        </PositionedSnackbar>
+                    </div>
+                    : <div></div>}
                 <div className="create-request">
                     <div className="create-request-container">
                         <div className="page-heading">

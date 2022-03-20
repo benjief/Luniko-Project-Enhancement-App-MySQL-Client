@@ -63,14 +63,14 @@ export default function AddOwnedRequestsCard({
             setCardOpacity("0%");
             setTimeout(() => {
                 toAdd(id);
-            }, 50);
+            }, 100);
             // This condition ensures properties of an unmounted component aren't changed
             if (requestsRemaining > 0) {
                 setTimeout(() => {
                     setCardOpacity("100%");
-                }, 200);
+                }, 300);
             }
-        }, 10);
+        }, 50);
 
     }
 
