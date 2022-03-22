@@ -130,7 +130,7 @@ function CreateRequest() {
                 addIdentifications(response.data.insertId);
             } else {
                 setAlert(true);
-                handleAlertClosed(true);
+                // handleAlertClosed(true);
             }
         });
     };

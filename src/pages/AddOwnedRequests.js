@@ -160,7 +160,7 @@ function AddOwnedRequests() {
                                     department={getDepartment(val.req_dept)}
                                     description={val.req_descr}
                                     value={getValue(val.req_value)}
-                                    comments={val.req_comments === "" || val.req_comments === null ? "None" : val.req.comments}
+                                    comments={val.req_comments === "" || val.req_comments === null ? "None" : val.req_comments}
                                     toAdd={handleAddRequestCallback}>
                                 </AddOwnedRequestsCard>
                             </div>

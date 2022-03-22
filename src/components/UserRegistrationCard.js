@@ -31,6 +31,7 @@ export default function UserRegistrationCard({
     updatedFirstName = "",
     updatedLastName = "",
     updatedEmail = "",
+    emailAuthenticationError = "",
     updatedPassword = "",
     registerConventionally = false,
     registerWithGoogle = false,
@@ -74,7 +75,7 @@ export default function UserRegistrationCard({
         } else {
             setRegisterButtonColor("#BFBFBF");
         }
-    }, [registerButtonDisabled]);
+    }, [registerButtonDisabled, emailAuthenticationError]);
 
     return (
         <Card
@@ -152,7 +153,9 @@ export default function UserRegistrationCard({
                             requiresValidation={true}
                             type="email"
                             showCharCounter={true}
-                            shrinkInputLabel={false}>
+                            shrinkInputLabel={false}
+                            authenticationField={true}
+                            emailAuthenticationError={emailAuthenticationError}>
                         </MaterialTextField>
                         <MaterialTextField
                             label="Password"

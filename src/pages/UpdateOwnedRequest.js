@@ -83,9 +83,9 @@ function UpdateOwnedRequest() {
     // Single select options
     const effortOptions = [
         { value: 0, label: "TBD" },
-        { value: 1, label: "Low" },
+        { value: 1, label: "High" },
         { value: 2, label: "Medium" },
-        { value: 3, label: "High" }
+        { value: 3, label: "Low" }
     ];
 
     const statusOptions = [
@@ -161,16 +161,16 @@ function UpdateOwnedRequest() {
         checkValueUpdated();
     }
 
-    const updateRequest = (idFromSelector) => {
+    const updateRequest = (idFromCard) => {
         console.log("Updating request...");
         Axios.put("https://luniko-pe.herokuapp.com/update-owned-request", {
-            reasonRejected: rejectDisabled ? null : rejected === "" ? null : reasonRejected,
+            reasonRejected: rejectDisabled === null ? null : rejected === "" ? null : reasonRejected,
             effort: effort,
             approved: !approveDisabled ? approved : 0,
             rejected: !rejectDisabled ? rejected === "" ? 0 : rejected : 0,
             status: status,
-            comments: comments === "" ? null : comments,
-            id: idFromSelector,
+            comments: comments === null ? null : comments === "" ? null : comments,
+            id: idFromCard,
         }).then((response) => {
             setUpdated(true);
             console.log("Request successfully updated!");
@@ -201,13 +201,13 @@ function UpdateOwnedRequest() {
             setTransitionElementOpacity("0%");
             setTransitionElementVisibility("hidden");
             // console.log(comments);
-            if (valueUpdated && status !== "" && effort !== "" && approved !== "" && comments.trim() !== "") {
+            if (valueUpdated && status !== "" && effort !== "" && approved !== "") {
                 setUpdateButtonDisabled(false);
             } else {
                 setUpdateButtonDisabled(true);
             }
         }
-    }, [loading, user, rendering, valueUpdated, status, effort, approved, rejected, comments, value, updateButtonDisabled, reasonRejectedDisabled]);
+    }, [loading, user, rendering, valueUpdated, status, effort, approved, rejected, value, updateButtonDisabled, reasonRejectedDisabled]);
 
     return (
         rendering ?

@@ -39,9 +39,9 @@ function OwnedRequests() {
         });
     };
 
-    const handleModifyRequestCallback = (requestFromCard) => {
-        navigate(`/modify-owned-request/${user?.uid}/${isIdentifier}/${isOwner}`);
-    }
+    // const handleModifyRequestCallback = (requestFromCard) => {
+    //     navigate(`/modify-owned-request/${user?.uid}/${isIdentifier}/${isOwner}`);
+    // }
 
     useEffect(() => {
         if (loading) {
@@ -111,7 +111,7 @@ function OwnedRequests() {
                                     rejected={getApprovalStatus(val.req_rejected.data[0])}
                                     rsn_rejected={val.rsn_rejected ? val.rsn_rejected : "None"}
                                     comments={val.req_comments === "" || val.req_comments === null ? "None" : val.req_comments}
-                                    toModify={handleModifyRequestCallback}>
+                                    /* toModify={handleModifyRequestCallback} */>
                                 </OwnedRequestCard>
                             </div>
                         })}

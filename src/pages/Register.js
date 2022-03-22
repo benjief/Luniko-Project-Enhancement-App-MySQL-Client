@@ -9,6 +9,7 @@ import {
 import NavBar from "../components/Navbar";
 import UserRegistrationCard from "../components/UserRegistrationCard";
 import Hypnosis from "react-cssfx-loading/lib/Hypnosis";
+import Axios from "axios";
 import "../styles/Register.css";
 import "../styles/SelectorComponents.css";
 import "../styles/InputComponents.css";
@@ -20,6 +21,8 @@ function Register() {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
+    const [emailAuthenticationError, setEmailAuthenticationError] = useState("");
+    const [registeredEmails, setRegisteredEmails] = useState("");
     const [password, setPassword] = useState("");
     // const [backgroundColor, setBackgroundColor] = useState("#BFBFBF");
     const [registerButtonDisabled, setRegisterButtonDisabled] = useState(true);
@@ -39,6 +42,22 @@ function Register() {
     //     setRegisterButtonDisabled(true);
     // }
 
+    const getRegisteredEmails = () => {
+        Axios.get("https://luniko-pe.herokuapp.com/get-all-personnel", {
+        }).then((response) => {
+            populateRegisteredEmailList(response.data);
+        });
+    };
+
+    const populateRegisteredEmailList = (personnelList) => {
+        let tempArray = [];
+        for (let i = 0; i < personnelList.length; i++) {
+            tempArray.push(personnelList[i].pers_email);
+        }
+        setRegisteredEmails([...tempArray]);
+        setRendering(false);
+    }
+
     const handleFirstNameCallback = (firstNameFromTextInput) => {
         setFirstName(firstNameFromTextInput);
     }
@@ -49,19 +68,33 @@ function Register() {
 
     const handleEmailCallback = (emailFromTextInput) => {
         setEmail(emailFromTextInput);
+        setEmailAuthenticationError("");
+        checkIfEmailAlreadyRegistered(emailFromTextInput);
+    }
+
+    const checkIfEmailAlreadyRegistered = (email) => {
+        if (registeredEmails.includes(email)) {
+            setEmailAuthenticationError("Email already in use");
+        }
     }
 
     const handlePasswordCallback = (passwordFromTextInput) => {
         setPassword(passwordFromTextInput);
     }
 
-    const registerConventionally = async (conventionalRegistrationSelected) => {
+    const attemptConventionalRegistration = async (conventionalRegistrationSelected) => {
         if (conventionalRegistrationSelected) {
-            await registerWithEmailAndPassword(firstName, lastName, email, password).then(() => {
-                navigate("/dashboard");
-            });
+            try {
+                await registerWithEmailAndPassword(firstName, lastName, email, password).then(() => {
+                    navigate("/dashboard");
+                });
+            } catch (err) {
+                if (err.message.indexOf("email") !== -1 || err.message.indexOf("user") !== -1) {
+                    setEmailAuthenticationError("Email already in use");
+                }
+            }
         }
-    };
+    }
 
     const registerWithGoogle = async (googleRegistrationSelected) => {
         if (googleRegistrationSelected) {
@@ -74,11 +107,13 @@ function Register() {
     useEffect(() => {
         if (loading) {
             return;
+        }
+        if (rendering) {
+            getRegisteredEmails();
         } else {
-            setRendering(false);
             setTransitionElementOpacity("0%");
             setTransitionElementVisibility("hidden");
-            if (firstName !== "" && lastName !== "" && email !== "" && password !== "") {
+            if (firstName !== "" && lastName !== "" && email !== "" && password !== "" && emailAuthenticationError === "") {
                 // if (registerButtonDisabled) {
                 //     activateRegistration();
                 // }
@@ -87,7 +122,7 @@ function Register() {
                 setRegisterButtonDisabled(true);
             }
         }
-    }, [loading, user, firstName, lastName, email, password, registerButtonDisabled]);
+    }, [loading, user, firstName, lastName, email, password, registerButtonDisabled, emailAuthenticationError, rendering]);
 
     return (
         rendering ?
@@ -122,8 +157,9 @@ function Register() {
                                 updatedFirstName={handleFirstNameCallback}
                                 updatedLastName={handleLastNameCallback}
                                 updatedEmail={handleEmailCallback}
+                                emailAuthenticationError={emailAuthenticationError}
                                 updatedPassword={handlePasswordCallback}
-                                registerConventionally={registerConventionally}
+                                registerConventionally={attemptConventionalRegistration}
                                 registerWithGoogle={registerWithGoogle}
                                 registerButtonDisabled={registerButtonDisabled}>
                             </UserRegistrationCard>

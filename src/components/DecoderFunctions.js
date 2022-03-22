@@ -39,9 +39,9 @@ function getValue(valueCode) {
 
 function getEffort(effortCode) {
     let effort = effortCode === 0 ? "TBD"
-        : effortCode === 1 ? "Low"
+        : effortCode === 1 ? "High"
             : effortCode === 2 ? "Medium"
-                : "high";
+                : "Low";
 
     return effort;
 }
@@ -50,7 +50,7 @@ function getPriority(priorityCode) {
     let priority = priorityCode === 0 ? "TBD"
         : priorityCode < 3 ? "Low"
             : priorityCode < 8 ? "Medium"
-                : priorityCode === 8 ? "High"
+                : priorityCode < 12 ? "High"
                     : "Critical";
 
     return priority;

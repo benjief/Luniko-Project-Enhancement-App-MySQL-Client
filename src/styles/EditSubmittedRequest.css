@@ -42,3 +42,7 @@
     font-size: 13pt !important;
     transition: 200ms;
 }
+
+.submit-update-request-button:hover {
+    background-color: #00e065 !important;
+}

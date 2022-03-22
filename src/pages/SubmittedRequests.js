@@ -21,9 +21,10 @@ function SubmittedRequests() {
     const [transtitionElementVisibility, setTransitionElementVisibility] = useState("visible");
 
     const getSubmittedRequests = () => {
+
         Axios.get(`https://luniko-pe.herokuapp.com/get-submitted-requests-for-id/${uid}`, {
         }).then((response) => {
-            // console.log(response.data);
+            console.log(response.data[1].req_comments === null);
             setSubmittedRequests(response.data);
             if (response.data.length !== 0) {
                 setMessageContent("Your submitted requests:");
@@ -93,7 +94,7 @@ function SubmittedRequests() {
                                     description={val.req_descr}
                                     value={getValue(val.req_value)}
                                     rsn_rejected={val.rsn_rejected ? val.rsn_rejected : ""}
-                                    comments={val.req_comments === "" || val.req_comments === null ? "None" : val.req.comments}
+                                    comments={val.req_comments === "" || val.req_comments === null ? "None" : val.req_comments}
                                     editButtonDisabled={val.req_approved.data[0] === 1 || val.req_rejected.data[0] == 1}>
                                 </SubmittedRequestCard>
                             </div>

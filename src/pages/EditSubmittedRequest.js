@@ -33,6 +33,8 @@ function EditSubmittedRequest() {
     const [identifierOptions, setIdentifierOptions] = useState([]);
     const [selectedIdentifiers, setSelectedIdentifiers] = useState([]);
     const [description, setDescription] = useState("");
+    const [approved, setApproved] = useState("");
+    const [rejected, setRejected] = useState("");
     const [valueUpdated, setValueUpdated] = useState(false);
     const [updated, setUpdated] = useState(false);
     // const [updateButtonText, setUpdateButtonText] = useState("Update");
@@ -75,6 +77,8 @@ function EditSubmittedRequest() {
             setDepartment(response.data[0].req_dept);
             setValue(response.data[0].req_value);
             setDescription(response.data[0].req_descr);
+            setApproved(response.data[0].req_approved.data[0]);
+            setRejected(response.data[0].req_rejected.data[0]);
             getAllIdentifiers();
         });
     };
@@ -205,7 +209,7 @@ function EditSubmittedRequest() {
         } else {
             setTransitionElementOpacity("0%");
             setTransitionElementVisibility("hidden");
-            if (valueUpdated && company.trim() !== "" && scopeType !== "" && department !== "" && value !== "" && description.trim() !== "") {
+            if (!approved && !rejected && valueUpdated && company.trim() !== "" && scopeType !== "" && department !== "" && value !== "" && description.trim() !== "") {
                 setUpdateButtonDisabled(false);
             } else {
                 setUpdateButtonDisabled(true);
