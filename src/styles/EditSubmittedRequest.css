@@ -1,4 +1,4 @@
-.submitted-requests {
+.edit-submitted-request {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -9,11 +9,11 @@
     scrollbar-width: none;
 }
 
-.submitted-requests::-webkit-scrollbar {
+.edit-submitted-request::-webkit-scrollbar {
     display: none;
 }
 
-.submitted-requests-container {
+.edit-submitted-request-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -22,38 +22,11 @@
     max-width: 500px;
 }
 
-.add-request-button {
-    padding: 10px;
-    margin-top: 10px;
-    margin-bottom: 10px !important;
-    border: none;
-    color: white;
-    background-color: var(--lunikoBlue);
-    border-radius: 5px;
-    font-family: "Raleway", Verdana, Geneva, Tahoma, sans-serif;
-    font-weight: 600;
-    font-size: 14pt;
-    height: 50px;
-    width: 100%;
-    font-size: 13pt !important;
-    transition: 200ms;
-}
-
-.add-request-button:hover {
-    background-color: var(--lunikoOrange) !important;
-}
-
-.submitted-request-card {
+.edit-submitted-request-card {
     width: 100%;
 }
 
-.submitted-requests br {
-    display: block;
-    content: "";
-    margin-top: -3px;
-}
-
-.edit-request-button {
+.submit-update-request-button {
     padding: 10px;
     margin-top: 10px;
     margin-bottom: 10px !important;

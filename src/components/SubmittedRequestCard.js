@@ -12,7 +12,9 @@ import Typography from '@mui/material/Typography';
 // import { green } from '@mui/material/colors';
 // import { red } from '@mui/material/colors';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import DraggableDialog from './DraggableDialog';
 // import { color } from '@mui/system';
+import { Link } from 'react-router-dom';
 
 const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
@@ -26,6 +28,9 @@ const ExpandMore = styled((props) => {
 }));
 
 export default function SubmittedRequestCard({
+    uid = "",
+    isIdentifier = 0,
+    isOwner = 0,
     id = "",
     dateSubmitted = "",
     lastUpdated = "",
@@ -37,10 +42,12 @@ export default function SubmittedRequestCard({
     approved = "",
     status = "",
     reasonRejected = "",
-    comments = ""
+    comments = "",
+    editButtonDisabled = true
 }) {
     const [expanded, setExpanded] = React.useState(false);
     const [cardColor, setCardColor] = React.useState("var(--lunikoMidGrey)");
+    const [editButtonColor, setEditButtonColor] = React.useState("#BFBFBF");
     var statusAbbreviation = status.charAt(0).toUpperCase();
 
 
@@ -48,6 +55,14 @@ export default function SubmittedRequestCard({
         setExpanded(!expanded);
         cardColor === "var(--lunikoMidGrey)" ? setCardColor("var(--lunikoOrange)") : setCardColor("var(--lunikoMidGrey)");
     };
+
+    React.useEffect(() => {
+        if (!editButtonDisabled) {
+            setEditButtonColor("var(--lunikoBlue)");
+        } else {
+            setEditButtonColor("#BFBFBF");
+        }
+    }, [editButtonDisabled]);
 
     return (
         <Card
@@ -149,6 +164,17 @@ export default function SubmittedRequestCard({
                         paragraph>
                         <strong>Comments<br /></strong> {comments}
                     </Typography>
+                    <Link to={`/edit-submitted-request/${uid}/${isIdentifier}/${isOwner}/${id}`}>
+                        <button
+                            className="edit-request-button"
+                            disabled={editButtonDisabled}
+                            style={{ backgroundColor: editButtonColor }}>
+                            Edit Request
+                        </button>
+                    </Link>
+                    <DraggableDialog
+                        dialogText="Requests are only editable before they are approved or rejected by a request owner."
+                    ></DraggableDialog>
                 </CardContent>
             </Collapse>
         </Card >

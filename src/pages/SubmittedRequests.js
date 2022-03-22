@@ -79,6 +79,9 @@ function SubmittedRequests() {
                                 className="submitted-request-card"
                                 key={key}>
                                 <SubmittedRequestCard
+                                    uid={uid}
+                                    isIdentifier={isIdentifier}
+                                    isOwner={isOwner}
                                     id={val.req_id}
                                     dateSubmitted={val.req_date}
                                     lastUpdated={val.req_updated}
@@ -90,7 +93,8 @@ function SubmittedRequests() {
                                     description={val.req_descr}
                                     value={getValue(val.req_value)}
                                     rsn_rejected={val.rsn_rejected ? val.rsn_rejected : ""}
-                                    comments={val.req_comments === "" || val.req_comments === null ? "None" : val.req.comments}>
+                                    comments={val.req_comments === "" || val.req_comments === null ? "None" : val.req.comments}
+                                    editButtonDisabled={val.req_approved.data[0] === 1 || val.req_rejected.data[0] == 1}>
                                 </SubmittedRequestCard>
                             </div>
                         })}

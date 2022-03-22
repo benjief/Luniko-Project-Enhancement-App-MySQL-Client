@@ -5,7 +5,7 @@ import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import Collapse from '@mui/material/Collapse';
-// import Avatar from '@mui/material/Avatar';
+import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 // import { yellow } from '@mui/material/colors';
@@ -13,12 +13,9 @@ import Typography from '@mui/material/Typography';
 // import { red } from '@mui/material/colors';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 // import { color } from '@mui/system';
-import MaterialSingleSelect from './MaterialSingleSelect';
 import MaterialSingleSelectWithValue from './MaterialSingleSelectWithValue';
-import MaterialTextField from './MaterialTextField';
 import MaterialMultiSelect from './MaterialMultiSelect';
-// import BootstrapPopover from "../components/BootstrapPopover";
-import DraggableDialog from './DraggableDialog';
+import MaterialTextField from './MaterialTextField';
 
 const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
@@ -31,34 +28,40 @@ const ExpandMore = styled((props) => {
     }),
 }));
 
-export default function UpdateOwnedRequestCard({
-    uid = "",
+export default function EditOwnedRequestCard({
+    id = "",
     scopeTypeOptions = [],
     departmentOptions = [],
     valueOptions = [],
     identifierOptions = [],
+    company = "",
     updatedCompany = "",
-    selectedScopeType = "",
-    selectedDepartment = "",
+    scopeType = "",
+    updatedScopeType = "",
+    department = "",
+    updatedDepartment = "",
+    description = "",
     updatedDescription = "",
-    selectedValue = 0,
-    selectedIdentifiers = [],
-    requestToSubmit = "",
-    submitButtonDisabled = true
+    value = "",
+    updatedValue = 0,
+    identifiers = [],
+    addedIdentifiers = [],
+    requestToUpdate = "",
+    updateButtonDisabled = true
 }) {
     const [expanded, setExpanded] = React.useState(true);
-    const [submitButtonColor, setSubmitButtonColor] = React.useState("#BFBFBF");
+    const [updateButtonColor, setUpdateButtonColor] = React.useState("#BFBFBF");
 
     const handleOnChangeCompany = (updatedText) => {
         updatedCompany(updatedText);
     }
 
     const handleOnSelectScopeType = (valueFromSelector) => {
-        selectedScopeType(valueFromSelector);
+        updatedScopeType(valueFromSelector);
     }
 
     const handleOnSelectDepartment = (valueFromSelector) => {
-        selectedDepartment(valueFromSelector);
+        updatedDepartment(valueFromSelector);
     }
 
     const handleOnChangeDescription = (updatedText) => {
@@ -66,15 +69,15 @@ export default function UpdateOwnedRequestCard({
     }
 
     const handleOnSelectValue = (valueFromSelector) => {
-        selectedValue(valueFromSelector);
+        updatedValue(valueFromSelector);
     }
 
     const handleOnChangeIdentifiers = (valuesFromSelector) => {
-        selectedIdentifiers(valuesFromSelector);
+        addedIdentifiers(valuesFromSelector);
     }
 
-    const handleSubmitRequest = () => {
-        requestToSubmit(uid);
+    const handleUpdateRequest = () => {
+        requestToUpdate(id);
     }
 
     // const handleExpandClick = () => {
@@ -83,19 +86,19 @@ export default function UpdateOwnedRequestCard({
     // };
 
     React.useEffect(() => {
-        if (!submitButtonDisabled) {
-            setSubmitButtonColor("var(--lunikoBlue)");
+        if (!updateButtonDisabled) {
+            setUpdateButtonColor("var(--lunikoBlue)");
         } else {
-            setSubmitButtonColor("#BFBFBF");
+            setUpdateButtonColor("#BFBFBF");
         }
-    }, [submitButtonDisabled]);
+    }, [updateButtonDisabled]);
 
     return (
         <Card
             sx={{
                 // minWidth: 350,
                 // maxWidth: 350,
-                maxHeight: "calc(100vh - 96.52px)",
+                maxHeight: "calc(100vh - 156.52px)",
                 overflowY: "scroll",
                 borderRadius: "10px",
                 boxShadow: "2px 2px 6px rgba(43, 43, 43, 0.6)",
@@ -115,7 +118,8 @@ export default function UpdateOwnedRequestCard({
                     //         {statusAbbreviation}
                     //     </Avatar>
                     // }
-                    title="Fill In the Fields Below"
+                    // title={[<strong>Request ID </strong>, <strong>{id}</strong>]}
+                    title={"Request ID " + id}
                 />
                 {/* < CardActions
                 disableSpacing
@@ -132,40 +136,40 @@ export default function UpdateOwnedRequestCard({
             </CardActions > */}
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
                     <CardContent>
-                        {/* <Typography
-                        paragraph>
-                        <strong>Updatable Fields</strong>
-                    </Typography> */}
                         <MaterialTextField
                             label="Company Name"
                             characterLimit={45}
                             placeholder="Company Name"
+                            defaultValue={company}
                             inputValue={handleOnChangeCompany}
                             multiline={false}
                             required={true}
                             showCharCounter={true}>
                         </MaterialTextField>
-                        <MaterialSingleSelect
+                        <MaterialSingleSelectWithValue
                             label="Scope Type"
                             placeholder="Scope Type"
+                            defaultValue={scopeType}
                             singleSelectOptions={scopeTypeOptions}
                             selectedValue={handleOnSelectScopeType}
                             required={true}>
-                        </MaterialSingleSelect>
-                        <MaterialSingleSelect
+                        </MaterialSingleSelectWithValue>
+                        <MaterialSingleSelectWithValue
                             label="Department"
                             placeholder="Department"
+                            defaultValue={department}
                             singleSelectOptions={departmentOptions}
                             selectedValue={handleOnSelectDepartment}
                             required={true}>
-                        </MaterialSingleSelect>
-                        <MaterialSingleSelect
+                        </MaterialSingleSelectWithValue>
+                        <MaterialSingleSelectWithValue
                             label="Value"
                             placeholder="Value"
+                            defaultValue={value}
                             singleSelectOptions={valueOptions}
                             selectedValue={handleOnSelectValue}
                             required={true}>
-                        </MaterialSingleSelect>
+                        </MaterialSingleSelectWithValue>
                         <MaterialMultiSelect
                             label="Add Identifiers"
                             placeholder="Add Identifiers"
@@ -177,6 +181,7 @@ export default function UpdateOwnedRequestCard({
                             className="description"
                             label="Description"
                             placeholder="Description"
+                            defaultValue={description}
                             characterLimit={1000}
                             inputValue={handleOnChangeDescription}
                             multiline={true}
@@ -184,16 +189,12 @@ export default function UpdateOwnedRequestCard({
                             showCharCounter={true}>
                         </MaterialTextField>
                         <button
-                            className="submit-request-button"
-                            onClick={handleSubmitRequest}
-                            disabled={submitButtonDisabled}
-                            style={{ backgroundColor: submitButtonColor }}>
-                            Submit Request
+                            className="submit-update-request-button"
+                            onClick={handleUpdateRequest}
+                            disabled={updateButtonDisabled}
+                            style={{ backgroundColor: updateButtonColor }}>
+                            Update Request
                         </button>
-                        <DraggableDialog
-                            dialogText={[<strong>All identifiers </strong>, "added to this request will be ",
-                                "able to view it and receive updates pertaining to it."]}
-                        ></DraggableDialog>
                     </CardContent>
                 </Collapse>
             </div>

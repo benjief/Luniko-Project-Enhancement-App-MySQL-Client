@@ -130,9 +130,7 @@ function CreateRequest() {
                 addIdentifications(response.data.insertId);
             } else {
                 setAlert(true);
-                setTimeout(() => {
-                    handleAlertClosed(true);
-                }, 5000);
+                handleAlertClosed(true);
             }
         });
     };
@@ -172,7 +170,7 @@ function CreateRequest() {
                 setSubmitButtonDisabled(true);
             }
         }
-    }, [loading, user, company, scopeType, department, value, rendering, description]);
+    }, [loading, user, rendering, company, scopeType, department, value, description]);
 
     return (
         rendering ?

@@ -43,7 +43,7 @@ function UpdateOwnedRequest() {
     const [reasonRejectedDisabled, setReasonRejectedDisabled] = useState(false);
     const [valueUpdated, setValueUpdated] = useState(false);
     const [updated, setUpdated] = useState(false);
-    const [updateButtonText, setUpdateButtonText] = useState("Update");
+    // const [updateButtonText, setUpdateButtonText] = useState("Update");
     const [updateButtonDisabled, setUpdateButtonDisabled] = useState(true);
     const [transitionElementOpacity, setTransitionElementOpacity] = useState("100%");
     const [transtitionElementVisibility, setTransitionElementVisibility] = useState("visible");

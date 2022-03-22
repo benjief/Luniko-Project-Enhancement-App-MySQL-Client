@@ -21,7 +21,7 @@ export default function PositionedSnackbar({
     const action = (
         <React.Fragment>
             <IconButton
-                // size="small"
+                size="small"
                 aria-label="close"
                 color="inherit"
                 onClick={handleClose}
@@ -40,7 +40,7 @@ export default function PositionedSnackbar({
                 message={message}
                 action={action}
                 key={vertical + horizontal}
-            // autoHideDuration={5000}
+                autoHideDuration={4000}
             />
         </div>
     );

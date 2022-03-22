@@ -61,7 +61,7 @@ export default function UpdateOwnedRequestCard({
     comments = "",
     updatedComments = "",
     requestToUpdate = "",
-    updateButtonDisabled = true,
+    updateButtonDisabled = true
 }) {
     const [expanded, setExpanded] = React.useState(true);
     const [approvedValue, setApprovedValue] = React.useState(approved);
