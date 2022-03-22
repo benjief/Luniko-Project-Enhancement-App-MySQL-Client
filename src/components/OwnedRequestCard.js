@@ -111,56 +111,43 @@ export default function OwnedRequestCard({
             </CardActions >
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <CardContent>
-                    <Typography
-                        paragraph>
+                    <Typography paragraph>
                         <strong>Status<br /></strong> {status}
                     </Typography>
-                    <Typography
-                        paragraph>
+                    <Typography paragraph>
                         <strong>Company<br /></strong> {company}
                     </Typography>
-                    <Typography
-                        paragraph>
+                    <Typography paragraph>
                         <strong>Submitted By<br /></strong> {submitter}
                     </Typography>
-                    <Typography
-                        paragraph>
+                    <Typography paragraph>
                         <strong>Date Submitted<br /></strong> {dateSubmitted}
                     </Typography>
-                    <Typography
-                        paragraph>
+                    <Typography paragraph>
                         <strong>Last Updated<br /></strong> {lastUpdated}
                     </Typography>
-                    <Typography
-                        paragraph>
+                    <Typography paragraph>
                         <strong>Scope Type<br /></strong> {scopeType}
                     </Typography>
-                    <Typography
-                        paragraph>
+                    <Typography paragraph>
                         <strong>Department<br /></strong> {department}
                     </Typography>
-                    <Typography
-                        paragraph>
+                    <Typography paragraph>
                         <strong>Description<br /></strong> {description}
                     </Typography>
-                    <Typography
-                        paragraph>
+                    <Typography paragraph>
                         <strong>Value<br /></strong> {value}
                     </Typography>
-                    <Typography
-                        paragraph>
+                    <Typography paragraph>
                         <strong>Effort<br /></strong> {effort}
                     </Typography>
-                    <Typography
-                        paragraph>
+                    <Typography paragraph>
                         <strong>Priority<br /></strong> {priority}
                     </Typography>
-                    <Typography
-                        paragraph>
+                    <Typography paragraph>
                         <strong>Approved<br /></strong> {approved}
                     </Typography>
-                    <Typography
-                        paragraph>
+                    <Typography paragraph>
                         <strong>Rejected<br /></strong> {rejected}
                     </Typography>
                     <Typography
