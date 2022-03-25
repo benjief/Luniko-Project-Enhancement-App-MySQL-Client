@@ -13,7 +13,7 @@ import Typography from '@mui/material/Typography';
 // import { red } from '@mui/material/colors';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 // import { color } from '@mui/system';
-import MaterialSingleSelectWithValue from './MaterialSingleSelectWithValue';
+import MaterialSingleSelect from './MaterialSingleSelect';
 import MaterialMultiSelect from './MaterialMultiSelect';
 import MaterialTextField from './MaterialTextField';
 
@@ -146,30 +146,30 @@ export default function EditOwnedRequestCard({
                             required={true}
                             showCharCounter={true}>
                         </MaterialTextField>
-                        <MaterialSingleSelectWithValue
+                        <MaterialSingleSelect
                             label="Scope Type"
                             placeholder="Scope Type"
                             defaultValue={scopeType}
                             singleSelectOptions={scopeTypeOptions}
                             selectedValue={handleOnSelectScopeType}
                             required={true}>
-                        </MaterialSingleSelectWithValue>
-                        <MaterialSingleSelectWithValue
+                        </MaterialSingleSelect>
+                        <MaterialSingleSelect
                             label="Department"
                             placeholder="Department"
                             defaultValue={department}
                             singleSelectOptions={departmentOptions}
                             selectedValue={handleOnSelectDepartment}
                             required={true}>
-                        </MaterialSingleSelectWithValue>
-                        <MaterialSingleSelectWithValue
+                        </MaterialSingleSelect>
+                        <MaterialSingleSelect
                             label="Value"
                             placeholder="Value"
                             defaultValue={value}
                             singleSelectOptions={valueOptions}
                             selectedValue={handleOnSelectValue}
                             required={true}>
-                        </MaterialSingleSelectWithValue>
+                        </MaterialSingleSelect>
                         <MaterialMultiSelect
                             label="Add Identifiers"
                             placeholder="Add Identifiers"

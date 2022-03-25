@@ -35,6 +35,7 @@ export default function SubmittedRequestCard({
     dateSubmitted = "",
     lastUpdated = "",
     submitter = "",
+    identifiers = [],
     scopeType = "",
     department = "",
     description = "",
@@ -127,6 +128,18 @@ export default function SubmittedRequestCard({
                         <strong>Submitted By<br /></strong> {submitter}
                     </Typography>
                     <Typography paragraph>
+                        <strong>Identifiers<br /></strong>
+                        {identifiers.length !== 0
+                            ? identifiers.map((val, key) => {
+                                return <li
+                                    key={key}
+                                    style={{ listStyle: "none" }}>
+                                    {val}
+                                </li>
+                            })
+                            : "None"}
+                    </Typography>
+                    <Typography paragraph>
                         <strong>Date Submitted<br /></strong> {dateSubmitted}
                     </Typography>
                     <Typography paragraph>
@@ -164,7 +177,7 @@ export default function SubmittedRequestCard({
                         </button>
                     </Link>
                     <DraggableDialog
-                        dialogText="Requests are only editable before they are approved or rejected by a request owner."
+                        dialogText={["Requests are only editable ", <b>before</b>, " they are approved or rejected by a request owner."]}
                     ></DraggableDialog>
                 </CardContent>
             </Collapse>

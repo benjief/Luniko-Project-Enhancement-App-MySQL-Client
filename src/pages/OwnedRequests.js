@@ -31,12 +31,29 @@ function OwnedRequests() {
     const getOwnedRequests = () => {
         Axios.get(`https://luniko-pe.herokuapp.com/get-owned-requests-for-id/${uid}`, {
         }).then((response) => {
-            setOwnedRequests(response.data);
+            // setOwnedRequests(response.data);
             if (response.length !== 0) {
                 setMessageContent("Your owned requests:");
             }
-            setRendering(false);
+            // setRendering(false);
+            getSubmittedIdentifiers(response.data);
         });
+    };
+
+    const getSubmittedIdentifiers = async (requestList) => {
+        for (let i = 0; i < requestList.length; i++) {
+            await Axios.get(`https://luniko-pe.herokuapp.com/get-identifier-names-for-submitted-request/${requestList[i].req_id}`, {
+            }).then((response) => {
+                let submittedIdentifiers = []
+                for (let i = 0; i < response.data.length; i++) {
+                    submittedIdentifiers.push(response.data[i].pers_name);
+                    // console.log("added identifier " + i);
+                }
+                requestList[i].req_identifiers = submittedIdentifiers;
+            });
+        }
+        setOwnedRequests([...requestList]);
+        setRendering(false);
     };
 
     // const handleModifyRequestCallback = (requestFromCard) => {
@@ -101,6 +118,7 @@ function OwnedRequests() {
                                     lastUpdated={val.req_updated}
                                     company={val.req_company}
                                     submitter={val.req_submitter}
+                                    identifiers={val.req_identifiers}
                                     scopeType={getScopeType(val.req_scope_type)}
                                     department={getDepartment(val.req_dept)}
                                     description={val.req_descr}

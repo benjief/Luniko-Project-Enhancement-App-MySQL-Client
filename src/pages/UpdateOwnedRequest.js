@@ -63,21 +63,54 @@ function UpdateOwnedRequest() {
     const getRequestDetails = (id) => {
         Axios.get(`https://luniko-pe.herokuapp.com/get-request-details-for-id/${id}`, {
         }).then((response) => {
-            setRequestDetails(response.data);
-            setStatus(response.data[0].req_status);
-            setEffort(response.data[0].req_effort);
-            setApproved(response.data[0].req_approved.data[0]);
-            setRejected(response.data[0].req_rejected.data[0]);
-            setComments(response.data[0].req_comments);
-            setValue(response.data[0].req_value);
+            let requestDetails = response.data[0];
+            let status = {
+                "value": requestDetails.req_status,
+                "label": getStatus(requestDetails.req_status)
+            }
+            setStatus(status);
+            let effort = {
+                "value": requestDetails.req_effort,
+                "label": getEffort(requestDetails.req_effort)
+            }
+            setEffort(effort);
+            let requestApproved = {
+                "value": requestDetails.req_approved.data[0],
+                "label": getApprovalStatus(requestDetails.req_approved.data[0])
+            }
+            setApproved(requestApproved);
+            let requestRejected = {
+                "value": requestDetails.req_rejected.data[0],
+                "label": getApprovalStatus(requestDetails.req_rejected.data[0])
+            }
+            setRejected(requestRejected);
+            setComments(requestDetails.req_comments);
+            let value = {
+                "value": requestDetails.req_value,
+                "label": getValue(requestDetails.req_value)
+            }
+            setValue(value);
             if (!approved && response.data.rsn_rejected && response.data.rsn_rejected.length > 0) {
                 setRejectDisabled(false);
             } else {
                 setRejectDisabled(true);
             }
-            setPriority(response.data[0].req_value * response.data[0].req_effort);
-            setRendering(false);
+            setPriority(requestDetails.req_value * requestDetails.req_effort);
+            getSubmittedIdentifiers(response.data);
         });
+    };
+
+    const getSubmittedIdentifiers = async (requestInfo) => {
+        await Axios.get(`https://luniko-pe.herokuapp.com/get-identifier-names-for-submitted-request/${requestInfo[0].req_id}`, {
+        }).then((response) => {
+            let submittedIdentifiers = []
+            for (let i = 0; i < response.data.length; i++) {
+                submittedIdentifiers.push(response.data[i].pers_name);
+            }
+            requestInfo[0].req_identifiers = submittedIdentifiers;
+        });
+        setRequestDetails(requestInfo);
+        setRendering(false);
     };
 
     // Single select options
@@ -165,10 +198,16 @@ function UpdateOwnedRequest() {
         console.log("Updating request...");
         Axios.put("https://luniko-pe.herokuapp.com/update-owned-request", {
             reasonRejected: rejectDisabled === null ? null : rejected === "" ? null : reasonRejected,
-            effort: effort,
-            approved: !approveDisabled ? approved : 0,
-            rejected: !rejectDisabled ? rejected === "" ? 0 : rejected : 0,
-            status: status,
+            effort: effort.value ? effort.value : effort,
+            approved: !approveDisabled
+                ? rejected.value && rejected.value === "" ? 0
+                    : rejected === "" ? 0
+                        : approved.value ? approved.value : approved : 0,
+            rejected: !rejectDisabled
+                ? approved.value && approved.value === "" ? 0
+                    : approved === "" ? 0
+                        : rejected.value ? rejected.value : rejected : 0,
+            status: status.value ? status.value : status,
             comments: comments === null ? null : comments === "" ? null : comments,
             id: idFromCard,
         }).then((response) => {
@@ -200,7 +239,6 @@ function UpdateOwnedRequest() {
             }
             setTransitionElementOpacity("0%");
             setTransitionElementVisibility("hidden");
-            // console.log(comments);
             if (valueUpdated && status !== "" && effort !== "" && approved !== "") {
                 setUpdateButtonDisabled(false);
             } else {
@@ -254,24 +292,25 @@ function UpdateOwnedRequest() {
                                 key={key}>
                                 <UpdateOwnedRequestCard
                                     id={val.req_id}
-                                    status={getStatus(val.req_status)}
+                                    status={status}
                                     statusOptions={statusOptions}
                                     selectedStatus={handleStatusCallback}
                                     dateSubmitted={val.req_date}
                                     lastUpdated={val.req_updated}
                                     company={val.req_company}
                                     submitter={val.req_submitter}
+                                    identifiers={val.req_identifiers}
                                     scopeType={getScopeType(val.req_scope_type)}
-                                    department={val.req_dept}
+                                    department={getDepartment(val.req_dept)}
                                     description={val.req_descr}
                                     value={getValue(val.req_value)}
-                                    effort={getEffort(val.req_effort)}
+                                    effort={effort}
                                     effortOptions={effortOptions}
                                     selectedEffort={handleEffortCallback}
                                     priority={getPriority(priority)}
-                                    approved={getApprovalStatus(val.req_approved.data[0])}
+                                    approved={approved}
                                     approveDisabled={approveDisabled}
-                                    rejected={getApprovalStatus(val.req_rejected.data[0])}
+                                    rejected={rejected}
                                     rejectDisabled={rejectDisabled}
                                     approvalOptions={approvalOptions}
                                     selectedApproved={handleApprovedCallback}

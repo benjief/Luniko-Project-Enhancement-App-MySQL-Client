@@ -14,7 +14,6 @@ import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 // import { color } from '@mui/system';
 import MaterialSingleSelect from './MaterialSingleSelect';
-import MaterialSingleSelectWithValue from './MaterialSingleSelectWithValue';
 import MaterialTextField from './MaterialTextField';
 
 const ExpandMore = styled((props) => {
@@ -40,6 +39,7 @@ export default function UpdateOwnedRequestCard({
     lastUpdated = "",
     company = "",
     submitter = "",
+    identifiers = [],
     scopeType = "",
     department = "",
     description = "",
@@ -67,7 +67,7 @@ export default function UpdateOwnedRequestCard({
     const [approvedValue, setApprovedValue] = React.useState(approved);
     const [rejectedValue, setRejectedValue] = React.useState(rejected);
     const [updateButtonColor, setUpdateButtonColor] = React.useState("#BFBFBF");
-    var statusAbbreviation = status.charAt(0).toUpperCase();
+    var statusAbbreviation = status.label.charAt(0).toUpperCase();
 
     const handleOnSelectStatus = (valueFromSelector) => {
         selectedStatus(valueFromSelector);
@@ -85,9 +85,9 @@ export default function UpdateOwnedRequestCard({
             setApprovedValue("Yes");
             setRejectedValue("No");
             approved = "";
-        } /* else {
+        } else {
             setApprovedValue("No");
-        } */
+        }
     }
 
     const handleOnSelectRejected = (valueFromSelector) => {
@@ -98,7 +98,7 @@ export default function UpdateOwnedRequestCard({
             setApprovedValue("No");
             rejected = "";
         } else {
-            // setRejectedValue("No");
+            setRejectedValue("No");
         }
     }
 
@@ -179,33 +179,32 @@ export default function UpdateOwnedRequestCard({
                             paragraph>
                             <strong>Updatable Fields</strong>
                         </Typography>
-                        <MaterialSingleSelectWithValue
+                        <MaterialSingleSelect
                             label="Status"
                             placeholder="Status"
                             defaultValue={status}
                             singleSelectOptions={statusOptions}
                             selectedValue={handleOnSelectStatus}
                             required={true}>
-                        </MaterialSingleSelectWithValue>
-                        <MaterialSingleSelectWithValue
+                        </MaterialSingleSelect>
+                        <MaterialSingleSelect
                             label="Effort"
                             placeholder="Effort"
                             defaultValue={effort}
                             singleSelectOptions={effortOptions}
                             selectedValue={handleOnSelectEffort}
                             required={true}>
-                        </MaterialSingleSelectWithValue>
-                        <MaterialSingleSelectWithValue
+                        </MaterialSingleSelect>
+                        <MaterialSingleSelect
                             label="Approved"
                             placeholder="Approved"
                             defaultValue={approved}
                             value={approvedValue}
                             singleSelectOptions={approvalOptions}
                             selectedValue={handleOnSelectApproved}
-                            isDisabled={approveDisabled}
-                            required={true}>
-                        </MaterialSingleSelectWithValue>
-                        <MaterialSingleSelectWithValue
+                            isDisabled={approveDisabled}>
+                        </MaterialSingleSelect>
+                        <MaterialSingleSelect
                             label="Rejected"
                             placeholder="Rejected"
                             defaultValue={rejected}
@@ -214,7 +213,7 @@ export default function UpdateOwnedRequestCard({
                             selectedValue={handleOnSelectRejected}
                             isDisabled={rejectDisabled}
                             required={false}>
-                        </MaterialSingleSelectWithValue>
+                        </MaterialSingleSelect>
                         <MaterialTextField
                             className="reason-for-rejection"
                             label="Reason for Rejection"
@@ -241,6 +240,18 @@ export default function UpdateOwnedRequestCard({
                         </Typography>
                         <Typography paragraph>
                             <strong>Submitted By<br /></strong> {submitter}
+                        </Typography>
+                        <Typography paragraph>
+                            <strong>Identifiers<br /></strong>
+                            {identifiers.length !== 0
+                                ? identifiers.map((val, key) => {
+                                    return <li
+                                        key={key}
+                                        style={{ listStyle: "none" }}>
+                                        {val}
+                                    </li>
+                                })
+                                : "None"}
                         </Typography>
                         <Typography paragraph>
                             <strong>Date Submitted<br /></strong> {dateSubmitted}

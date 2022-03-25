@@ -34,6 +34,7 @@ export default function AddOwnedRequestsCard({
     status = "",
     approved = "",
     submitter = "",
+    identifiers = [],
     owners = "",
     scopeType = "",
     department = "",
@@ -49,7 +50,7 @@ export default function AddOwnedRequestsCard({
     var statusAbbreviation = status.charAt(0).toUpperCase();
 
     // React.useEffect(() => {
-    //     console.log(owners);
+    //     console.log(owners.length === 0);
     // }, [owners]);
 
     const handleExpandClick = () => {
@@ -140,9 +141,30 @@ export default function AddOwnedRequestsCard({
                         paragraph>
                         <strong>Submitted By<br /></strong> {submitter}
                     </Typography>
+                    <Typography paragraph>
+                        <strong>Identifiers<br /></strong>
+                        {identifiers.length !== 0
+                            ? identifiers.map((val, key) => {
+                                return <li
+                                    key={key}
+                                    style={{ listStyle: "none" }}>
+                                    {val}
+                                </li>
+                            })
+                            : "None"}
+                    </Typography>
                     <Typography
                         paragraph>
-                        <strong>Owners<br /></strong> {owners === "" ? "None" : parse(owners)}
+                        <strong>Owners<br /></strong>
+                        {owners.length !== 0
+                            ? owners.map((val, key) => {
+                                return <li
+                                    key={key}
+                                    style={{ listStyle: "none" }}>
+                                    {val}
+                                </li>
+                            })
+                            : "None"}
                     </Typography>
                     <Typography
                         paragraph>

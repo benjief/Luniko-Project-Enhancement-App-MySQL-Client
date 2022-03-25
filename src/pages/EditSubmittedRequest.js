@@ -72,13 +72,26 @@ function EditSubmittedRequest() {
         Axios.get(`https://luniko-pe.herokuapp.com/get-request-details-for-id/${id}`, {
         }).then((response) => {
             setRequestDetails(response.data);
-            setCompany(response.data[0].req_company);
-            setScopeType(response.data[0].req_scope_type);
-            setDepartment(response.data[0].req_dept);
-            setValue(response.data[0].req_value);
-            setDescription(response.data[0].req_descr);
-            setApproved(response.data[0].req_approved.data[0]);
-            setRejected(response.data[0].req_rejected.data[0]);
+            let requestInfo = response.data[0];
+            setCompany(requestInfo.req_company);
+            let scopeType = {
+                "value": requestInfo.req_scope_type,
+                "label": getScopeType(requestInfo.req_scope_type)
+            }
+            setScopeType(scopeType);
+            let department = {
+                "value": requestInfo.req_dept,
+                "label": getDepartment(requestInfo.req_dept)
+            }
+            setDepartment(department);
+            let value = {
+                "value": requestInfo.req_value,
+                "label": getValue(requestInfo.req_value)
+            }
+            setValue(value);
+            setDescription(requestInfo.req_descr);
+            setApproved(requestInfo.req_approved.data[0]);
+            setRejected(requestInfo.req_rejected.data[0]);
             getAllIdentifiers();
         });
     };
@@ -163,10 +176,10 @@ function EditSubmittedRequest() {
         console.log("Updating request...");
         Axios.put("https://luniko-pe.herokuapp.com/update-submitted-request", {
             company: company,
-            scopeType: scopeType,
-            department: department,
+            scopeType: scopeType.value ? scopeType.value : scopeType,
+            department: department.value ? department.value : department,
             description: description,
-            value: value,
+            value: value.value ? value.value : value,
             id: idFromCard
         }).then((response) => {
             setUpdated(true); //TODO: are these needed?
@@ -264,15 +277,15 @@ function EditSubmittedRequest() {
                                     id={val.req_id}
                                     company={val.req_company}
                                     updatedCompany={handleCompanyCallback}
-                                    scopeType={getScopeType(val.req_scope_type)}
+                                    scopeType={scopeType}
                                     scopeTypeOptions={scopeOptions}
                                     updatedScopeType={handleScopeCallback}
-                                    department={getDepartment(val.req_dept)}
+                                    department={department}
                                     departmentOptions={deptOptions}
                                     updatedDepartment={handleDeptCallback}
                                     description={val.req_descr}
                                     updatedDescription={handleDescriptionCallback}
-                                    value={getValue(val.req_value)}
+                                    value={value}
                                     valueOptions={valueOptions}
                                     updatedValue={handleValueCallback}
                                     identifierOptions={identifierOptions}

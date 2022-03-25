@@ -17,7 +17,7 @@ function AddOwnedRequests() {
     const navigate = useNavigate();
     const { uid, isIdentifier, isOwner } = useParams();
     const [unownedRequests, setUnownedRequests] = useState([]);
-    const [requestOwners, setRequestOwners] = useState(new Map());
+    // const [requestOwners, setRequestOwners] = useState(new Map());
     const [messageContent, setMessageContent] = useState("No requests available!");
     const [transitionElementOpacity, setTransitionElementOpacity] = useState("100%");
     const [transtitionElementVisibility, setTransitionElementVisibility] = useState("visible");
@@ -32,9 +32,8 @@ function AddOwnedRequests() {
             if (response.data.length !== 0) {
                 setMessageContent("Available Requests:");
                 getRequestOwners(response.data);
-            }
-            setRendering(false);
-            if (response.data.length === 0) {
+            } else {
+                setRendering(false);
                 setTimeout(() => {
                     navigate("/dashboard");
                 }, 2000);
@@ -42,36 +41,54 @@ function AddOwnedRequests() {
         });
     };
 
-    const getRequestOwners = (unownedRequestList) => {
-        let tempMap = new Map();
+    const getRequestOwners = async (unownedRequestList) => {
+        // let tempMap = new Map();
         for (let i = 0; i < unownedRequestList.length; i++) {
-            Axios.get(`https://luniko-pe.herokuapp.com/get-request-owners-for-id/${unownedRequestList[i].req_id}`, {
+            await Axios.get(`https://luniko-pe.herokuapp.com/get-request-owners-for-id/${unownedRequestList[i].req_id}`, {
             }).then((response) => {
-                if (response.data.length !== 0) {
-                    let req_id = unownedRequestList[i].req_id;
-                    let owners = [];
-                    for (let i = 0; i < response.data.length; i++) {
-                        owners.push(response.data[i].req_owner);
-                    }
-                    tempMap.set(req_id, owners);
-                    setRequestOwners(tempMap);
+                let owners = [];
+                // let req_id = unownedRequestList[i].req_id;
+                for (let i = 0; i < response.data.length; i++) {
+                    owners.push(response.data[i].req_owner);
                 }
-                setRendering(false);
+                unownedRequestList[i].req_owners = owners;
+                // tempMap.set(req_id, owners);
+
+                // setRequestOwners(tempMap);
+                // setRendering(false);
             });
         }
+        setUnownedRequests(unownedRequestList);
+        getSubmittedIdentifiers(unownedRequestList);
     };
 
-    const getOwnerList = (id) => {
-        let ownerList = "";
-        let returnedOwners = requestOwners.get(id);
-        if (returnedOwners) {
-            for (let i = 0; i < returnedOwners.length; i++) {
-                ownerList += returnedOwners[i];
-                ownerList += i !== returnedOwners.length - 1 ? "<br />" : "";
-            }
+    const getSubmittedIdentifiers = async (unownedRequestList) => {
+        for (let i = 0; i < unownedRequestList.length; i++) {
+            await Axios.get(`https://luniko-pe.herokuapp.com/get-identifier-names-for-submitted-request/${unownedRequestList[i].req_id}`, {
+            }).then((response) => {
+                let submittedIdentifiers = []
+                for (let i = 0; i < response.data.length; i++) {
+                    submittedIdentifiers.push(response.data[i].pers_name);
+                    // console.log("added identifier " + i);
+                }
+                unownedRequestList[i].req_identifiers = submittedIdentifiers;
+            });
         }
-        return ownerList;
-    }
+        setUnownedRequests([...unownedRequestList]);
+        setRendering(false);
+    };
+
+    // const getOwnerList = (id) => {
+    //     let ownerList = "";
+    //     let returnedOwners = requestOwners.get(id);
+    //     if (returnedOwners) {
+    //         for (let i = 0; i < returnedOwners.length; i++) {
+    //             ownerList += returnedOwners[i];
+    //             ownerList += i !== returnedOwners.length - 1 ? "<br />" : "";
+    //         }
+    //     }
+    //     return ownerList;
+    // }
 
     const handleAddRequestCallback = (requestFromCard) => {
         Axios.post("https://luniko-pe.herokuapp.com/create-ownership", {
@@ -103,6 +120,7 @@ function AddOwnedRequests() {
         } if (rendering) {
             getUnownedRequests();
         } else {
+            // console.log(unownedRequests);
             setTransitionElementOpacity("0%");
             setTransitionElementVisibility("hidden");
         }
@@ -155,7 +173,8 @@ function AddOwnedRequests() {
                                     status={val.req_rejected.data[0] === 1 ? "Rejected" : getStatus(val.req_status)}
                                     approved={getApprovalStatus(val.req_approved.data[0])}
                                     submitter={val.req_submitter}
-                                    owners={getOwnerList(val.req_id)}
+                                    identifiers={val.req_identifiers}
+                                    owners={val.req_owners}
                                     scopeType={getScopeType(val.req_scope_type)}
                                     department={getDepartment(val.req_dept)}
                                     description={val.req_descr}

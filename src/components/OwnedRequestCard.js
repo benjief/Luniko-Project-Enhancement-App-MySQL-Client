@@ -37,6 +37,7 @@ export default function OwnedRequestCard({
     lastUpdated = "",
     company = "",
     submitter = "",
+    identifiers = [],
     scopeType = "",
     department = "",
     description = "",
@@ -119,6 +120,18 @@ export default function OwnedRequestCard({
                     </Typography>
                     <Typography paragraph>
                         <strong>Submitted By<br /></strong> {submitter}
+                    </Typography>
+                    <Typography paragraph>
+                        <strong>Identifiers<br /></strong>
+                        {identifiers.length !== 0
+                            ? identifiers.map((val, key) => {
+                                return <li
+                                    key={key}
+                                    style={{ listStyle: "none" }}>
+                                    {val}
+                                </li>
+                            })
+                            : "None"}
                     </Typography>
                     <Typography paragraph>
                         <strong>Date Submitted<br /></strong> {dateSubmitted}

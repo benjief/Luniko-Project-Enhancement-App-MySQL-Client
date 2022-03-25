@@ -21,18 +21,43 @@ function SubmittedRequests() {
     const [transtitionElementVisibility, setTransitionElementVisibility] = useState("visible");
 
     const getSubmittedRequests = () => {
-
         Axios.get(`https://luniko-pe.herokuapp.com/get-submitted-requests-for-id/${uid}`, {
         }).then((response) => {
-            console.log(response.data[1].req_comments === null);
-            setSubmittedRequests(response.data);
+            // response.data[0].req_identifiers = ["Benjie Friedman", "Wanika Lai"];
+            // setSubmittedRequests(response.data);
             if (response.data.length !== 0) {
                 setMessageContent("Your submitted requests:");
             }
-            // console.log(submittedRequests);
-            setRendering(false);
+            // setRendering(false);
+            getSubmittedIdentifiers(response.data);
         });
     };
+
+    const getSubmittedIdentifiers = async (requestList) => {
+        for (let i = 0; i < requestList.length; i++) {
+            await Axios.get(`https://luniko-pe.herokuapp.com/get-identifier-names-for-submitted-request/${requestList[i].req_id}`, {
+            }).then((response) => {
+                let submittedIdentifiers = []
+                for (let i = 0; i < response.data.length; i++) {
+                    submittedIdentifiers.push(response.data[i].pers_name);
+                }
+                requestList[i].req_identifiers = submittedIdentifiers;
+            });
+        }
+        setSubmittedRequests([...requestList]);
+        setRendering(false);
+    };
+
+    // const populateIdentifierList = (submittedIdentifiers) => {
+    //     let tempArray = [];
+    //     if (submittedIdentifiers.length > 1) {
+    //         for (let i = 0; i < submittedIdentifiers.length; i++) {
+    //             tempArray.push(submittedIdentifiers[i]);
+    //         }
+    //     }
+    //     console.log(tempArray);
+    //     return tempArray;
+    // }
 
     useEffect(() => {
         if (loading) {
@@ -44,6 +69,7 @@ function SubmittedRequests() {
         } else {
             setTransitionElementOpacity("0%");
             setTransitionElementVisibility("hidden");
+            // console.log(submittedRequests);
         }
     }, [loading, user, rendering, uid]);
 
@@ -89,6 +115,7 @@ function SubmittedRequests() {
                                     status={val.req_rejected.data[0] === 1 ? "Rejected" : getStatus(val.req_status)}
                                     approved={getApprovalStatus(val.req_approved.data[0])}
                                     submitter={val.req_submitter}
+                                    identifiers={val.req_identifiers}
                                     scopeType={getScopeType(val.req_scope_type)}
                                     department={getDepartment(val.req_dept)}
                                     description={val.req_descr}
