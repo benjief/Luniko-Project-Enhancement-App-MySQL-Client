@@ -5,8 +5,13 @@
     /* margin-top: 5px; */
 }
 
+.login-card .MuiBox-root, .register-card .MuiBox-root {
+    margin-bottom: 10px !important;
+}
+
 .material-text-field {
     width: 100% !important;
+    min-height: 76.99px !important;
     margin-top: 0 !important;
 }
 

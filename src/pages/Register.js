@@ -8,6 +8,7 @@ import {
 } from "../firebase";
 import NavBar from "../components/Navbar";
 import UserRegistrationCard from "../components/UserRegistrationCard";
+import PositionedSnackbar from "../components/PositionedSnackbar";
 import Hypnosis from "react-cssfx-loading/lib/Hypnosis";
 import Axios from "axios";
 import "../styles/Register.css";
@@ -28,6 +29,7 @@ function Register() {
     const [registerButtonDisabled, setRegisterButtonDisabled] = useState(true);
     const [transitionElementOpacity, setTransitionElementOpacity] = useState("100%");
     const [transtitionElementVisibility, setTransitionElementVisibility] = useState("visible");
+    const [alert, setAlert] = useState(false);
 
     // const history = useHistory();
     const navigate = useNavigate();
@@ -98,11 +100,25 @@ function Register() {
 
     const registerWithGoogle = async (googleRegistrationSelected) => {
         if (googleRegistrationSelected) {
-            await loginWithGoogle(email, password).then(() => {
-                navigate("/dashboard");
-            });
+            try {
+                await loginWithGoogle(email, password).then(() => {
+                    navigate("/dashboard");
+                    console.log("logged in with google");
+                });
+            } catch (err) {
+                if (err.message.indexOf("popup") !== -1) {
+                    setAlert(true);
+                }
+            }
         }
-    };
+    }
+
+    const handleAlertClosed = (alertClosed) => {
+        if (alertClosed) {
+            setAlert(false);
+            navigate("/register");
+        }
+    }
 
     useEffect(() => {
         if (loading) {
@@ -147,6 +163,15 @@ function Register() {
                     srDisabled={true}
                     orDisabled={true}>
                 </NavBar>
+                {alert
+                    ? <div className="alert-container">
+                        <PositionedSnackbar
+                            message="Popup Closed. Please try again."
+                            closed={handleAlertClosed}
+                            className="register-alert">
+                        </PositionedSnackbar>
+                    </div>
+                    : <div></div>}
                 <div className="register">
                     <div className="register-container">
                         <div className="page-heading">

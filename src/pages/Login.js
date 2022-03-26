@@ -4,6 +4,7 @@ import { auth, loginWithEmailAndPassword, loginWithGoogle } from "../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import NavBar from "../components/Navbar";
 import UserLoginCard from "../components/UserLoginCard";
+import PositionedSnackbar from "../components/PositionedSnackbar";
 import Hypnosis from "react-cssfx-loading/lib/Hypnosis";
 import "../styles/Login.css";
 import "../styles/SelectorComponents.css";
@@ -20,11 +21,13 @@ function Login() {
     const [loginButtonDisabled, setLoginButtonDisabled] = useState(true);
     const [transitionElementOpacity, setTransitionElementOpacity] = useState("100%");
     const [transtitionElementVisibility, setTransitionElementVisibility] = useState("visible");
+    const [alert, setAlert] = useState(false);
     const navigate = useNavigate();
 
     const handleEmailCallback = (emailFromTextInput) => {
         setEmail(emailFromTextInput);
         setEmailAuthenticationError("");
+        setPasswordAuthenticationError("");
     }
 
     const handlePasswordCallback = (passwordFromTextInput) => {
@@ -47,10 +50,25 @@ function Login() {
     }
 
     const attemptLoginWithGoogle = async () => {
-        await loginWithGoogle(email, password).then(() => {
-            navigate("/dashboard");
-        });
+        try {
+            console.log("trying to log in with google");
+            await loginWithGoogle(email, password).then(() => {
+                navigate("/dashboard");
+                console.log("logged in with google");
+            });
+        } catch (err) {
+            if (err.message.indexOf("popup") !== -1) {
+                setAlert(true);
+            }
+        }
     };
+
+    const handleAlertClosed = (alertClosed) => {
+        if (alertClosed) {
+            setAlert(false);
+            navigate("/");
+        }
+    }
 
     useEffect(() => {
         if (loading) {
@@ -90,6 +108,15 @@ function Login() {
                     srDisabled={true}
                     orDisabled={true}>
                 </NavBar>
+                {alert
+                    ? <div className="alert-container">
+                        <PositionedSnackbar
+                            message="Popup Closed. Please try again."
+                            closed={handleAlertClosed}
+                            className="login-alert">
+                        </PositionedSnackbar>
+                    </div>
+                    : <div></div>}
                 <div className="login">
                     <div className="login-container">
                         <div className="page-heading">
@@ -142,7 +169,7 @@ function Login() {
                         </div> */}
                     </div>
                 </div>
-            </Fragment>
+            </Fragment >
     );
 }
 

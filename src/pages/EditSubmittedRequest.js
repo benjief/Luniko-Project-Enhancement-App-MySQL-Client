@@ -71,69 +71,94 @@ function EditSubmittedRequest() {
     const getRequestDetails = (id) => {
         Axios.get(`https://luniko-pe.herokuapp.com/get-request-details-for-id/${id}`, {
         }).then((response) => {
-            setRequestDetails(response.data);
-            let requestInfo = response.data[0];
-            setCompany(requestInfo.req_company);
-            let scopeType = {
-                "value": requestInfo.req_scope_type,
-                "label": getScopeType(requestInfo.req_scope_type)
-            }
-            setScopeType(scopeType);
-            let department = {
-                "value": requestInfo.req_dept,
-                "label": getDepartment(requestInfo.req_dept)
-            }
-            setDepartment(department);
-            let value = {
-                "value": requestInfo.req_value,
-                "label": getValue(requestInfo.req_value)
-            }
-            setValue(value);
-            setDescription(requestInfo.req_descr);
-            setApproved(requestInfo.req_approved.data[0]);
-            setRejected(requestInfo.req_rejected.data[0]);
-            getAllIdentifiers();
+            let reqSubmitter = "";
+            new Promise(resolve => {
+                setRequestDetails(response.data);
+                let requestInfo = response.data[0];
+                setCompany(requestInfo.req_company);
+                let scopeType = {
+                    "value": requestInfo.req_scope_type,
+                    "label": getScopeType(requestInfo.req_scope_type)
+                };
+                reqSubmitter = {
+                    "value": requestInfo.req_submitter_id,
+                    "label": requestInfo.req_submitter
+                };
+                setScopeType(scopeType);
+                let department = {
+                    "value": requestInfo.req_dept,
+                    "label": getDepartment(requestInfo.req_dept)
+                };
+                setDepartment(department);
+                let value = {
+                    "value": requestInfo.req_value,
+                    "label": getValue(requestInfo.req_value)
+                };
+                setValue(value);
+                setDescription(requestInfo.req_descr);
+                setApproved(requestInfo.req_approved.data[0]);
+                setRejected(requestInfo.req_rejected.data[0]);
+            }).then(getAllIdentifiers(reqSubmitter));
         });
     };
 
-    const getAllIdentifiers = () => {
+    const getAllIdentifiers = (reqSubmitter) => {
         Axios.get("https://luniko-pe.herokuapp.com/get-all-personnel", {
         }).then((response) => {
-            getSubmittedIdentifiers(response.data, reqID);
+            let tempArray = [];
+            for (let i = 0; i < response.data.length; i++) {
+                if (response.data[i].pers_id !== reqSubmitter.value) {
+                    let personnel = {
+                        "value": response.data[i].pers_id,
+                        "label": response.data[i].pers_fname + " " + response.data[i].pers_lname
+                    }
+                    tempArray.push(personnel);
+                }
+            }
+            setIdentifierOptions(tempArray);
+            getSubmittedIdentifiers(reqID, reqSubmitter);
         });
     };
 
-    const getSubmittedIdentifiers = (allPersonnel, id) => {
+    const getSubmittedIdentifiers = (id, reqSubmitter) => {
         Axios.get(`https://luniko-pe.herokuapp.com/get-identifiers-for-submitted-request/${id}`, {
         }).then((response) => {
             let submittedIdentifiers = []
             for (let i = 0; i < response.data.length; i++) {
-                submittedIdentifiers.push(response.data[i].pers_id);
-            }
-            populateIdentifierList(allPersonnel, submittedIdentifiers);
-        })
-    }
-
-    const populateIdentifierList = (allPersonnel, submittedIdentifiers) => {
-        if (allPersonnel.length > 1) {
-            let tempArray = [];
-            for (let i = 0; i < allPersonnel.length; i++) {
-                if (allPersonnel[i].pers_id !== uid && !submittedIdentifiers.includes(allPersonnel[i].pers_id)) {
-                    let value = allPersonnel[i].pers_id;
-                    let label = allPersonnel[i].pers_fname + " " + allPersonnel[i].pers_lname;
-                    let email = allPersonnel[i].pers_email;
-                    let identifier = {
-                        "value": value,
-                        "label": label,
-                        "description": email
-                    };
-                    tempArray.push(identifier);
+                if (response.data[i].pers_id !== reqSubmitter.value) {
+                    let personnel = {
+                        "value": response.data[i].pers_id,
+                        "label": response.data[i].pers_name
+                    }
+                    submittedIdentifiers.push(personnel);
                 }
             }
-            setIdentifierOptions(tempArray);
-        }
-        setRendering(false);
+            // populateIdentifierList(allPersonnel, submittedIdentifiers);
+            setSelectedIdentifiers(submittedIdentifiers);
+            setRendering(false);
+        });
     }
+
+    // const populateIdentifierList = (allPersonnel, submittedIdentifiers) => {
+    //     if (allPersonnel.length > 1) {
+    //         let tempArray = [];
+    //         for (let i = 0; i < allPersonnel.length; i++) {
+    //             if (allPersonnel[i].pers_id !== uid && !submittedIdentifiers.includes(allPersonnel[i].pers_id)) {
+    //                 let value = allPersonnel[i].pers_id;
+    //                 let label = allPersonnel[i].pers_fname + " " + allPersonnel[i].pers_lname;
+    //                 let email = allPersonnel[i].pers_email;
+    //                 let identifier = {
+    //                     "value": value,
+    //                     "label": label,
+    //                     "description": email
+    //                 };
+    //                 tempArray.push(identifier);
+    //             }
+    //         }
+    //         setIdentifierOptions(tempArray);
+    //     }
+    //     setRendering(false);
+    // }
 
     const checkValueUpdated = () => {
         if (!valueUpdated) {
@@ -185,15 +210,23 @@ function EditSubmittedRequest() {
             setUpdated(true); //TODO: are these needed?
             console.log("Request successfully updated!!");
             if (selectedIdentifiers.length !== 0) {
-                addIdentifications(idFromCard);
+                removeIdentifications(idFromCard);
             } else {
                 setAlert(true);
             }
         });
     };
 
+    const removeIdentifications = (requestID) => {
+        console.log("Removing old identifications...");
+        Axios.delete(`https://luniko-pe.herokuapp.com/remove-identifications/${requestID}`, {
+        }).then((response) => {
+            addIdentifications(requestID);
+        })
+    }
+
     const addIdentifications = (requestID) => {
-        console.log("Moving on to identifications...")
+        console.log("Adding updated identifications...")
         for (let i = 0; i < selectedIdentifiers.length; i++) {
             Axios.post("https://luniko-pe.herokuapp.com/create-identification", {
                 uid: selectedIdentifiers[i].value,
@@ -222,7 +255,7 @@ function EditSubmittedRequest() {
         } else {
             setTransitionElementOpacity("0%");
             setTransitionElementVisibility("hidden");
-            if (!approved && !rejected && valueUpdated && company.trim() !== "" && scopeType !== "" && department !== "" && value !== "" && description.trim() !== "") {
+            if (!approved && !rejected && valueUpdated && company.trim() !== "" && scopeType !== "" && department !== "" && value !== "" && description.trim() !== "", selectedIdentifiers) {
                 setUpdateButtonDisabled(false);
             } else {
                 setUpdateButtonDisabled(true);
@@ -289,7 +322,8 @@ function EditSubmittedRequest() {
                                     valueOptions={valueOptions}
                                     updatedValue={handleValueCallback}
                                     identifierOptions={identifierOptions}
-                                    addedIdentifiers={handleIdentifierCallback}
+                                    identifiers={selectedIdentifiers}
+                                    updatedIdentifiers={handleIdentifierCallback}
                                     requestToUpdate={updateRequest}
                                     updateButtonDisabled={updateButtonDisabled}>
                                 </EditSubmittedRequestCard>

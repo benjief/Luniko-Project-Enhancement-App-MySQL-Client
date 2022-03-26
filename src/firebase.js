@@ -78,40 +78,41 @@ const writePersonnelToDB = async (uid, firstName, lastName, email) => {
 // Google authentication
 const googleProvider = new GoogleAuthProvider();
 const loginWithGoogle = async () => {
-    try {
-        const res = await signInWithPopup(auth, googleProvider);
-        const user = res.user;
+    // try {
+    const res = await signInWithPopup(auth, googleProvider);
+    const user = res.user;
 
-        // let uidList = [];
-        // uidList = await getUIDs(user).then(() => {
-        //     console.log(uidList);
-        // })
+    // let uidList = [];
+    // uidList = await getUIDs(user).then(() => {
+    //     console.log(uidList);
+    // })
 
-        let personnelList = [];
-        await getPersonnelWithUID(personnelList, user.uid).then(async () => {
-            if (personnelList[0].length === 0) {
-                await writePersonnelToDB(user.uid, user.displayName.split(" ")[0],
-                    user.displayName.split(" ").slice(1), user.email).then(() => {
-                    });
-            }
-        });
+    let personnelList = [];
+    await getPersonnelWithUID(personnelList, user.uid).then(async () => {
+        if (personnelList[0].length === 0) {
+            await writePersonnelToDB(user.uid, user.displayName.split(" ")[0],
+                user.displayName.split(" ").slice(1), user.email).then(() => {
+                });
+        }
+    });
 
 
-        // const q = query(collection(db, "users"), where("uid", "==", user.uid));
-        // const docs = await getDocs(q);
+    // const q = query(collection(db, "users"), where("uid", "==", user.uid));
+    // const docs = await getDocs(q);
 
-        // await addDoc(collection(db, "users"), {
-        //     uid: user.uid,
-        //     name: user.displayName,
-        //     authProvider: "google",
-        //     email: user.email,
-        // });
+    // await addDoc(collection(db, "users"), {
+    //     uid: user.uid,
+    //     name: user.displayName,
+    //     authProvider: "google",
+    //     email: user.email,
+    // });
 
-    } catch (err) {
-        console.error(err);
-        console.log(err.message);
-        alert(err.message);
-    }
+    // } catch (err) {
+    //     console.log("Mees");
+    //     console.error(err);
+    //     console.log(err.message);
+    //     alert(err.message);
+    // }
 };
 
 // Standard Authentication

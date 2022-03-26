@@ -200,13 +200,13 @@ function UpdateOwnedRequest() {
             reasonRejected: rejectDisabled === null ? null : rejected === "" ? null : reasonRejected,
             effort: effort.value ? effort.value : effort,
             approved: !approveDisabled
-                ? rejected.value && rejected.value === "" ? 0
-                    : rejected === "" ? 0
-                        : approved.value ? approved.value : approved : 0,
+                ? (rejected.value && rejected.value === "") || rejected === "" ? 0
+                    : approved.value ? approved.value : approved
+                : 0,
             rejected: !rejectDisabled
-                ? approved.value && approved.value === "" ? 0
-                    : approved === "" ? 0
-                        : rejected.value ? rejected.value : rejected : 0,
+                ? (approved.value && approved.value === "") || approved === "" ? 0
+                    : rejected.value ? rejected.value : rejected
+                : 0,
             status: status.value ? status.value : status,
             comments: comments === null ? null : comments === "" ? null : comments,
             id: idFromCard,

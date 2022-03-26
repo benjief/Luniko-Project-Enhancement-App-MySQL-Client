@@ -5,10 +5,11 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 
 export default function PositionedSnackbar({
+    className = "",
     vertical = "top",
     horizontal = "center",
     message = "",
-    closed = false
+    closed = false,
 }) {
 
     // const [open, setOpen] = React.useState(true);
@@ -34,13 +35,14 @@ export default function PositionedSnackbar({
     return (
         <div>
             <Snackbar
+                className={className}
                 open
                 anchorOrigin={{ vertical, horizontal }}
                 onClose={handleClose}
                 message={message}
                 action={action}
                 key={vertical + horizontal}
-                autoHideDuration={4000}
+                autoHideDuration={2000}
             />
         </div>
     );

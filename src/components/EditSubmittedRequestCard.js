@@ -45,7 +45,7 @@ export default function EditOwnedRequestCard({
     value = "",
     updatedValue = 0,
     identifiers = [],
-    addedIdentifiers = [],
+    updatedIdentifiers = [],
     requestToUpdate = "",
     updateButtonDisabled = true
 }) {
@@ -73,7 +73,7 @@ export default function EditOwnedRequestCard({
     }
 
     const handleOnChangeIdentifiers = (valuesFromSelector) => {
-        addedIdentifiers(valuesFromSelector);
+        updatedIdentifiers(valuesFromSelector);
     }
 
     const handleUpdateRequest = () => {
@@ -173,6 +173,7 @@ export default function EditOwnedRequestCard({
                         <MaterialMultiSelect
                             label="Add Identifiers"
                             placeholder="Add Identifiers"
+                            defaultValue={identifiers}
                             multiSelectOptions={identifierOptions}
                             selectedValues={handleOnChangeIdentifiers}
                             required={false}>
