@@ -208,6 +208,7 @@ function EditSubmittedRequest() {
             id: idFromCard
         }).then((response) => {
             setUpdated(true); //TODO: are these needed?
+            setUpdateButtonDisabled(true);
             console.log("Request successfully updated!!");
             if (selectedIdentifiers.length !== 0) {
                 removeIdentifications(idFromCard);
@@ -239,7 +240,6 @@ function EditSubmittedRequest() {
 
     const handleAlertClosed = (alertClosed) => {
         if (alertClosed) {
-            console.log("navigating back");
             setAlert(false);
             navigate(-1);
         }

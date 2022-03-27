@@ -212,6 +212,7 @@ function UpdateOwnedRequest() {
             id: idFromCard,
         }).then((response) => {
             setUpdated(true);
+            setUpdateButtonDisabled(true);
             console.log("Request successfully updated!");
             setAlert(true);
             // handleAlertClosed(true);

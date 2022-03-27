@@ -60,18 +60,18 @@ export default function AddOwnedRequestsCard({
 
     const handleAddRequest = () => {
         handleExpandClick();
-        setTimeout(() => {
-            setCardOpacity("0%");
-            setTimeout(() => {
-                toAdd(id);
-            }, 100);
-            // This condition ensures properties of an unmounted component aren't changed
-            if (requestsRemaining > 0) {
-                setTimeout(() => {
-                    setCardOpacity("100%");
-                }, 300);
-            }
-        }, 50);
+        // setTimeout(() => {
+        setCardOpacity("0%");
+        // setTimeout(() => {
+        toAdd(id);
+        // }, 100);
+        // This condition ensures properties of an unmounted component aren't changed
+        if (requestsRemaining > 0) {
+            // setTimeout(() => {
+            setCardOpacity("100%");
+            // }, 300);
+        }
+        // }, 50);
 
     }
 

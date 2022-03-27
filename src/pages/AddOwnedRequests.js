@@ -4,8 +4,9 @@ import { auth } from "../firebase";
 import { useNavigate, useParams } from "react-router-dom";
 import NavBar from "../components/Navbar";
 import Axios from "axios";
-import Hypnosis from "react-cssfx-loading/lib/Hypnosis";
 import AddOwnedRequestsCard from "../components/AddOwnedRequestsCard";
+import PositionedSnackbar from "../components/PositionedSnackbar";
+import Hypnosis from "react-cssfx-loading/lib/Hypnosis";
 // import { map } from "@firebase/util";
 import { getStatus, getScopeType, getDepartment, getValue, getApprovalStatus } from "../components/DecoderFunctions";
 import "../styles/AddOwnedRequests.css";
@@ -17,6 +18,7 @@ function AddOwnedRequests() {
     const navigate = useNavigate();
     const { uid, isIdentifier, isOwner } = useParams();
     const [unownedRequests, setUnownedRequests] = useState([]);
+    const [addedRequestID, setAddedRequestID] = useState("");
     // const [requestOwners, setRequestOwners] = useState(new Map());
     const [messageContent, setMessageContent] = useState("No requests available!");
     const [transitionElementOpacity, setTransitionElementOpacity] = useState("100%");
@@ -24,6 +26,7 @@ function AddOwnedRequests() {
     // const [pageTransitionTime, setPageTransitionTime] = useState("0s");
     const [cardContainerOpacity, setCardContainerOpacity] = useState("100%");
     const [pageMessageopacity, setPageMessageOpacity] = useState("100%");
+    const [alert, setAlert] = useState(false);
 
     const getUnownedRequests = () => {
         Axios.get(`https://luniko-pe.herokuapp.com/get-unowned-requests-for-id/${uid}`, {
@@ -91,6 +94,10 @@ function AddOwnedRequests() {
     // }
 
     const handleAddRequestCallback = (requestFromCard) => {
+        if (unownedRequests.length > 1) {
+            setAddedRequestID(requestFromCard);
+            setAlert(true);
+        }
         Axios.post("https://luniko-pe.herokuapp.com/create-ownership", {
             uid: uid,
             req_id: requestFromCard
@@ -111,6 +118,12 @@ function AddOwnedRequests() {
             }
         });
     };
+
+    const handleAlertClosed = (alertClosed) => {
+        if (alertClosed) {
+            setAlert(false);
+        }
+    }
 
     useEffect(() => {
         if (loading) {
@@ -152,6 +165,14 @@ function AddOwnedRequests() {
                     submittedRequestsLink={`/submitted-requests/${uid}/${isIdentifier}/${isOwner}`}
                     ownedRequestsLink={`/owned-requests/${user?.uid}/${isIdentifier}/${isOwner}`}>
                 </NavBar>
+                {alert
+                    ? <div className="alert-container">
+                        <PositionedSnackbar
+                            message={["Request ", <strong>{addedRequestID}</strong>, " has been added to your owned requests!"]}
+                            closed={handleAlertClosed}>
+                        </PositionedSnackbar>
+                    </div>
+                    : <div></div>}
                 <div className="unowned-requests">
                     <p
                         className="page-message"

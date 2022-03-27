@@ -114,7 +114,6 @@ function CreateRequest() {
     }
 
     const addRequest = (uidFromCallback) => {
-        console.log(uidFromCallback);
         console.log("Adding request...");
         Axios.post("https://luniko-pe.herokuapp.com/create-request", {
             uid: uidFromCallback,
@@ -125,12 +124,12 @@ function CreateRequest() {
             value: value
         }).then((response) => {
             setSubmitted(true);
+            setSubmitButtonDisabled(true);
             console.log("Request successfully added!!");
             if (selectedIdentifiers.length !== 0) {
                 addIdentifications(response.data.insertId);
             } else {
                 setAlert(true);
-                // handleAlertClosed(true);
             }
         });
     };
