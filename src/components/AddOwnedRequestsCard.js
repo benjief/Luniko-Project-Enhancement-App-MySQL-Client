@@ -14,6 +14,7 @@ import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 // import { color } from '@mui/system';
 import parse from 'html-react-parser';
+import FadingBalls from "react-cssfx-loading/lib/FadingBalls";
 
 const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
@@ -41,12 +42,15 @@ export default function AddOwnedRequestsCard({
     description = "",
     value = "",
     comments = "",
-    toAdd = ""
+    toAdd = "",
+    displayFadingBalls = false,
+    addRequestButtonDisabled = false
 }) {
     const [expanded, setExpanded] = React.useState(false);
     // const [cardTransitionTime, setCardTransitionTime] = React.useState("0.2s");
     const [cardColor, setCardColor] = React.useState("var(--lunikoMidGrey)");
     const [cardOpacity, setCardOpacity] = React.useState("100%");
+    const [addRequestButtonColor, setAddRequestButtonColor] = React.useState("#BFBFBF");
     var statusAbbreviation = status.charAt(0).toUpperCase();
 
     // React.useEffect(() => {
@@ -74,6 +78,14 @@ export default function AddOwnedRequestsCard({
         // }, 50);
 
     }
+
+    React.useEffect(() => {
+        if (!addRequestButtonDisabled) {
+            setAddRequestButtonColor("var(--lunikoBlue)");
+        } else {
+            setAddRequestButtonColor("#BFBFBF");
+        }
+    }, [addRequestButtonDisabled]);
 
     return (
         <Card
@@ -196,8 +208,19 @@ export default function AddOwnedRequestsCard({
                     </Typography>
                     <button
                         className="add-request-button"
-                        onClick={handleAddRequest}>
-                        Become Owner
+                        onClick={handleAddRequest}
+                        style={{ backgroundColor: addRequestButtonColor }}>
+                        {displayFadingBalls ?
+                            <div className="fading-balls-container">
+                                <FadingBalls
+                                    className="spinner"
+                                    color="white"
+                                    width="7px"
+                                    height="7px"
+                                    duration="0.5s"
+                                />
+                            </div> :
+                            <p>Become Owner</p>}
                     </button>
                 </CardContent>
             </Collapse>

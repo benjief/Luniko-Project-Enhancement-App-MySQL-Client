@@ -15,7 +15,6 @@ import "../styles/CardComponents.css";
 function AddOwnedRequests() {
     const [user, loading] = useAuthState(auth);
     const [rendering, setRendering] = useState(true);
-    const navigate = useNavigate();
     const { uid, isIdentifier, isOwner } = useParams();
     const [unownedRequests, setUnownedRequests] = useState([]);
     const [addedRequestID, setAddedRequestID] = useState("");
@@ -27,6 +26,12 @@ function AddOwnedRequests() {
     const [cardContainerOpacity, setCardContainerOpacity] = useState("100%");
     const [pageMessageopacity, setPageMessageOpacity] = useState("100%");
     const [alert, setAlert] = useState(false);
+    const [alertType, setAlertType] = useState("success-alert");
+    const [alertMessage, setAlertMessage] = useState(["Request ", <strong>{addedRequestID}</strong>, " has been added to your owned requests!"]);
+    const [displaySubmitButtonWorkingIcon, setDisplaySubmitButtonWorkingIcon] = useState(false);
+    const [addRequestButtonDisabled, setAddRequestButtonDisabled] = useState(false);
+
+    const navigate = useNavigate();
 
     const getUnownedRequests = () => {
         Axios.get(`https://luniko-pe.herokuapp.com/get-unowned-requests-for-id/${uid}`, {
@@ -94,6 +99,8 @@ function AddOwnedRequests() {
     // }
 
     const handleAddRequestCallback = (requestFromCard) => {
+        setAddRequestButtonDisabled(true)
+        setDisplaySubmitButtonWorkingIcon(true);
         if (unownedRequests.length > 1) {
             setAddedRequestID(requestFromCard);
             setAlert(true);
@@ -101,11 +108,15 @@ function AddOwnedRequests() {
         Axios.post("https://luniko-pe.herokuapp.com/create-ownership", {
             uid: uid,
             req_id: requestFromCard
+        }).catch((err) => {
+            handleError();
         }).then((response) => {
-            console.log("Ownership successfully added!");
-            setUnownedRequests(unownedRequests.filter((val) => {
-                return val.req_id !== requestFromCard;
-            }));
+            if (response) {
+                console.log("Ownership successfully added!");
+                setUnownedRequests(unownedRequests.filter((val) => {
+                    return val.req_id !== requestFromCard;
+                }));
+            }
             if (unownedRequests.length === 1) {
                 setPageMessageOpacity("0%");
                 setTimeout(() => {
@@ -118,6 +129,12 @@ function AddOwnedRequests() {
             }
         });
     };
+
+    const handleError = () => {
+        setAlertType("error-alert");
+        setAlertMessage("Aplogies! We've encountered an error. Please attempt to re-submit your checklist.");
+        setAlert(true);
+    }
 
     const handleAlertClosed = (alertClosed) => {
         if (alertClosed) {
@@ -168,11 +185,13 @@ function AddOwnedRequests() {
                 {alert
                     ? <div className="alert-container">
                         <PositionedSnackbar
-                            message={["Request ", <strong>{addedRequestID}</strong>, " has been added to your owned requests!"]}
-                            closed={handleAlertClosed}>
+                            message={alertMessage}
+                            closed={handleAlertClosed}
+                            className={alertType}>
                         </PositionedSnackbar>
                     </div>
-                    : <div></div>}
+                    : <div></div>
+                }
                 <div className="unowned-requests">
                     <p
                         className="page-message"
@@ -201,7 +220,9 @@ function AddOwnedRequests() {
                                     description={val.req_descr}
                                     value={getValue(val.req_value)}
                                     comments={val.req_comments === "" || val.req_comments === null ? "None" : val.req_comments}
-                                    toAdd={handleAddRequestCallback}>
+                                    toAdd={handleAddRequestCallback}
+                                    displayFadingBalls={displaySubmitButtonWorkingIcon}
+                                    addRequestButtonDisabled={addRequestButtonDisabled}>
                                 </AddOwnedRequestsCard>
                             </div>
                         })}

@@ -82,7 +82,7 @@ export default function MaterialMultiSelect({
         return (
           <li {...props} key={option.value} style={{ flexDirection: "column", alignItems: "flex-start" }}>
             {option.label}
-            <span style={{ fontSize: "8pt", color: "var(--lunikoBlue)" }}>{option.description}</span>
+            <span style={{ fontSize: "8pt", color: "rgba(0, 0, 0, 0.7)" }}>{option.description}</span>
           </li>
         );
       }}

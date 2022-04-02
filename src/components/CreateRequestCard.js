@@ -18,6 +18,7 @@ import MaterialTextField from './MaterialTextField';
 import MaterialMultiSelect from './MaterialMultiSelect';
 // import BootstrapPopover from "../components/BootstrapPopover";
 import DraggableDialog from './DraggableDialog';
+import FadingBalls from "react-cssfx-loading/lib/FadingBalls";
 
 const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
@@ -43,7 +44,8 @@ export default function UpdateOwnedRequestCard({
     selectedValue = 0,
     selectedIdentifiers = [],
     requestToSubmit = "",
-    submitButtonDisabled = true
+    submitButtonDisabled = true,
+    displayFadingBalls = false
 }) {
     const [expanded, setExpanded] = React.useState(true);
     const [submitButtonColor, setSubmitButtonColor] = React.useState("#BFBFBF");
@@ -187,7 +189,17 @@ export default function UpdateOwnedRequestCard({
                             onClick={handleSubmitRequest}
                             disabled={submitButtonDisabled}
                             style={{ backgroundColor: submitButtonColor }}>
-                            Submit Request
+                            {displayFadingBalls ?
+                                <div className="fading-balls-container">
+                                    <FadingBalls
+                                        className="spinner"
+                                        color="white"
+                                        width="7px"
+                                        height="7px"
+                                        duration="0.5s"
+                                    />
+                                </div> :
+                                <p>Submit Request</p>}
                         </button>
                         <DraggableDialog
                             dialogText={[<strong>All identifiers </strong>, "added to this request will be ",

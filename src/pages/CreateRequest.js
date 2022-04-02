@@ -16,7 +16,6 @@ import "../styles/AlertComponents.css";
 
 function CreateRequest() {
     const [user, loading] = useAuthState(auth);
-    const navigate = useNavigate();
     const { uid, isIdentifier, isOwner } = useParams();
     const [rendering, setRendering] = useState(true);
     const [company, setCompany] = useState("");
@@ -32,6 +31,11 @@ function CreateRequest() {
     const [transitionElementOpacity, setTransitionElementOpacity] = useState("100%");
     const [transtitionElementVisibility, setTransitionElementVisibility] = useState("visible");
     const [alert, setAlert] = useState(false);
+    const [alertType, setAlertType] = useState("success-alert");
+    const [alertMessage, setAlertMessage] = useState("Pre-conversion checklist successfully created!");
+    const [displaySubmitButtonWorkingIcon, setDisplaySubmitButtonWorkingIcon] = useState(false);
+
+    const navigate = useNavigate();
 
     // Single select options
     const scopeOptions = [
@@ -114,6 +118,8 @@ function CreateRequest() {
     }
 
     const addRequest = (uidFromCallback) => {
+        setSubmitButtonDisabled(true);
+        setDisplaySubmitButtonWorkingIcon(true);
         console.log("Adding request...");
         Axios.post("https://luniko-pe.herokuapp.com/create-request", {
             uid: uidFromCallback,
@@ -122,29 +128,45 @@ function CreateRequest() {
             department: department,
             description: description,
             value: value
+        }).catch((err) => {
+            handleError();
         }).then((response) => {
-            setSubmitted(true);
-            setSubmitButtonDisabled(true);
-            console.log("Request successfully added!!");
-            if (selectedIdentifiers.length !== 0) {
-                addIdentifications(response.data.insertId);
-            } else {
-                setAlert(true);
+            if (response) {
+                console.log("Request successfully added!!");
+                if (selectedIdentifiers.length !== 0) {
+                    addIdentifications(response.data.insertId);
+                } else {
+                    setAlert(true);
+                }
             }
+            setSubmitted(true);
         });
     };
 
     const addIdentifications = (requestID) => {
         console.log("Moving on to identifications...")
         for (let i = 0; i < selectedIdentifiers.length; i++) {
-            Axios.post("https://luniko-pe.herokuapp.com/create-identification", {
+            Axios.post("https://luniko-pe.herokuapp.com/create-identificatidon", {
                 uid: selectedIdentifiers[i].value,
                 req_id: requestID
+            }).catch((err) => {
+                Axios.delete(`https://luniko-pe.herokuapp.com/remove-request/${requestID}`, {
+                }).then((response) => {
+                    handleError();
+                })
             }).then((response) => {
-                setAlert(true);
+                if (response) {
+                    setAlert(true);
+                }
             });
-        };
+        }
     };
+
+    const handleError = () => {
+        setAlertType("error-alert");
+        setAlertMessage("Aplogies! We've encountered an error. Please attempt to re-submit your checklist.");
+        setAlert(true);
+    }
 
     const handleAlertClosed = (alertClosed) => {
         if (alertClosed) {
@@ -200,8 +222,9 @@ function CreateRequest() {
                 {alert
                     ? <div className="alert-container">
                         <PositionedSnackbar
-                            message="Request successfully submitted!"
-                            closed={handleAlertClosed}>
+                            message={alertMessage}
+                            closed={handleAlertClosed}
+                            className={alertType}>
                         </PositionedSnackbar>
                     </div>
                     : <div></div>}
@@ -224,7 +247,8 @@ function CreateRequest() {
                                 selectedValue={handleValueCallback}
                                 selectedIdentifiers={handleIdentifierCallback}
                                 requestToSubmit={addRequest}
-                                submitButtonDisabled={submitButtonDisabled}>
+                                submitButtonDisabled={submitButtonDisabled}
+                                displayFadingBalls={displaySubmitButtonWorkingIcon}>
                             </CreateRequestCard>
                         </div>
                         {/* <input

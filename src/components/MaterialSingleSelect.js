@@ -47,6 +47,7 @@ export default function MaterialSingleSelect(
             isOptionEqualToValue={(option, value) => {
                 return value !== "" ? option.value === value.value : true;
             }}
+            // open
             value={value}
             disablePortal
             disabled={isDisabled}

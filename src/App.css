@@ -107,3 +107,14 @@ textarea:focus {
   justify-content: center;
   margin-bottom: 9px;
 }
+
+.fading-balls-container {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+}
+
+/* Maybe remove this at some point? */
+ul::-webkit-scrollbar {
+  width: 0px !important;
+}
