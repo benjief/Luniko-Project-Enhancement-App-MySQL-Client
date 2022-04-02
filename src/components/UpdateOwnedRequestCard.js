@@ -15,6 +15,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 // import { color } from '@mui/system';
 import MaterialSingleSelect from './MaterialSingleSelect';
 import MaterialTextField from './MaterialTextField';
+import FadingBalls from "react-cssfx-loading/lib/FadingBalls";
 
 const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
@@ -61,13 +62,15 @@ export default function UpdateOwnedRequestCard({
     comments = "",
     updatedComments = "",
     requestToUpdate = "",
-    updateButtonDisabled = true
+    updateButtonDisabled = true,
+    displayFadingBalls = false
 }) {
+    const [currentStatus, setCurrentStatus] = React.useState(status);
     const [expanded, setExpanded] = React.useState(true);
     const [approvedValue, setApprovedValue] = React.useState(approved);
     const [rejectedValue, setRejectedValue] = React.useState(rejected);
     const [updateButtonColor, setUpdateButtonColor] = React.useState("#BFBFBF");
-    var statusAbbreviation = status.label.charAt(0).toUpperCase();
+    var statusAbbreviation = currentStatus.label.charAt(0).toUpperCase();
 
     const handleOnSelectStatus = (valueFromSelector) => {
         selectedStatus(valueFromSelector);
@@ -279,7 +282,17 @@ export default function UpdateOwnedRequestCard({
                             onClick={handleUpdateRequest}
                             disabled={updateButtonDisabled}
                             style={{ backgroundColor: updateButtonColor }}>
-                            Update Request
+                            {displayFadingBalls ?
+                                <div className="fading-balls-container">
+                                    <FadingBalls
+                                        className="spinner"
+                                        color="white"
+                                        width="7px"
+                                        height="7px"
+                                        duration="0.5s"
+                                    />
+                                </div> :
+                                <p>Update Request</p>}
                         </button>
                     </CardContent>
                 </Collapse>

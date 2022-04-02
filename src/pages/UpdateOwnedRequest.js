@@ -48,6 +48,9 @@ function UpdateOwnedRequest() {
     const [transitionElementOpacity, setTransitionElementOpacity] = useState("100%");
     const [transtitionElementVisibility, setTransitionElementVisibility] = useState("visible");
     const [alert, setAlert] = useState(false);
+    const [alertType, setAlertType] = useState("success-alert");
+    const [alertMessage, setAlertMessage] = useState("Request successfully updated!");
+    const [displaySubmitButtonWorkingIcon, setDisplaySubmitButtonWorkingIcon] = useState(false);
 
     // Update button
     // const activateUpdate = () => {
@@ -195,6 +198,9 @@ function UpdateOwnedRequest() {
     }
 
     const updateRequest = (idFromCard) => {
+        setValueUpdated(false);
+        setUpdateButtonDisabled(true);
+        setDisplaySubmitButtonWorkingIcon(true);
         console.log("Updating request...");
         Axios.put("https://luniko-pe.herokuapp.com/update-owned-request", {
             reasonRejected: rejectDisabled === null ? null : rejected === "" ? null : reasonRejected,
@@ -210,18 +216,25 @@ function UpdateOwnedRequest() {
             status: status.value ? status.value : status,
             comments: comments === null ? null : comments === "" ? null : comments,
             id: idFromCard,
+        }).catch((err) => {
+            handleError();
         }).then((response) => {
-            setUpdated(true);
-            setUpdateButtonDisabled(true);
-            console.log("Request successfully updated!");
-            setAlert(true);
-            // handleAlertClosed(true);
+            if (response) {
+                setUpdated(true);
+                console.log("Request successfully updated!");
+                setAlert(true);
+            }
         });
     };
 
+    const handleError = () => {
+        setAlertType("error-alert");
+        setAlertMessage("Apologies! We've encountered an error. Please attempt to re-update your request.");
+        setAlert(true);
+    }
+
     const handleAlertClosed = (alertClosed) => {
         if (alertClosed) {
-            console.log("navigating back");
             setAlert(false);
             navigate(-1);
         }
@@ -277,8 +290,9 @@ function UpdateOwnedRequest() {
                 {alert
                     ? <div className="alert-container">
                         <PositionedSnackbar
-                            message="Request successfully updated!"
-                            closed={handleAlertClosed}>
+                            message={alertMessage}
+                            closed={handleAlertClosed}
+                            className={alertType}>
                         </PositionedSnackbar>
                     </div>
                     : <div></div>}
@@ -322,7 +336,8 @@ function UpdateOwnedRequest() {
                                     comments={val.req_comments === null ? "" : val.req_comments}
                                     updatedComments={handleCommentsChange}
                                     requestToUpdate={updateRequest}
-                                    updateButtonDisabled={updateButtonDisabled}>
+                                    updateButtonDisabled={updateButtonDisabled}
+                                    displayFadingBalls={displaySubmitButtonWorkingIcon}>
                                 </UpdateOwnedRequestCard>
                             </div>
                         })}

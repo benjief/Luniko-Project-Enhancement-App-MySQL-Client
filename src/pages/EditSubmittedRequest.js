@@ -22,7 +22,6 @@ import "../styles/AlertComponents.css";
 
 function EditSubmittedRequest() {
     const [user, loading] = useAuthState(auth);
-    const navigate = useNavigate();
     const { uid, isIdentifier, isOwner, reqID } = useParams();
     const [rendering, setRendering] = useState(true);
     const [requestDetails, setRequestDetails] = useState([]);
@@ -42,6 +41,11 @@ function EditSubmittedRequest() {
     const [transitionElementOpacity, setTransitionElementOpacity] = useState("100%");
     const [transtitionElementVisibility, setTransitionElementVisibility] = useState("visible");
     const [alert, setAlert] = useState(false);
+    const [alertType, setAlertType] = useState("success-alert");
+    const [alertMessage, setAlertMessage] = useState("Request successfully updated!");
+    const [displaySubmitButtonWorkingIcon, setDisplaySubmitButtonWorkingIcon] = useState(false);
+
+    const navigate = useNavigate();
 
     // Single select options
     const scopeOptions = [
@@ -198,6 +202,8 @@ function EditSubmittedRequest() {
     }
 
     const updateRequest = (idFromCard) => {
+        setUpdateButtonDisabled(true);
+        setDisplaySubmitButtonWorkingIcon(true);
         console.log("Updating request...");
         Axios.put("https://luniko-pe.herokuapp.com/update-submitted-request", {
             company: company,
@@ -206,14 +212,17 @@ function EditSubmittedRequest() {
             description: description,
             value: value.value ? value.value : value,
             id: idFromCard
+        }).catch((err) => {
+            handleError();
         }).then((response) => {
-            setUpdated(true); //TODO: are these needed?
-            setUpdateButtonDisabled(true);
-            console.log("Request successfully updated!!");
-            if (selectedIdentifiers.length !== 0) {
-                removeIdentifications(idFromCard);
-            } else {
-                setAlert(true);
+            if (response) {
+                setUpdated(true); //TODO: are these needed?
+                console.log("Request successfully updated!!");
+                if (selectedIdentifiers.length !== 0) {
+                    removeIdentifications(idFromCard);
+                } else {
+                    setAlert(true);
+                }
             }
         });
     };
@@ -221,9 +230,13 @@ function EditSubmittedRequest() {
     const removeIdentifications = (requestID) => {
         console.log("Removing old identifications...");
         Axios.delete(`https://luniko-pe.herokuapp.com/remove-identifications/${requestID}`, {
+        }).catch((err) => {
+            handleError();
         }).then((response) => {
-            addIdentifications(requestID);
-        })
+            if (response) {
+                addIdentifications(requestID);
+            }
+        });
     }
 
     const addIdentifications = (requestID) => {
@@ -232,11 +245,21 @@ function EditSubmittedRequest() {
             Axios.post("https://luniko-pe.herokuapp.com/create-identification", {
                 uid: selectedIdentifiers[i].value,
                 req_id: requestID
+            }).catch((err) => {
+                handleError();
             }).then((response) => {
-                setAlert(true);
+                if (response) {
+                    setAlert(true);
+                }
             });
-        };
+        }
     };
+
+    const handleError = () => {
+        setAlertType("error-alert");
+        setAlertMessage("Apologies! We've encountered an error. Please attempt to re-update your request.");
+        setAlert(true);
+    }
 
     const handleAlertClosed = (alertClosed) => {
         if (alertClosed) {
@@ -255,7 +278,9 @@ function EditSubmittedRequest() {
         } else {
             setTransitionElementOpacity("0%");
             setTransitionElementVisibility("hidden");
-            if (!approved && !rejected && valueUpdated && company.trim() !== "" && scopeType !== "" && department !== "" && value !== "" && description.trim() !== "", selectedIdentifiers) {
+            if (!approved && !rejected && valueUpdated && company.trim() !== ""
+                && scopeType !== "" && department !== "" && value !== ""
+                && description.trim() !== "") {
                 setUpdateButtonDisabled(false);
             } else {
                 setUpdateButtonDisabled(true);
@@ -292,8 +317,9 @@ function EditSubmittedRequest() {
                 {alert
                     ? <div className="alert-container">
                         <PositionedSnackbar
-                            message="Request successfully updated!"
-                            closed={handleAlertClosed}>
+                            message={alertMessage}
+                            closed={handleAlertClosed}
+                            className={alertType}>
                         </PositionedSnackbar>
                     </div>
                     : <div></div>}
@@ -325,7 +351,8 @@ function EditSubmittedRequest() {
                                     identifiers={selectedIdentifiers}
                                     updatedIdentifiers={handleIdentifierCallback}
                                     requestToUpdate={updateRequest}
-                                    updateButtonDisabled={updateButtonDisabled}>
+                                    updateButtonDisabled={updateButtonDisabled}
+                                    displayFadingBalls={displaySubmitButtonWorkingIcon}>
                                 </EditSubmittedRequestCard>
                             </div>
                         })}

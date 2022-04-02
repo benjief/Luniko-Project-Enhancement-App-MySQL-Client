@@ -111,7 +111,7 @@ function SubmittedRequests() {
                                     isOwner={isOwner}
                                     id={val.req_id}
                                     dateSubmitted={val.req_date}
-                                    lastUpdated={val.req_updated}
+                                    lastUpdated={val.req_updated_formatted}
                                     status={val.req_rejected.data[0] === 1 ? "Rejected" : getStatus(val.req_status)}
                                     approved={getApprovalStatus(val.req_approved.data[0])}
                                     submitter={val.req_submitter}

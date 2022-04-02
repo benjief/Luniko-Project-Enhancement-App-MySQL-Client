@@ -16,6 +16,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MaterialSingleSelect from './MaterialSingleSelect';
 import MaterialMultiSelect from './MaterialMultiSelect';
 import MaterialTextField from './MaterialTextField';
+import FadingBalls from "react-cssfx-loading/lib/FadingBalls";
 
 const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
@@ -47,7 +48,8 @@ export default function EditOwnedRequestCard({
     identifiers = [],
     updatedIdentifiers = [],
     requestToUpdate = "",
-    updateButtonDisabled = true
+    updateButtonDisabled = true,
+    displayFadingBalls = false
 }) {
     const [expanded, setExpanded] = React.useState(true);
     const [updateButtonColor, setUpdateButtonColor] = React.useState("#BFBFBF");
@@ -194,7 +196,17 @@ export default function EditOwnedRequestCard({
                             onClick={handleUpdateRequest}
                             disabled={updateButtonDisabled}
                             style={{ backgroundColor: updateButtonColor }}>
-                            Update Request
+                            {displayFadingBalls ?
+                                <div className="fading-balls-container">
+                                    <FadingBalls
+                                        className="spinner"
+                                        color="white"
+                                        width="7px"
+                                        height="7px"
+                                        duration="0.5s"
+                                    />
+                                </div> :
+                                <p>Update Request</p>}
                         </button>
                     </CardContent>
                 </Collapse>

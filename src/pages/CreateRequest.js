@@ -32,7 +32,7 @@ function CreateRequest() {
     const [transtitionElementVisibility, setTransitionElementVisibility] = useState("visible");
     const [alert, setAlert] = useState(false);
     const [alertType, setAlertType] = useState("success-alert");
-    const [alertMessage, setAlertMessage] = useState("Pre-conversion checklist successfully created!");
+    const [alertMessage, setAlertMessage] = useState("Request successfully submitted!");
     const [displaySubmitButtonWorkingIcon, setDisplaySubmitButtonWorkingIcon] = useState(false);
 
     const navigate = useNavigate();
@@ -164,7 +164,7 @@ function CreateRequest() {
 
     const handleError = () => {
         setAlertType("error-alert");
-        setAlertMessage("Aplogies! We've encountered an error. Please attempt to re-submit your checklist.");
+        setAlertMessage("Apologies! We've encountered an error. Please attempt to re-submit your request.");
         setAlert(true);
     }
 

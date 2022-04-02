@@ -132,7 +132,7 @@ function AddOwnedRequests() {
 
     const handleError = () => {
         setAlertType("error-alert");
-        setAlertMessage("Aplogies! We've encountered an error. Please attempt to re-submit your checklist.");
+        setAlertMessage("Apologies! We've encountered an error. Please attempt to re-add this request.");
         setAlert(true);
     }
 
