@@ -115,7 +115,3 @@ a {
 .register-container .popover-container {
   margin-top: 18px !important;
 }
-
-.register-alert .MuiPaper-root {
-  background-color: #d32f2f !important;
-}

@@ -78,7 +78,14 @@ export default function MaterialMultiSelect({
       getOptionDisabled={(option) => {
         return setDisabledOptions(option);
       }}
-      getOptionLabel={(option) => option.label}
+      renderOption={(props, option) => {
+        return (
+          <li {...props} key={option.value} style={{ flexDirection: "column", alignItems: "flex-start" }}>
+            {option.label}
+            <span style={{ fontSize: "8pt", color: "var(--lunikoBlue)" }}>{option.description}</span>
+          </li>
+        );
+      }}
       // defaultValue={[top100Films[13]]}
       filterSelectedOptions
       onChange={(event, object) => handleOnChange(object)}
