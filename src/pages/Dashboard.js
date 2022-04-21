@@ -33,7 +33,7 @@ function Dashboard() {
     const alertType = useRef("success-alert");
     const alertMessage = useRef("Registration successful!");
     const loadErrorMessage = useRef("Apologies! We've encountered an error. Please attempt to re-load this page.");
-    const registrationErrorMessage = useRef("Apologies! We've encountered an error. Please attempt to register again.");
+    const registrationErrorMessage = useRef("Apologies! We've encountered an error. Please attempt to register again, or contact the application administrator.");
     const activeError = useRef(false);
     const async = useRef(false);
     const deletingUser = useRef(false);
@@ -44,27 +44,22 @@ function Dashboard() {
             await deleteUserFromFirebase(uid);
         } else {
             await getPersonnelInfoWithID(uid);
-            setRendering(false);
         }
     }
 
     const deleteUserFromFirebase = (uid) => {
         console.log("deleting user from firebase");
-        try {
-            activeError.current = true;
-            deletingUser.current = true;
-            handleError("o");
-            setTimeout(async () => {
-                await user.delete()
-                    .then(() => {
-                        deletingUser.current = false;
-                        console.log("deleted user");
-                    });
-            }, 3000);
-        } catch (err) {
-            console.log("error caught:", err);
-            logout();
-        }
+
+        activeError.current = true;
+        deletingUser.current = true;
+        handleError("o");
+        setTimeout(async () => {
+            await user.delete()
+                .then(() => {
+                    deletingUser.current = false;
+                    console.log("deleted user");
+                }); // there isn't much sense in trying to catch an error that occurs here (since error handling has already begun)
+        }, 3000);
     }
 
     const getPersonnelInfoWithID = async (id) => {
@@ -75,7 +70,6 @@ function Dashboard() {
             }).then(response => {
                 setFirstName(response.data[0].pers_fname);
                 checkPersonnelStatus(response.data[0]);
-                async.current = false;
             });
         } catch (err) {
             console.log("error caught:", err);
@@ -83,36 +77,50 @@ function Dashboard() {
         }
     }
 
-    const checkPersonnelStatus = async (personnelData) => {
-        if (personnelData.pers_is_identifier.data[0] === 1) {
-            setIsIdentifier(true);
-            setSubmittedRequestsButtonDisabled(false);
-        } else {
-            setIsIdentifier(false);
-            setSubmittedRequestsButtonDisabled(true);
-        }
-        if (personnelData.pers_is_owner.data[0] === 1) {
-            setIsOwner(true);
-            setAddToOwnedRequestsButtonDisabled(false);
-            await getOwnedRequests(personnelData.pers_id);
-        } else {
-            setIsOwner(false);
-            setAddToOwnedRequestsButtonDisabled(true);
+    const checkPersonnelStatus = (personnelData) => {
+        console.log("checking personnel status");
+        try {
+            if (personnelData.pers_is_identifier.data[0] === 1) {
+                setIsIdentifier(true);
+                setSubmittedRequestsButtonDisabled(false);
+            } else {
+                setIsIdentifier(false);
+                setSubmittedRequestsButtonDisabled(true);
+            }
+            if (personnelData.pers_is_owner.data[0] === 1) {
+                setIsOwner(true);
+                setAddToOwnedRequestsButtonDisabled(false);
+                getOwnedRequests(personnelData.pers_id);
+            } else {
+                setIsOwner(false);
+                setAddToOwnedRequestsButtonDisabled(true);
+                setRendering(false);
+            }
+            async.current = false;
+        } catch (err) {
+            console.log("error caught:", err);
+            handleError("r");
         }
     }
 
-    const getOwnedRequests = (id) => {
-        Axios.get(`https://luniko-pe.herokuapp.com/get-owned-requests-for-id/${id}`, {
-        }).then((response) => {
-            if (response.data[0]) {
-                setOwnsRequests(true);
-                setOwnedRequestsButtonDisabled(false);
-            } else {
-                setOwnsRequests(false);
-                setOwnedRequestsButtonDisabled(true);
-            }
-            setRendering(false);
-        });
+    const getOwnedRequests = async (id) => {
+        console.log("fetching owned requests");
+        try {
+            await Axios.get(`https://luniko-pe.herokuapp.com/get-owned-requests-for-id/${id}`, {
+            }).then(response => {
+                if (response.data[0]) {
+                    setOwnsRequests(true);
+                    setOwnedRequestsButtonDisabled(false);
+                } else {
+                    setOwnsRequests(false);
+                    setOwnedRequestsButtonDisabled(true);
+                }
+                setRendering(false);
+            });
+        } catch (err) {
+            console.log("error caught:", err);
+            handleError("r");
+        }
     }
 
     const handleError = (errorType) => {

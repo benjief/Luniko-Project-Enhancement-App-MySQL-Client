@@ -22,6 +22,7 @@ function Login() {
     const [transitionElementOpacity, setTransitionElementOpacity] = useState("100%");
     const [transtitionElementVisibility, setTransitionElementVisibility] = useState("visible");
     const [alert, setAlert] = useState(false);
+
     const navigate = useNavigate();
 
     const handleEmailCallback = (emailFromTextInput) => {
@@ -38,7 +39,7 @@ function Login() {
     const attemptConventionalLogin = async () => {
         try {
             await loginWithEmailAndPassword(email, password).then(() => {
-                navigate("/dashboard");
+                navigate(`/dashboard/"personnelOkay"`);
             });
         } catch (err) {
             if (err.message.indexOf("email") !== -1 || err.message.indexOf("user") !== -1) {
