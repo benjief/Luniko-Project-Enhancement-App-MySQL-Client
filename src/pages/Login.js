@@ -12,7 +12,7 @@ import "../styles/InputComponents.css";
 import "../styles/CardComponents.css";
 
 function Login() {
-    const [loading] = useAuthState(auth);
+    // const [loading] = useAuthState(auth);
     const [rendering, setRendering] = useState(true);
     const [email, setEmail] = useState("");
     const [emailAuthenticationError, setEmailAuthenticationError] = useState("");
@@ -118,8 +118,8 @@ function Login() {
     }
 
     useEffect(() => {
-        if (loading) {
-            return;
+        if (rendering) {
+            setRendering(false);
         } else {
             setRendering(false);
             setTransitionElementOpacity("0%");
@@ -130,7 +130,7 @@ function Login() {
                 setLoginButtonDisabled(true);
             }
         }
-    }, [loading, email, password]);
+    }, [rendering, email, password, loginButtonDisabled]);
 
     return (
         rendering

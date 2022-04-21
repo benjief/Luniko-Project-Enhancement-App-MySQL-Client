@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { logout } from "../firebase";
 import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -23,6 +23,7 @@ function NavBar({
     const [isOpen, setIsOpen] = useState(false);
     const [srColor, setSRcolor] = useState("rgba(228, 228, 228, 0.6)");
     const [orColor, setORcolor] = useState("rgba(228, 228, 228, 0.6)");
+    const dashboardLink = useRef(`/dashboard/"personnelOkay`);
 
     const setSRAndORStatus = () => {
         var sr = document.getElementsByClassName("sr-nav-link")[0];
@@ -57,7 +58,7 @@ function NavBar({
             fixed=""
             light
         >
-            <NavbarBrand href="/dashboard">
+            <NavbarBrand href={dashboardLink}>
                 <img className="test" src={require("../img/logo_exp.png")} alt="Luniko"></img>
             </NavbarBrand>
             <NavbarToggler
