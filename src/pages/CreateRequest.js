@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, useRef } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase";
 import { useNavigate, useParams } from "react-router-dom";
@@ -30,10 +30,14 @@ function CreateRequest() {
     const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
     const [transitionElementOpacity, setTransitionElementOpacity] = useState("100%");
     const [transtitionElementVisibility, setTransitionElementVisibility] = useState("visible");
+    const activeError = useRef(false);
     const [alert, setAlert] = useState(false);
-    const [alertType, setAlertType] = useState("success-alert");
-    const [alertMessage, setAlertMessage] = useState("Request successfully submitted!");
+    const alertType = useRef("success-alert");
+    const alertMessage = useRef("Request successfully submitted!");
+    const loadErrorMessage = useRef("Apologies! We've encountered an error. Please attempt to re-load this page.");
+    const writeErrorMessage = useRef("Apologies! We've encountered an error. Please attempt to re-submit your request.");
     const [displaySubmitButtonWorkingIcon, setDisplaySubmitButtonWorkingIcon] = useState(false);
+    const async = useRef(false);
 
     const navigate = useNavigate();
 
@@ -61,35 +65,52 @@ function CreateRequest() {
         { value: 4, label: "Critical" }
     ];
 
+    const runReadAsyncFunctions = async () => {
+        await getIdentifiers();
+    }
+
 
     // Identifier functions
-    const getIdentifiers = () => {
-        console.log("getting identifiers");
-        Axios.get("https://luniko-pe.herokuapp.com/get-all-personnel", {
-        }).then((response) => {
-            populateIdentifierList(response.data);
-        });
+    const getIdentifiers = async () => {
+        console.log("fetching identifiers");
+        try {
+            async.current = true;
+            await Axios.get("https://luniko-pe.herokuapp.com/get-all-personnel", {
+            }).then(response => {
+                populateIdentifierList(response.data);
+            });
+        } catch (err) {
+            console.log("error caught:", err);
+            handleError("r");
+        }
     };
 
     const populateIdentifierList = (identifierList) => {
-        if (identifierList.length > 1) {
-            let tempArray = [];
-            for (let i = 0; i < identifierList.length; i++) {
-                if (identifierList[i].pers_id !== uid) {
-                    let value = identifierList[i].pers_id;
-                    let label = identifierList[i].pers_fname + " " + identifierList[i].pers_lname;
-                    let email = identifierList[i].pers_email;
-                    let identifier = {
-                        "value": value,
-                        "label": label,
-                        "description": email
-                    };
-                    tempArray.push(identifier);
+        console.log("populating identifier list");
+        try {
+            if (identifierList.length > 1) { // there's no sense in running the code below if the current user is the only identifier
+                let tempArray = [];
+                for (let i = 0; i < identifierList.length; i++) {
+                    if (identifierList[i].pers_id !== uid) {
+                        let value = identifierList[i].pers_id;
+                        let label = identifierList[i].pers_fname + " " + identifierList[i].pers_lname;
+                        let email = identifierList[i].pers_email;
+                        let identifier = {
+                            "value": value,
+                            "label": label,
+                            "description": email
+                        };
+                        tempArray.push(identifier);
+                    }
                 }
+                setIdentifierOptions(tempArray);
             }
-            setIdentifierOptions(tempArray);
+            async.current = false;
+            setRendering(false);
+        } catch (err) {
+            console.log("error caught:", err);
+            handleError("r");
         }
-        setRendering(false);
     }
 
     // Selector callback handlers
@@ -117,61 +138,96 @@ function CreateRequest() {
         setSelectedIdentifiers(identifiersFromSelector);
     }
 
-    const addRequest = (uidFromCallback) => {
+    const runWriteAsyncFunctions = async (uidFromCallback) => {
+        let requestID = await addRequest(uidFromCallback);
+        try {
+            if (selectedIdentifiers.length !== 0) {
+                await addIdentifications(requestID);
+
+            } else {
+                setAlert(true);
+            }
+        } catch (err) {
+            console.log("error caught:", err);
+            handleError("w");
+        }
+    }
+
+    const addRequest = async (uidFromCallback) => {
         setSubmitButtonDisabled(true);
         setDisplaySubmitButtonWorkingIcon(true);
-        console.log("Adding request...");
-        Axios.post("https://luniko-pe.herokuapp.com/create-request", {
-            uid: uidFromCallback,
-            company: company,
-            scopeType: scopeType,
-            department: department,
-            description: description,
-            value: value
-        }).catch((err) => {
-            handleError();
-        }).then((response) => {
-            if (response) {
-                console.log("Request successfully added!!");
-                if (selectedIdentifiers.length !== 0) {
-                    addIdentifications(response.data.insertId);
-                } else {
-                    setAlert(true);
-                }
-            }
-            setSubmitted(true);
-        });
-    };
-
-    const addIdentifications = (requestID) => {
-        console.log("Moving on to identifications...")
-        for (let i = 0; i < selectedIdentifiers.length; i++) {
-            Axios.post("https://luniko-pe.herokuapp.com/create-identificatidon", {
-                uid: selectedIdentifiers[i].value,
-                req_id: requestID
-            }).catch((err) => {
-                Axios.delete(`https://luniko-pe.herokuapp.com/remove-request/${requestID}`, {
-                }).then((response) => {
-                    handleError();
-                })
-            }).then((response) => {
-                if (response) {
-                    setAlert(true);
-                }
+        console.log("adding request");
+        try {
+            async.current = true;
+            let tempArray = [];
+            await Axios.post("https://luniko-pe.herokuapp.com/create-request", {
+                uid: uidFromCallback,
+                company: company,
+                scopeType: scopeType,
+                department: department,
+                description: description,
+                value: value
+            }).then(response => {
+                async.current = false;
+                tempArray.push(response.data.insertId);
+                setSubmitted(true); // TODO: is this needed?
             });
+            return tempArray;
+        } catch (err) {
+            console.log("error caught:", err);
+            handleError("w");
         }
-    };
+    }
 
-    const handleError = () => {
-        setAlertType("error-alert");
-        setAlertMessage("Apologies! We've encountered an error. Please attempt to re-submit your request.");
-        setAlert(true);
+    const addIdentifications = async (requestID) => {
+        if (!async.current) {
+            console.log("adding identifications");
+            try {
+                async.current = true;
+                for (let i = 0; i < selectedIdentifiers.length; i++) {
+                    await Axios.post("https://luniko-pe.herokuapp.com/create-identification", {
+                        uid: selectedIdentifiers[i].value,
+                        req_id: requestID
+                    }).then(response => {
+                        async.current = false;
+                        setAlert(true);
+                    });
+                }
+            } catch (err) {
+                // delete the request if identifications can't be added
+                await Axios.delete(`https://luniko-pe.herokuapp.com/remove-request/${requestID}`, {
+                }).then(response => {
+                    console.log("request successfully removed");
+                    console.log("error caught:", err);
+                    handleError("w");
+                });
+            }
+        }
+    }
+
+    const handleError = (errorType) => {
+        activeError.current = true;
+        alertType.current = "error-alert";
+        errorType === "r"
+            ? alertMessage.current = loadErrorMessage.current
+            : alertMessage.current = writeErrorMessage.current;
+
+        // Delay is set up just in case an error is generated before the is fully-displayed
+        let delay = transitionElementOpacity === "100%" ? 500 : rendering ? 500 : 0;
+
+        if (rendering) {
+            setRendering(false);
+        }
+
+        setTimeout(() => {
+            setAlert(true);
+        }, delay);
     }
 
     const handleAlertClosed = (alertClosed) => {
         if (alertClosed) {
             setAlert(false);
-            navigate("/dashboard");
+            navigate(`/dashboard/"personnelOkay"`);
         }
     }
 
@@ -181,77 +237,95 @@ function CreateRequest() {
         } if (!user) {
             return navigate("/");
         } if (rendering) {
-            getIdentifiers();
+            runReadAsyncFunctions();
         } else {
             setTransitionElementOpacity("0%");
             setTransitionElementVisibility("hidden");
-            if (company.trim() !== "" && scopeType !== "" && department !== "" && value !== "" && description.trim() !== "") {
+            if (!async.current && company.trim() !== "" && scopeType !== "" && department !== "" && value !== "" && description.trim() !== "") {
                 setSubmitButtonDisabled(false);
             } else {
                 setSubmitButtonDisabled(true);
             }
         }
-    }, [loading, user, rendering, company, scopeType, department, value, description]);
+    }, [loading, user, rendering, async, company, scopeType, department, value, description]);
 
     return (
-        rendering ?
-            <div className="loading-spinner">
+        rendering
+            ? <div className="loading-spinner">
                 <Hypnosis
                     className="spinner"
                     color="var(--lunikoOrange)"
                     width="100px"
                     height="100px"
                     duration="1.5s" />
-            </div> :
-            <Fragment>
-                <div
-                    className="transition-element"
-                    style={{
-                        opacity: transitionElementOpacity,
-                        visibility: transtitionElementVisibility
-                    }}>
-                </div>
-                <NavBar
-                    visibility={"visible"}
-                    srDisabled={!(isIdentifier === "true")}
-                    orDisabled={!(isOwner === "true")}
-                    createRequestLink={`/create-request/${uid}/${isIdentifier}/${isOwner}`}
-                    submittedRequestsLink={`/submitted-requests/${uid}/${isIdentifier}/${isOwner}`}
-                    ownedRequestsLink={`/owned-requests/${user?.uid}/${isIdentifier}/${isOwner}`}>
-                </NavBar>
-                {alert
-                    ? <div className="alert-container">
-                        <PositionedSnackbar
-                            message={alertMessage}
-                            closed={handleAlertClosed}
-                            className={alertType}>
-                        </PositionedSnackbar>
+            </div>
+            : activeError.current
+                ? <Fragment>
+                    <NavBar>
+                    </NavBar>
+                    {alert
+                        ? <div className="alert-container">
+                            <PositionedSnackbar
+                                message={alertMessage.current}
+                                closed={handleAlertClosed}
+                                className={alertType.current}>
+                            </PositionedSnackbar>
+                        </div>
+                        : <div></div>}
+                    <div
+                        className="error-div"
+                        style={{ height: "100vw", width: "100%" }}
+                    ></div>
+                </Fragment>
+                : <Fragment>
+                    <div
+                        className="transition-element"
+                        style={{
+                            opacity: transitionElementOpacity,
+                            visibility: transtitionElementVisibility
+                        }}>
                     </div>
-                    : <div></div>}
-                <div className="create-request">
-                    <div className="create-request-container">
-                        <div className="page-heading">
-                            Create Your Request:
+                    <NavBar
+                        visibility={"visible"}
+                        srDisabled={!(isIdentifier === "true")}
+                        orDisabled={!(isOwner === "true")}
+                        createRequestLink={`/create-request/${uid}/${isIdentifier}/${isOwner}`}
+                        submittedRequestsLink={`/submitted-requests/${uid}/${isIdentifier}/${isOwner}`}
+                        ownedRequestsLink={`/owned-requests/${user?.uid}/${isIdentifier}/${isOwner}`}>
+                    </NavBar>
+                    {alert
+                        ? <div className="alert-container">
+                            <PositionedSnackbar
+                                message={alertMessage.current}
+                                closed={handleAlertClosed}
+                                className={alertType.current}>
+                            </PositionedSnackbar>
                         </div>
-                        <div className="create-request-card">
-                            <CreateRequestCard
-                                uid={uid}
-                                scopeTypeOptions={scopeOptions}
-                                departmentOptions={deptOptions}
-                                valueOptions={valueOptions}
-                                identifierOptions={identifierOptions}
-                                updatedCompany={handleCompanyCallback}
-                                selectedScopeType={handleScopeCallback}
-                                selectedDepartment={handleDeptCallback}
-                                updatedDescription={handleDescriptionCallback}
-                                selectedValue={handleValueCallback}
-                                selectedIdentifiers={handleIdentifierCallback}
-                                requestToSubmit={addRequest}
-                                submitButtonDisabled={submitButtonDisabled}
-                                displayFadingBalls={displaySubmitButtonWorkingIcon}>
-                            </CreateRequestCard>
-                        </div>
-                        {/* <input
+                        : <div></div>}
+                    <div className="create-request">
+                        <div className="create-request-container">
+                            <div className="page-heading">
+                                Create Your Request:
+                            </div>
+                            <div className="create-request-card">
+                                <CreateRequestCard
+                                    uid={uid}
+                                    scopeTypeOptions={scopeOptions}
+                                    departmentOptions={deptOptions}
+                                    valueOptions={valueOptions}
+                                    identifierOptions={identifierOptions}
+                                    updatedCompany={handleCompanyCallback}
+                                    selectedScopeType={handleScopeCallback}
+                                    selectedDepartment={handleDeptCallback}
+                                    updatedDescription={handleDescriptionCallback}
+                                    selectedValue={handleValueCallback}
+                                    selectedIdentifiers={handleIdentifierCallback}
+                                    requestToSubmit={runWriteAsyncFunctions}
+                                    submitButtonDisabled={submitButtonDisabled}
+                                    displayFadingBalls={displaySubmitButtonWorkingIcon}>
+                                </CreateRequestCard>
+                            </div>
+                            {/* <input
                             className="request-textBox"
                             type="text"
                             value={company}
@@ -300,9 +374,9 @@ function CreateRequest() {
                             style={{ backgroundColor: submitButtonColor }}>
                             {submitButtonText}
                         </button> */}
+                        </div>
                     </div>
-                </div>
-            </Fragment >
+                </Fragment >
     )
 }
 
