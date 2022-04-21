@@ -80,7 +80,6 @@ export default function UserRegistrationCard({
         } else {
             setRegisterButtonColor("#BFBFBF");
         }
-
         if (!registerWithGoogleButtonDisabled) {
             setGoogleLogo("google_logo.png");
         } else {
@@ -208,8 +207,7 @@ export default function UserRegistrationCard({
                                         duration="0.5s"
                                     />
                                 </div>
-                                :
-                                <div style={{ display: "flex" }}>
+                                : <div style={{ display: "flex" }}>
                                     <img src={require("../img/" + googleLogo)} alt="Google" />
                                     <p>Register with Google</p>
                                 </div>}

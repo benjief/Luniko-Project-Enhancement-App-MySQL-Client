@@ -14,6 +14,7 @@ import { Link } from 'react-router-dom';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 // import { color } from '@mui/system';
 import MaterialTextField from './MaterialTextField';
+import FadingBalls from "react-cssfx-loading/lib/FadingBalls";
 
 const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
@@ -33,10 +34,14 @@ export default function UserLoginCard({
     passwordAuthenticationError = "",
     conventionalLoginSelected = false,
     googleLoginSelected = false,
-    loginButtonDisabled = true
+    loginButtonDisabled = true,
+    loginWithGoogleButtonDisabled = false,
+    displayLoginFadingBalls = false,
+    displayGoogleFadingBalls = false
 }) {
     const [expanded, setExpanded] = React.useState(true);
     const [loginButtonColor, setLoginButtonColor] = React.useState("#BFBFBF");
+    const [googleLogo, setGoogleLogo] = React.useState("google_logo.png");
 
     const handleOnChangeEmail = (updatedText) => {
         updatedEmail(updatedText);
@@ -65,7 +70,12 @@ export default function UserLoginCard({
         } else {
             setLoginButtonColor("#BFBFBF");
         }
-    }, [loginButtonDisabled]);
+        if (!loginWithGoogleButtonDisabled) {
+            setGoogleLogo("google_logo.png");
+        } else {
+            setGoogleLogo("google_logo_greyscale.png");
+        }
+    }, [loginButtonDisabled, loginWithGoogleButtonDisabled]);
 
     return (
         <Card
@@ -121,7 +131,8 @@ export default function UserLoginCard({
                             type="email"
                             authenticationField={true}
                             emailAuthenticationError={emailAuthenticationError}
-                            shrinkInputLabel={false}>
+                            shrinkInputLabel={false}
+                            required={true}>
                         </MaterialTextField>
                         <MaterialTextField
                             label="Password"
@@ -131,20 +142,43 @@ export default function UserLoginCard({
                             type="password"
                             authenticationField={true}
                             passwordAuthenticationError={passwordAuthenticationError}
-                            shrinkInputLabel={false}>
+                            shrinkInputLabel={false}
+                            required={true}>
                         </MaterialTextField>
                         <button
                             className="login-button"
                             onClick={handleOnClickLogin}
                             disabled={loginButtonDisabled}
                             style={{ backgroundColor: loginButtonColor }}>
-                            Login
+                            {displayLoginFadingBalls
+                                ? <div className="fading-balls-container">
+                                    <FadingBalls
+                                        className="spinner"
+                                        color="white"
+                                        width="7px"
+                                        height="7px"
+                                        duration="0.5s"
+                                    />
+                                </div>
+                                : <p>Login</p>}
                         </button>
                         <div
                             className="login-google"
                             onClick={handleOnClickLoginWithGoogle}>
-                            <img src={require("../img/google_logo.png")} alt="Google" />
-                            <p>Login with Google</p>
+                            {displayGoogleFadingBalls
+                                ? <div className="fading-balls-container">
+                                    <FadingBalls
+                                        className="spinner"
+                                        color="var(--lunikoOrange)"
+                                        width="7px"
+                                        height="7px"
+                                        duration="0.5s"
+                                    />
+                                </div>
+                                : <div style={{ display: "flex" }}>
+                                    <img src={require("../img/" + googleLogo)} alt="Google" />
+                                    <p>Login with Google</p>
+                                </div>}
                         </div>
                         <div className="login-text-container">
                             <div>

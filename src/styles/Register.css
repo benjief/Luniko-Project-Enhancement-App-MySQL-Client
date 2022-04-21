@@ -71,7 +71,7 @@ input:focus {
   margin-bottom: 0 !important;
 }
 
-.register-google:hover {
+.register-google:not(:disabled):hover {
   cursor: pointer;
 }
 

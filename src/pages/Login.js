@@ -19,11 +19,14 @@ function Login() {
     const [password, setPassword] = useState("");
     const [passwordAuthenticationError, setPasswordAuthenticationError] = useState("");
     const [loginButtonDisabled, setLoginButtonDisabled] = useState(true);
+    const [loginWithGoogleButtonDisabled, setLoginWithGoogleButtonDisabled] = useState(false);
     const [transitionElementOpacity, setTransitionElementOpacity] = useState("100%");
     const [transtitionElementVisibility, setTransitionElementVisibility] = useState("visible");
     const [alert, setAlert] = useState(false);
     const alertType = useRef("error-alert");
     const alertMessage = useRef("Apologies! We've encountered an error. Please attempt to log in again.");
+    const [displayLoginButtonWorkingIcon, setDisplayLoginButtonWorkingIcon] = useState(false);
+    const [displayGoogleButtonWorkingIcon, setDisplayGoogleButtonWorkingIcon] = useState(false);
     const activeError = useRef(false);
     const async = useRef(false);
 
@@ -45,15 +48,23 @@ function Login() {
             console.log("attempting to log in conventionally");
             try {
                 async.current = true;
+                setLoginButtonDisabled(true);
+                setLoginWithGoogleButtonDisabled(true);
+                setDisplayLoginButtonWorkingIcon(true);
                 await loginWithEmailAndPassword(email, password)
                     .then(() => {
                         async.current = false;
                         navigate(`/dashboard/"personnelOkay"`);
                     });
             } catch (err) {
+                setLoginButtonDisabled(false);
+                setLoginWithGoogleButtonDisabled(false);
+                setDisplayLoginButtonWorkingIcon(false);
                 if (err.message.indexOf("email") !== -1 || err.message.indexOf("user") !== -1) {
+                    async.current = false;
                     setEmailAuthenticationError("User not found");
                 } else if (err.message.indexOf("password") !== -1) {
+                    async.current = false;
                     setPasswordAuthenticationError("Incorrect password");
                 } else {
                     console.log("error caught:", err);
@@ -67,12 +78,18 @@ function Login() {
         console.log("attempting to log in with google");
         try {
             async.current = true;
+            setLoginButtonDisabled(true);
+            setLoginWithGoogleButtonDisabled(true);
+            setDisplayGoogleButtonWorkingIcon(true);
             await loginWithGoogle(email, password)
                 .then(() => {
                     async.current = false;
                     navigate(`/dashboard/"personnelOkay"`);
                 });
         } catch (err) {
+            setLoginButtonDisabled(false);
+            setLoginWithGoogleButtonDisabled(false);
+            setDisplayGoogleButtonWorkingIcon(false);
             console.log("error caught:", err);
             handleError();
         }
@@ -107,7 +124,7 @@ function Login() {
             setRendering(false);
             setTransitionElementOpacity("0%");
             setTransitionElementVisibility("hidden");
-            if (email !== "" && password !== "") {
+            if (!async.current && email !== "" && password !== "") {
                 setLoginButtonDisabled(false);
             } else {
                 setLoginButtonDisabled(true);
@@ -178,7 +195,10 @@ function Login() {
                                     passwordAuthenticationError={passwordAuthenticationError}
                                     conventionalLoginSelected={attemptConventionalLogin}
                                     googleLoginSelected={attemptLoginWithGoogle}
-                                    loginButtonDisabled={loginButtonDisabled}>
+                                    loginButtonDisabled={loginButtonDisabled}
+                                    loginWithGoogleButtonDisabled={loginWithGoogleButtonDisabled}
+                                    displayLoginFadingBalls={displayLoginButtonWorkingIcon}
+                                    displayGoogleFadingBalls={displayGoogleButtonWorkingIcon}>
                                 </UserLoginCard>
                             </div>
                             {/* <input

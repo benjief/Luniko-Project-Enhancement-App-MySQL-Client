@@ -38,10 +38,10 @@ export default function MaterialTextField({
         handleValidValue(value);
       }
     } else {
-      if (required) {
+      if (required || authenticationField) {
         setDisplayedHelperText("Required Field");
+        handleEmptyOrInvalidValue(value);
       }
-      handleEmptyOrInvalidValue(value);
     }
   }
 
