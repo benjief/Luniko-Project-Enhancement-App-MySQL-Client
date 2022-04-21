@@ -7,22 +7,9 @@ import {
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
     sendPasswordResetEmail,
-    signOut
+    deleteUser,
+    signOut,
 } from "firebase/auth";
-// import {
-//     getFirestore,
-//     query,
-//     getDocs,
-//     collection,
-//     where,
-//     addDoc,
-// } from "firebase/firestore";
-
-// Variable definition
-// var uid = "";
-// var firstName = "";
-// var lastName = "";
-// var email = "";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAQPWZwAjHAaT-9cSvGpyYexkiZ0NSPP70",
@@ -36,28 +23,14 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// const getUIDs = async () => {
-//     let uidList = [];
-//     // Pull all UIDs from the MySQL DB
-//     try {
-//         await Axios.get("https://luniko-pe.herokuapp.com/get-uids", {
-//         }).then((response) => {
-//             uidList.push(response.data);
-//             return uidList;
-//         });
-//     } catch (err) {
-//         console.log(err);
-//     }
-// };
-
-const getPersonnelWithUID = async (personnelList, id) => {
+const getPersonnelWithUID = async (personnelList, uid) => {
     try {
-        await Axios.get(`https://luniko-pe.herokuapp.com/get-personnel-with-id/${id}`, {
+        await Axios.get(`https://luniko-pe.herokuapp.com/get-personnel-with-id/${uid}`, {
         }).then((response) => {
             personnelList.push(response.data);
         });
     } catch (err) {
-        console.log(err);
+        throw new Error("personnelError");
     }
 }
 
@@ -71,7 +44,7 @@ const writePersonnelToDB = async (uid, firstName, lastName, email) => {
             email: email
         });
     } catch (err) {
-        console.log(err);
+        throw new Error("personnelError");
     }
 };
 
@@ -88,13 +61,14 @@ const loginWithGoogle = async () => {
     // })
 
     let personnelList = [];
-    await getPersonnelWithUID(personnelList, user.uid).then(async () => {
-        if (personnelList[0].length === 0) {
-            await writePersonnelToDB(user.uid, user.displayName.split(" ")[0],
-                user.displayName.split(" ").slice(1), user.email).then(() => {
-                });
-        }
-    });
+    await getPersonnelWithUID(personnelList, user.uid)
+        .then(async () => {
+            if (personnelList[0].length === 0) {
+                await writePersonnelToDB(user.uid, user.displayName.split(" ")[0],
+                    user.displayName.split(" ").slice(1), user.email).then(() => {
+                    });
+            }
+        });
 
 
     // const q = query(collection(db, "users"), where("uid", "==", user.uid));
@@ -109,7 +83,7 @@ const loginWithGoogle = async () => {
 
     // } catch (err) {
     //     console.log("Mees");
-    //     console.error(err);
+    // console.error(err);
     //     console.log(err.message);
     //     alert(err.message);
     // }
@@ -127,25 +101,27 @@ const loginWithEmailAndPassword = async (email, password) => {
 
 // Register with email and password
 const registerWithEmailAndPassword = async (firstName, lastName, email, password) => {
-    try {
-        const res = await createUserWithEmailAndPassword(auth, email, password);
-        const user = res.user;
+    // try {
 
-        // Add the new user to the MySQL DB
-        await writePersonnelToDB(user.uid, firstName, lastName, email = user.email).then(() => {
-            console.log("Personnel written to DB!")
-        });
+    const res = await createUserWithEmailAndPassword(auth, email, password);
+    const user = res.user;
 
-        //   await addDoc(collection(db, "users"), {
-        //     uid: user.uid,
-        //     name,
-        //     authProvider: "local",
-        //     email,
-        //   });
-    } catch (err) {
-        console.error(err);
-        alert(err.message);
-    }
+    // Add the new user to the MySQL DB
+    await writePersonnelToDB(user.uid, firstName, lastName, email = user.email).then(() => {
+        console.log("Personnel written to DB!")
+    });
+
+    //   await addDoc(collection(db, "users"), {
+    //     uid: user.uid,
+    //     name,
+    //     authProvider: "local",
+    //     email,
+    //   });
+    // } catch (err) {
+    // console.error(err);
+    // throw err;
+    // alert(err.message);
+    // } 
 };
 
 // Send a password reset link to an email address
@@ -160,8 +136,10 @@ const sendPasswordReset = async (email) => {
 };
 
 // Logout
-const logout = () => {
-    signOut(auth);
+const logout = (delay = 0) => {
+    setTimeout(() => {
+        signOut(auth);
+    }, delay);
 };
 
 export {
@@ -170,5 +148,6 @@ export {
     loginWithEmailAndPassword,
     registerWithEmailAndPassword,
     sendPasswordReset,
-    logout
+    logout,
+    deleteUser
 };

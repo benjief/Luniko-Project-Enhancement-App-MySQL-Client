@@ -122,7 +122,7 @@ function SubmittedRequests() {
                                     value={getValue(val.req_value)}
                                     rsn_rejected={val.rsn_rejected ? val.rsn_rejected : ""}
                                     comments={val.req_comments === "" || val.req_comments === null ? "None" : val.req_comments}
-                                    editButtonDisabled={val.req_approved.data[0] === 1 || val.req_rejected.data[0] == 1}>
+                                    editButtonDisabled={val.req_approved.data[0] === 1 || val.req_rejected.data[0] === 1}>
                                 </SubmittedRequestCard>
                             </div>
                         })}

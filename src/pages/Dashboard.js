@@ -1,11 +1,12 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, useRef } from "react";
 import Axios from "axios";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useNavigate, Link } from "react-router-dom";
-import { auth } from "../firebase";
+import { useNavigate, useParams, Link } from "react-router-dom";
+import { auth, logout, deleteUser } from "../firebase";
 // import { query, collection, getDocs, where } from "firebase/firestore";
 import NavBar from "../components/Navbar";
 import DashboardOptionsCard from "../components/DashboardOptionsCard";
+import PositionedSnackbar from "../components/PositionedSnackbar";
 import Hypnosis from "react-cssfx-loading/lib/Hypnosis";
 import "../styles/Dashboard.css";
 import "../styles/SelectorComponents.css";
@@ -15,6 +16,7 @@ import "../styles/CardComponents.css";
 function Dashboard() {
     const [user, loading] = useAuthState(auth);
     const [rendering, setRendering] = useState(true);
+    const { error } = useParams();
     const [firstName, setFirstName] = useState("");
     const [isIdentifier, setIsIdentifier] = useState(false);
     const [isOwner, setIsOwner] = useState(false);
@@ -27,29 +29,76 @@ function Dashboard() {
     // const [orBackgroundColor, setORBackgroundColor] = useState("#BFBFBF");
     const [transitionElementOpacity, setTransitionElementOpacity] = useState("100%");
     const [transtitionElementVisibility, setTransitionElementVisibility] = useState("visible");
+    const [alert, setAlert] = useState(false);
+    const alertType = useRef("success-alert");
+    const alertMessage = useRef("Registration successful!");
+    const loadErrorMessage = useRef("Apologies! We've encountered an error. Please attempt to re-load this page.");
+    const registrationErrorMessage = useRef("Apologies! We've encountered an error. Please attempt to register again.");
+    const activeError = useRef(false);
+    const async = useRef(false);
+    const deletingUser = useRef(false);
     const navigate = useNavigate();
 
-    const getPersonnelInfoWithID = (id) => {
-        Axios.get(`https://luniko-pe.herokuapp.com/get-personnel-with-id/${id}`, {
-        }).then((response) => {
-            setFirstName(response.data[0].pers_fname);
-            if (response.data[0].pers_is_identifier.data[0] === 1) {
-                setIsIdentifier(true);
-                setSubmittedRequestsButtonDisabled(false);
-            } else {
-                setIsIdentifier(false);
-                setSubmittedRequestsButtonDisabled(true);
-            }
-            if (response.data[0].pers_is_owner.data[0] === 1) {
-                setIsOwner(true);
-                setAddToOwnedRequestsButtonDisabled(false);
-                getOwnedRequests(id);
-            } else {
-                setIsOwner(false);
-                setAddToOwnedRequestsButtonDisabled(true);
-                setRendering(false);
-            }
-        });
+    const runAsyncReadFunctions = async (uid) => {
+        if (error === "personnelError") {
+            await deleteUserFromFirebase(uid);
+        } else {
+            await getPersonnelInfoWithID(uid);
+            setRendering(false);
+        }
+    }
+
+    const deleteUserFromFirebase = (uid) => {
+        console.log("deleting user from firebase");
+        try {
+            activeError.current = true;
+            deletingUser.current = true;
+            handleError("o");
+            setTimeout(async () => {
+                await user.delete()
+                    .then(() => {
+                        deletingUser.current = false;
+                        console.log("deleted user");
+                    });
+            }, 3000);
+        } catch (err) {
+            console.log("error caught:", err);
+            logout();
+        }
+    }
+
+    const getPersonnelInfoWithID = async (id) => {
+        console.log("fetching personnel info");
+        try {
+            async.current = true;
+            await Axios.get(`https://luniko-pe.herokuapp.com/get-personnel-with-id/${id}`, {
+            }).then(response => {
+                setFirstName(response.data[0].pers_fname);
+                checkPersonnelStatus(response.data[0]);
+                async.current = false;
+            });
+        } catch (err) {
+            console.log("error caught:", err);
+            handleError("r");
+        }
+    }
+
+    const checkPersonnelStatus = async (personnelData) => {
+        if (personnelData.pers_is_identifier.data[0] === 1) {
+            setIsIdentifier(true);
+            setSubmittedRequestsButtonDisabled(false);
+        } else {
+            setIsIdentifier(false);
+            setSubmittedRequestsButtonDisabled(true);
+        }
+        if (personnelData.pers_is_owner.data[0] === 1) {
+            setIsOwner(true);
+            setAddToOwnedRequestsButtonDisabled(false);
+            await getOwnedRequests(personnelData.pers_id);
+        } else {
+            setIsOwner(false);
+            setAddToOwnedRequestsButtonDisabled(true);
+        }
     }
 
     const getOwnedRequests = (id) => {
@@ -66,13 +115,41 @@ function Dashboard() {
         });
     }
 
+    const handleError = (errorType) => {
+        activeError.current = true;
+        alertType.current = "error-alert";
+        errorType === "r"
+            ? alertMessage.current = loadErrorMessage.current
+            : alertMessage.current = registrationErrorMessage.current;
+        // Delay is set up just in case an error is generated before the is fully-displayed
+        let delay = transitionElementOpacity === "100%" ? 500 : rendering ? 500 : 0;
+
+        if (rendering) {
+            setRendering(false);
+        }
+
+        setTimeout(() => {
+            setAlert(true);
+        }, delay);
+    }
+
+    const handleAlertClosed = (alertClosed) => {
+        if (alertClosed) {
+            setAlert(false);
+            // Refreshes the page
+            if (!deletingUser.current) {
+                logout();
+            }
+        }
+    }
+
     useEffect(() => {
         if (loading) {
             return;
         } if (!user) {
             return navigate("/");
         } if (rendering) {
-            getPersonnelInfoWithID(user?.uid);
+            runAsyncReadFunctions(user?.uid);
         } else {
             // getPersonnelInfoWithID(user?.uid);
             setTransitionElementOpacity("0%");
@@ -81,49 +158,76 @@ function Dashboard() {
     }, [loading, user, rendering]);
 
     return (
-        rendering ?
-            <div className="loading-spinner">
+        rendering
+            ? <div className="loading-spinner">
                 <Hypnosis
                     className="spinner"
                     color="var(--lunikoOrange)"
                     width="100px"
                     height="100px"
                     duration="1.5s" />
-            </div> :
-            <Fragment>
-                <div
-                    className="transition-element"
-                    style={{
-                        opacity: transitionElementOpacity,
-                        visibility: transtitionElementVisibility
-                    }}>
-                </div>
-                <NavBar
-                    visibility={"visible"}
-                    srDisabled={!(isIdentifier === "true" || isIdentifier === true)}
-                    orDisabled={!(isOwner === "true" || isOwner === true)}
-                    createRequestLink={`/create-request/${user?.uid}/${isIdentifier}/${isOwner}`}
-                    submittedRequestsLink={`/submitted-requests/${user?.uid}/${isIdentifier}/${isOwner}`}
-                    ownedRequestsLink={`/owned-requests/${user?.uid}/${isIdentifier}/${isOwner}`}>
-                </NavBar>
-                <div className="dashboard">
-                    <div className="dashboard-container">
-                        <div className="page-heading">
-                            Please choose an option below:
+            </div>
+            : activeError.current
+                ? <Fragment>
+                    <NavBar>
+                    </NavBar>
+                    {alert
+                        ? <div className="alert-container">
+                            <PositionedSnackbar
+                                message={alertMessage.current}
+                                closed={handleAlertClosed}
+                                className={alertType.current}>
+                            </PositionedSnackbar>
                         </div>
-                        <div className="dashboard-card">
-                            <DashboardOptionsCard
-                                uid={user?.uid}
-                                isIdentifier={isIdentifier}
-                                isOwner={isOwner}
-                                firstName={firstName}
-                                submittedRequestsButtonDisabled={submittedRequestsButtonDisabled}
-                                addToOwnedRequestsButtonDisabled={addToOwnedRequestsButtonDisabled}
-                                ownedRequestsButtonDisabled={ownedRequestsButtonDisabled}
-                            >
-                            </DashboardOptionsCard>
+                        : <div></div>}
+                    <div
+                        className="error-div"
+                        style={{ height: "100vw", width: "100%" }}
+                    ></div>
+                </Fragment>
+                : <Fragment>
+                    <div
+                        className="transition-element"
+                        style={{
+                            opacity: transitionElementOpacity,
+                            visibility: transtitionElementVisibility
+                        }}>
+                    </div>
+                    <NavBar
+                        visibility={"visible"}
+                        srDisabled={!(isIdentifier === "true" || isIdentifier === true)}
+                        orDisabled={!(isOwner === "true" || isOwner === true)}
+                        createRequestLink={`/create-request/${user?.uid}/${isIdentifier}/${isOwner}`}
+                        submittedRequestsLink={`/submitted-requests/${user?.uid}/${isIdentifier}/${isOwner}`}
+                        ownedRequestsLink={`/owned-requests/${user?.uid}/${isIdentifier}/${isOwner}`}>
+                    </NavBar>
+                    {alert
+                        ? <div className="alert-container">
+                            <PositionedSnackbar
+                                message={alertMessage.current}
+                                closed={handleAlertClosed}
+                                className={alertType.current}>
+                            </PositionedSnackbar>
                         </div>
-                        {/* <p>Welcome, <b>{firstName}</b>!</p>
+                        : <div></div>}
+                    <div className="dashboard">
+                        <div className="dashboard-container">
+                            <div className="page-heading">
+                                Please choose an option below:
+                            </div>
+                            <div className="dashboard-card">
+                                <DashboardOptionsCard
+                                    uid={user?.uid}
+                                    isIdentifier={isIdentifier}
+                                    isOwner={isOwner}
+                                    firstName={firstName}
+                                    submittedRequestsButtonDisabled={submittedRequestsButtonDisabled}
+                                    addToOwnedRequestsButtonDisabled={addToOwnedRequestsButtonDisabled}
+                                    ownedRequestsButtonDisabled={ownedRequestsButtonDisabled}
+                                >
+                                </DashboardOptionsCard>
+                            </div>
+                            {/* <p>Welcome, <b>{firstName}</b>!</p>
                         <Link to={`/create-request/${user?.uid}/${isIdentifier}/${isOwner}`}>
                             <button
                                 className="add-request-button">
@@ -157,9 +261,9 @@ function Dashboard() {
                         <button className="logout-button" onClick={logout}>
                             Logout
                         </button> */}
+                        </div>
                     </div>
-                </div>
-            </Fragment >
+                </Fragment >
     );
 }
 

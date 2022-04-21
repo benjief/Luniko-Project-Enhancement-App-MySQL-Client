@@ -15,6 +15,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 // import { color } from '@mui/system';
 import MaterialTextField from './MaterialTextField';
 import DraggableDialog from './DraggableDialog';
+import FadingBalls from "react-cssfx-loading/lib/FadingBalls";
 
 const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
@@ -35,10 +36,14 @@ export default function UserRegistrationCard({
     updatedPassword = "",
     registerConventionally = false,
     registerWithGoogle = false,
-    registerButtonDisabled = true
+    registerButtonDisabled = true,
+    registerWithGoogleButtonDisabled = false,
+    displayRegisterFadingBalls = false,
+    displayGoogleFadingBalls = false
 }) {
     const [expanded, setExpanded] = React.useState(true);
     const [registerButtonColor, setRegisterButtonColor] = React.useState("#BFBFBF");
+    const [googleLogo, setGoogleLogo] = React.useState("google_logo.png");
 
     const handleOnChangeFirstName = (updatedText) => {
         updatedFirstName(updatedText);
@@ -75,7 +80,13 @@ export default function UserRegistrationCard({
         } else {
             setRegisterButtonColor("#BFBFBF");
         }
-    }, [registerButtonDisabled, emailAuthenticationError]);
+
+        if (!registerWithGoogleButtonDisabled) {
+            setGoogleLogo("google_logo.png");
+        } else {
+            setGoogleLogo("google_logo_greyscale.png");
+        }
+    }, [registerButtonDisabled, registerWithGoogleButtonDisabled]);
 
     return (
         <Card
@@ -172,13 +183,36 @@ export default function UserRegistrationCard({
                             onClick={handleOnClickRegisterWithEmail}
                             disabled={registerButtonDisabled}
                             style={{ backgroundColor: registerButtonColor }}>
-                            Register with Email
+                            {displayRegisterFadingBalls
+                                ? <div className="fading-balls-container">
+                                    <FadingBalls
+                                        className="spinner"
+                                        color="white"
+                                        width="7px"
+                                        height="7px"
+                                        duration="0.5s"
+                                    />
+                                </div>
+                                : <p>Register with Email</p>}
                         </button>
                         <div
                             className="register-google"
                             onClick={registerWithGoogle}>
-                            <img src={require("../img/google_logo.png")} alt="Google" />
-                            <p>Register with Google</p>
+                            {displayGoogleFadingBalls
+                                ? <div className="fading-balls-container">
+                                    <FadingBalls
+                                        className="spinner"
+                                        color="var(--lunikoOrange)"
+                                        width="7px"
+                                        height="7px"
+                                        duration="0.5s"
+                                    />
+                                </div>
+                                :
+                                <div style={{ display: "flex" }}>
+                                    <img src={require("../img/" + googleLogo)} alt="Google" />
+                                    <p>Register with Google</p>
+                                </div>}
                         </div>
                         <DraggableDialog
                             dialogText={["A ", <strong>valid email address </strong>, "and password length of ", <strong>at least six characters </strong>,

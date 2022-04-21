@@ -21,7 +21,7 @@ function App() {
           <Route exact path="/" element={<Login />} />
           <Route exact path="/register" element={<Register />} />
           <Route exact path="/reset" element={<Reset />} />
-          <Route exact path="/dashboard" element={<Dashboard />} />
+          <Route exact path="/dashboard/:error" element={<Dashboard />} />
           <Route exact path="/create-request/:uid/:isIdentifier/:isOwner" element={<CreateRequest />} />
           <Route exact path="/submitted-requests/:uid/:isIdentifier/:isOwner" element={<SubmittedRequests />} />
           <Route exact path="/add-owned-requests/:uid/:isIdentifier/:isOwner" element={<AddOwnedRequests />} />

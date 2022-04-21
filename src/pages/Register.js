@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, useRef } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import {
@@ -25,39 +25,54 @@ function Register() {
     const [emailAuthenticationError, setEmailAuthenticationError] = useState("");
     const [registeredEmails, setRegisteredEmails] = useState("");
     const [password, setPassword] = useState("");
-    // const [backgroundColor, setBackgroundColor] = useState("#BFBFBF");
     const [registerButtonDisabled, setRegisterButtonDisabled] = useState(true);
+    const [registerWithGoogleButtonDisabled, setRegisterWithGoogleButtonDisabled] = useState(false);
     const [transitionElementOpacity, setTransitionElementOpacity] = useState("100%");
     const [transtitionElementVisibility, setTransitionElementVisibility] = useState("visible");
     const [alert, setAlert] = useState(false);
+    const alertType = useRef("success-alert");
+    const alertMessage = useRef("Registration successful!");
+    const loadErrorMessage = useRef("Apologies! We've encountered an error. Please attempt to re-load this page.");
+    const registrationErrorMessage = useRef("Apologies! We've encountered an error. Please attempt to register again.");
+    const [displayRegisterButtonWorkingIcon, setDisplayRegisterButtonWorkingIcon] = useState(false);
+    const [displayGoogleButtonWorkingIcon, setDisplayGoogleButtonWorkingIcon] = useState(false);
+    const activeError = useRef(false);
+    const async = useRef(false);
 
-    // const history = useHistory();
     const navigate = useNavigate();
 
-    // const activateRegistration = () => {
-    //     setBackgroundColor("#E58004");
-    //     setRegisterButtonDisabled(false);
-    // }
+    const runAsyncReadFunctions = async () => {
+        await getRegisteredEmails();
+        setRendering(false);
+    }
 
-    // const deactivateRegistration = () => {
-    //     setBackgroundColor("#BFBFBF");
-    //     setRegisterButtonDisabled(true);
-    // }
-
-    const getRegisteredEmails = () => {
-        Axios.get("https://luniko-pe.herokuapp.com/get-all-personnel", {
-        }).then((response) => {
-            populateRegisteredEmailList(response.data);
-        });
+    const getRegisteredEmails = async () => {
+        console.log("fetching registered emails");
+        try {
+            async.current = true;
+            Axios.get("https://luniko-pe.herokuapp.com/get-all-personnel", {
+            }).then(response => {
+                populateRegisteredEmailList(response.data);
+            });
+        } catch (err) {
+            console.log("error caught:", err);
+            handleError("r");
+        }
     };
 
     const populateRegisteredEmailList = (personnelList) => {
-        let tempArray = [];
-        for (let i = 0; i < personnelList.length; i++) {
-            tempArray.push(personnelList[i].pers_email);
+        console.log("populating registered emails list");
+        try {
+            let tempArray = [];
+            for (let i = 0; i < personnelList.length; i++) {
+                tempArray.push(personnelList[i].pers_email);
+            }
+            setRegisteredEmails([...tempArray]);
+            async.current = false;
+        } catch (err) {
+            console.log("error caught:", err);
+            handleError("r");
         }
-        setRegisteredEmails([...tempArray]);
-        setRendering(false);
     }
 
     const handleFirstNameCallback = (firstNameFromTextInput) => {
@@ -87,36 +102,86 @@ function Register() {
     const attemptConventionalRegistration = async (conventionalRegistrationSelected) => {
         if (conventionalRegistrationSelected) {
             try {
-                await registerWithEmailAndPassword(firstName, lastName, email, password).then(() => {
-                    navigate("/dashboard");
-                });
+                setDisplayRegisterButtonWorkingIcon(true);
+                async.current = true;
+                setRegisterButtonDisabled(true);
+                setRegisterWithGoogleButtonDisabled(true);
+                await registerWithEmailAndPassword(firstName, lastName, email, password)
+                    .then(() => {
+                        async.current = false;
+                        setAlert(true);
+                        setTimeout(() => {
+                            navigate(`/dashboard/"noPersonnelError"`);
+                        }, 3000);
+                    });
             } catch (err) {
-                if (err.message.indexOf("email") !== -1 || err.message.indexOf("user") !== -1) {
+                console.log("error caught");
+                if (err.message.indexOf("personnelError") !== -1) {
+                    async.current = false;
+                    navigate(`/dashboard/${err.message}`);
+                } else if (err.message.indexOf("email") !== -1 || err.message.indexOf("user") !== -1) {
                     setEmailAuthenticationError("Email already in use");
+                } else {
+                    console.log("error caught:", err);
+                    handleError("o");
                 }
             }
         }
     }
 
-    const registerWithGoogle = async (googleRegistrationSelected) => {
+    const attemptGoogleRegistration = async (googleRegistrationSelected) => {
         if (googleRegistrationSelected) {
             try {
-                await loginWithGoogle(email, password).then(() => {
-                    navigate("/dashboard");
-                    console.log("logged in with google");
-                });
+                setDisplayGoogleButtonWorkingIcon(true);
+                async.current = true;
+                setRegisterButtonDisabled(true);
+                setRegisterWithGoogleButtonDisabled(true);
+                await loginWithGoogle(email, password)
+                    .then(() => {
+                        async.current = false;
+                        setAlert(true);
+                        setTimeout(() => {
+                            navigate(`/dashboard/"personnelOkay"`);
+                        }, 3000);
+                    });
             } catch (err) {
-                if (err.message.indexOf("popup") !== -1) {
-                    setAlert(true);
+                if (err.message.indexOf("personnelOkay") !== -1) {
+                    async.current = false;
+                    navigate(`/dashboard/${err.message}`);
+                } else {
+                    console.log("error caught:", err);
+                    handleError("o");
                 }
             }
         }
+    }
+
+    const handleError = (errorType) => {
+        activeError.current = true;
+        alertType.current = "error-alert";
+        errorType === "r"
+            ? alertMessage.current = loadErrorMessage.current
+            : alertMessage.current = registrationErrorMessage.current;
+
+        // Delay is set up just in case an error is generated before the is fully-displayed
+        let delay = transitionElementOpacity === "100%" ? 500 : rendering ? 500 : 0;
+
+        if (rendering) {
+            setRendering(false);
+        }
+
+        setTimeout(() => {
+            setAlert(true);
+        }, delay);
     }
 
     const handleAlertClosed = (alertClosed) => {
         if (alertClosed) {
             setAlert(false);
-            navigate("/register");
+            // Refreshes the page
+            if (activeError.current) {
+                navigate(0);
+            }
         }
     }
 
@@ -125,11 +190,11 @@ function Register() {
             return;
         }
         if (rendering) {
-            getRegisteredEmails();
+            runAsyncReadFunctions();
         } else {
             setTransitionElementOpacity("0%");
             setTransitionElementVisibility("hidden");
-            if (firstName !== "" && lastName !== "" && email !== "" && password !== "" && emailAuthenticationError === "") {
+            if (!async.current && firstName !== "" && lastName !== "" && email !== "" && password !== "" && emailAuthenticationError === "") {
                 // if (registerButtonDisabled) {
                 //     activateRegistration();
                 // }
@@ -138,58 +203,81 @@ function Register() {
                 setRegisterButtonDisabled(true);
             }
         }
-    }, [loading, user, firstName, lastName, email, password, registerButtonDisabled, emailAuthenticationError, rendering]);
+    }, [loading, user, firstName, lastName, email, password, registerButtonDisabled, emailAuthenticationError, rendering, async]);
 
     return (
-        rendering ?
-            <div className="loading-spinner">
+        rendering
+            ? <div className="loading-spinner">
                 <Hypnosis
                     className="spinner"
                     color="var(--lunikoOrange)"
                     width="100px"
                     height="100px"
                     duration="1.5s" />
-            </div> :
-            <Fragment>
-                <div
-                    className="transition-element"
-                    style={{
-                        opacity: transitionElementOpacity,
-                        visibility: transtitionElementVisibility
-                    }}>
-                </div>
-                <NavBar
-                    visibility={"hidden"}
-                    srDisabled={true}
-                    orDisabled={true}>
-                </NavBar>
-                {alert
-                    ? <div className="alert-container">
-                        <PositionedSnackbar
-                            message="Popup Closed. Please try again."
-                            closed={handleAlertClosed}
-                            className="register-alert">
-                        </PositionedSnackbar>
+            </div>
+            : activeError.current
+                ? <Fragment>
+                    <NavBar>
+                    </NavBar>
+                    {alert
+                        ? <div className="alert-container">
+                            <PositionedSnackbar
+                                message={alertMessage.current}
+                                closed={handleAlertClosed}
+                                className={alertType.current}>
+                            </PositionedSnackbar>
+                        </div>
+                        : <div></div>}
+                    <div
+                        className="error-div"
+                        style={{ height: "100vw", width: "100%" }}
+                    ></div>
+                </Fragment>
+                : <Fragment>
+                    <div
+                        className="transition-element"
+                        style={{
+                            opacity: transitionElementOpacity,
+                            visibility: transtitionElementVisibility
+                        }}>
                     </div>
-                    : <div></div>}
-                <div className="register">
-                    <div className="register-container">
-                        <div className="page-heading">
-                            Please Register Below:
+                    <NavBar
+                        visibility={"hidden"}
+                        srDisabled={true}
+                        orDisabled={true}>
+                    </NavBar>
+                    {alert
+                        ? <div className="alert-container">
+                            <PositionedSnackbar
+                                message={alertMessage.current}
+                                closed={handleAlertClosed}
+                                className="success-alert"
+                            >
+                            </PositionedSnackbar>
                         </div>
-                        <div className="register-card">
-                            <UserRegistrationCard
-                                updatedFirstName={handleFirstNameCallback}
-                                updatedLastName={handleLastNameCallback}
-                                updatedEmail={handleEmailCallback}
-                                emailAuthenticationError={emailAuthenticationError}
-                                updatedPassword={handlePasswordCallback}
-                                registerConventionally={attemptConventionalRegistration}
-                                registerWithGoogle={registerWithGoogle}
-                                registerButtonDisabled={registerButtonDisabled}>
-                            </UserRegistrationCard>
-                        </div>
-                        {/* <input
+                        : <div></div>}
+                    <div className="register">
+                        <div className="register-container">
+                            <div className="page-heading">
+                                Please Register Below:
+                            </div>
+                            <div className="register-card">
+                                <UserRegistrationCard
+                                    updatedFirstName={handleFirstNameCallback}
+                                    updatedLastName={handleLastNameCallback}
+                                    updatedEmail={handleEmailCallback}
+                                    emailAuthenticationError={emailAuthenticationError}
+                                    updatedPassword={handlePasswordCallback}
+                                    registerConventionally={attemptConventionalRegistration}
+                                    registerWithGoogle={attemptGoogleRegistration}
+                                    registerButtonDisabled={registerButtonDisabled}
+                                    registerWithGoogleButtonDisabled={registerWithGoogleButtonDisabled}
+                                    displayRegisterFadingBalls={displayRegisterButtonWorkingIcon}
+                                    displayGoogleFadingBalls={displayGoogleButtonWorkingIcon}
+                                >
+                                </UserRegistrationCard>
+                            </div>
+                            {/* <input
                             type="text"
                             className="register-textBox"
                             value={firstName}
@@ -245,9 +333,9 @@ function Register() {
                                 Already have an account? <Link to="/">Login</Link> now.
                             </div>
                         </div> */}
+                        </div>
                     </div>
-                </div>
-            </Fragment>
+                </Fragment>
     );
 }
 

@@ -63,8 +63,12 @@ input:focus {
   transition: 200ms;
 }
 
-.register-button:hover {
+.register-button:not(:disabled):hover {
   background-color: var(--lunikoOrange) !important;
+}
+
+.register-button p {
+  margin-bottom: 0 !important;
 }
 
 .register-google:hover {
