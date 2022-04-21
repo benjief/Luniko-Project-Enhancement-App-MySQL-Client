@@ -115,7 +115,6 @@ function Register() {
                         }, 3000);
                     });
             } catch (err) {
-                console.log("error caught");
                 if (err.message.indexOf("personnelError") !== -1) {
                     async.current = false;
                     navigate(`/dashboard/${err.message}`);
@@ -178,9 +177,8 @@ function Register() {
     const handleAlertClosed = (alertClosed) => {
         if (alertClosed) {
             setAlert(false);
-            // Refreshes the page
             if (activeError.current) {
-                navigate(0);
+                navigate(0); // refreshes the page
             }
         }
     }

@@ -31,8 +31,8 @@ export default function UserLoginCard({
     emailAuthenticationError = "",
     updatedPassword = "",
     passwordAuthenticationError = "",
-    loginConventionally = false,
-    loginWithGoogle = false,
+    conventionalLoginSelected = false,
+    googleLoginSelected = false,
     loginButtonDisabled = true
 }) {
     const [expanded, setExpanded] = React.useState(true);
@@ -47,11 +47,11 @@ export default function UserLoginCard({
     }
 
     const handleOnClickLogin = () => {
-        loginConventionally(true);
+        conventionalLoginSelected(true);
     }
 
     const handleOnClickLoginWithGoogle = () => {
-        loginWithGoogle(true);
+        googleLoginSelected(true);
     }
 
     // const handleExpandClick = () => {

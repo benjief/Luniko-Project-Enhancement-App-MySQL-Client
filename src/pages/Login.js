@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth, loginWithEmailAndPassword, loginWithGoogle } from "../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -12,7 +12,7 @@ import "../styles/InputComponents.css";
 import "../styles/CardComponents.css";
 
 function Login() {
-    const [user, loading] = useAuthState(auth);
+    const [loading] = useAuthState(auth);
     const [rendering, setRendering] = useState(true);
     const [email, setEmail] = useState("");
     const [emailAuthenticationError, setEmailAuthenticationError] = useState("");
@@ -22,6 +22,10 @@ function Login() {
     const [transitionElementOpacity, setTransitionElementOpacity] = useState("100%");
     const [transtitionElementVisibility, setTransitionElementVisibility] = useState("visible");
     const [alert, setAlert] = useState(false);
+    const alertType = useRef("error-alert");
+    const alertMessage = useRef("Apologies! We've encountered an error. Please attempt to log in again.");
+    const activeError = useRef(false);
+    const async = useRef(false);
 
     const navigate = useNavigate();
 
@@ -36,38 +40,63 @@ function Login() {
         setPasswordAuthenticationError("");
     }
 
-    const attemptConventionalLogin = async () => {
-        try {
-            await loginWithEmailAndPassword(email, password).then(() => {
-                navigate(`/dashboard/"personnelOkay"`);
-            });
-        } catch (err) {
-            if (err.message.indexOf("email") !== -1 || err.message.indexOf("user") !== -1) {
-                setEmailAuthenticationError("User not found");
-            } else if (err.message.indexOf("password") !== -1) {
-                setPasswordAuthenticationError("Incorrect password");
+    const attemptConventionalLogin = async (conventionalLoginSelected) => {
+        if (conventionalLoginSelected) {
+            console.log("attempting to log in conventionally");
+            try {
+                async.current = true;
+                await loginWithEmailAndPassword(email, password)
+                    .then(() => {
+                        async.current = false;
+                        navigate(`/dashboard/"personnelOkay"`);
+                    });
+            } catch (err) {
+                if (err.message.indexOf("email") !== -1 || err.message.indexOf("user") !== -1) {
+                    setEmailAuthenticationError("User not found");
+                } else if (err.message.indexOf("password") !== -1) {
+                    setPasswordAuthenticationError("Incorrect password");
+                } else {
+                    console.log("error caught:", err);
+                    handleError();
+                }
             }
         }
     }
 
-    const attemptLoginWithGoogle = async () => {
+    const attemptLoginWithGoogle = async (googleLoginSelected) => {
+        console.log("attempting to log in with google");
         try {
-            console.log("trying to log in with google");
-            await loginWithGoogle(email, password).then(() => {
-                navigate("/dashboard");
-                console.log("logged in with google");
-            });
+            async.current = true;
+            await loginWithGoogle(email, password)
+                .then(() => {
+                    async.current = false;
+                    navigate(`/dashboard/"personnelOkay"`);
+                });
         } catch (err) {
-            if (err.message.indexOf("popup") !== -1) {
-                setAlert(true);
-            }
+            console.log("error caught:", err);
+            handleError();
         }
     };
+
+    const handleError = () => {
+        activeError.current = true;
+
+        // Delay is set up just in case an error is generated before the is fully-displayed
+        let delay = transitionElementOpacity === "100%" ? 500 : rendering ? 500 : 0;
+
+        if (rendering) {
+            setRendering(false);
+        }
+
+        setTimeout(() => {
+            setAlert(true);
+        }, delay);
+    }
 
     const handleAlertClosed = (alertClosed) => {
         if (alertClosed) {
             setAlert(false);
-            navigate("/");
+            navigate(0); // refreshes the page
         }
     }
 
@@ -87,54 +116,72 @@ function Login() {
     }, [loading, email, password]);
 
     return (
-        rendering ?
-            <div className="loading-spinner">
+        rendering
+            ? <div className="loading-spinner">
                 <Hypnosis
                     className="spinner"
                     color="var(--lunikoOrange)"
                     width="100px"
                     height="100px"
                     duration="1.5s" />
-            </div> :
-            <Fragment>
-                <div
-                    className="transition-element"
-                    style={{
-                        opacity: transitionElementOpacity,
-                        visibility: transtitionElementVisibility
-                    }}>
-                </div>
-                <NavBar
-                    visibility={"hidden"}
-                    srDisabled={true}
-                    orDisabled={true}>
-                </NavBar>
-                {alert
-                    ? <div className="alert-container">
-                        <PositionedSnackbar
-                            message="Popup Closed. Please try again."
-                            closed={handleAlertClosed}
-                            className="login-alert">
-                        </PositionedSnackbar>
+            </div>
+            : activeError.current
+                ? <Fragment>
+                    <NavBar>
+                    </NavBar>
+                    {alert
+                        ? <div className="alert-container">
+                            <PositionedSnackbar
+                                message={alertMessage.current}
+                                closed={handleAlertClosed}
+                                className={alertType.current}>
+                            </PositionedSnackbar>
+                        </div>
+                        : <div></div>}
+                    <div
+                        className="error-div"
+                        style={{ height: "100vw", width: "100%" }}
+                    ></div>
+                </Fragment>
+                : <Fragment>
+                    <div
+                        className="transition-element"
+                        style={{
+                            opacity: transitionElementOpacity,
+                            visibility: transtitionElementVisibility
+                        }}>
                     </div>
-                    : <div></div>}
-                <div className="login">
-                    <div className="login-container">
-                        <div className="page-heading">
-                            Please Log In Below:
+                    <NavBar
+                        visibility={"hidden"}
+                        srDisabled={true}
+                        orDisabled={true}>
+                    </NavBar>
+                    {alert
+                        ? <div className="alert-container">
+                            <PositionedSnackbar
+                                message={alertMessage.current}
+                                closed={handleAlertClosed}
+                                className={alertType.current}>
+                            </PositionedSnackbar>
                         </div>
-                        <div className="login-card">
-                            <UserLoginCard
-                                updatedEmail={handleEmailCallback}
-                                updatedPassword={handlePasswordCallback}
-                                emailAuthenticationError={emailAuthenticationError}
-                                passwordAuthenticationError={passwordAuthenticationError}
-                                loginConventionally={attemptConventionalLogin}
-                                loginWithGoogle={attemptLoginWithGoogle}
-                                loginButtonDisabled={loginButtonDisabled}>
-                            </UserLoginCard>
-                        </div>
-                        {/* <input
+                        : <div></div>}
+                    <div className="login">
+                        <div className="login-container">
+                            <div className="page-heading">
+                                Please Log In Below:
+                            </div>
+                            <div className="login-card">
+                                <UserLoginCard
+                                    updatedEmail={handleEmailCallback}
+                                    updatedPassword={handlePasswordCallback}
+                                    emailAuthenticationError={emailAuthenticationError}
+                                    passwordAuthenticationError={passwordAuthenticationError}
+                                    conventionalLoginSelected={attemptConventionalLogin}
+                                    googleLoginSelected={attemptLoginWithGoogle}
+                                    loginButtonDisabled={loginButtonDisabled}>
+                                </UserLoginCard>
+                            </div>
+                            {/* <input
                             type="text"
                             className="login-textBox"
                             value={email}
@@ -168,9 +215,9 @@ function Login() {
                                 Don't have an account? <Link to="/register">Register</Link> now.
                             </div>
                         </div> */}
+                        </div>
                     </div>
-                </div>
-            </Fragment >
+                </Fragment >
     );
 }
 
